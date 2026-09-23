@@ -91,8 +91,12 @@
                                                         <div id="items_1" class="dropdown titles-dropdown">
 
                                                             <ul>
-                                                                <li><i class="fa-solid fa-pen-to-square"></i>
-                                                                    <span>Editar</span>
+                                                                <li>
+                                                                    <a
+                                                                        href="{{ route('admin.categorias.edit', $categoria->id) }}">
+                                                                        <i class="fa-solid fa-pen-to-square"></i>
+                                                                        <span>Editar</span>
+                                                                    </a>
                                                                 </li>
                                                                 <li class="remove-file"><span
                                                                         class="icon-trash more-ic"></span><span>Eliminar</span>
@@ -110,7 +114,7 @@
 
                         </div>
                         <div class="d-flex justify-content-center mt-4 mb-4">
-                           {{ $categorias->links('pagination::bootstrap-5') }}
+                            {{ $categorias->links('pagination::bootstrap-5') }}
                         </div>
                     </div>
                 </div>

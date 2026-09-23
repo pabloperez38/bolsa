@@ -49,10 +49,17 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::prefix('admin')->group(function () {
         Route::get('/categorias/create', [CategoriaController::class, 'create'])
             ->name('admin.categorias.create');
-    });
 
-    Route::post('/categorias', [CategoriaController::class, 'storeCategoria'])
-        ->name('admin.categorias.store');
+
+        Route::post('/categorias', [CategoriaController::class, 'storeCategoria'])
+            ->name('admin.categorias.store');
+
+        Route::get('/categorias/{id}/edit', [CategoriaController::class, 'editCategoria'])
+            ->name('admin.categorias.edit');
+
+        Route::put('/categorias/{id}', [CategoriaController::class, 'updateCategoria'])
+            ->name('admin.categorias.update');
+    });
 });
 
 Route::middleware(['auth', 'organizacion'])->group(function () {
