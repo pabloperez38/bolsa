@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Localidad;
 use App\Models\Perfil;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,9 +18,14 @@ class PerfilController extends Controller
 
         $perfil = $usuario->perfil;
 
+        $localidades = Localidad::where('activo', true)
+            ->orderBy('nombre')
+            ->get();
+
         return view('usuario.perfil.index', compact(
             'usuario',
-            'perfil'
+            'perfil',
+            'localidades'
         ));
     }
 
@@ -56,8 +62,7 @@ class PerfilController extends Controller
 
                 'dni' => [
                     'nullable',
-                    'string',
-                    'max:20',
+                    'digits_between:7,8',
                     'unique:perfiles,dni,' . optional($usuario->perfil)->id,
                 ],
 
@@ -79,16 +84,9 @@ class PerfilController extends Controller
                     'max:255',
                 ],
 
-                'localidad' => [
+                'localidad_id' => [
                     'nullable',
-                    'string',
-                    'max:100',
-                ],
-
-                'provincia' => [
-                    'nullable',
-                    'string',
-                    'max:100',
+                    'exists:localidades,id',
                 ],
 
                 'biografia' => [
@@ -131,6 +129,7 @@ class PerfilController extends Controller
                     'max:5120',
                 ],
             ],
+
             [
 
                 // ==========================================
@@ -146,11 +145,8 @@ class PerfilController extends Controller
                 'name.max' =>
                 'El nombre y apellido no pueden superar los 255 caracteres.',
 
-                'dni.string' =>
-                'El DNI no es válido.',
-
-                'dni.max' =>
-                'El DNI no puede superar los 20 caracteres.',
+                'dni.digits_between' =>
+                'El DNI debe contener entre 7 y 8 números.',
 
                 'dni.unique' =>
                 'El DNI ya está registrado.',
@@ -170,11 +166,8 @@ class PerfilController extends Controller
                 'direccion.max' =>
                 'La dirección no puede superar los 255 caracteres.',
 
-                'localidad.max' =>
-                'La localidad no puede superar los 100 caracteres.',
-
-                'provincia.max' =>
-                'La provincia no puede superar los 100 caracteres.',
+                'localidad_id.exists' =>
+                'La localidad seleccionada no es válida.',
 
                 'biografia.max' =>
                 'La biografía no puede superar los 5000 caracteres.',
@@ -230,14 +223,21 @@ class PerfilController extends Controller
     */
 
         $datosPerfil = [
+
             'dni' => $datos['dni'] ?? null,
+
             'telefono' => $datos['telefono'] ?? null,
+
             'fecha_nacimiento' => $datos['fecha_nacimiento'] ?? null,
+
             'direccion' => $datos['direccion'] ?? null,
-            'localidad' => $datos['localidad'] ?? null,
-            'provincia' => $datos['provincia'] ?? null,
+
+            'localidad_id' => $datos['localidad_id'] ?? null,
+
             'biografia' => $datos['biografia'] ?? null,
+
             'linkedin' => $datos['linkedin'] ?? null,
+
             'sitio_web' => $datos['sitio_web'] ?? null,
         ];
 

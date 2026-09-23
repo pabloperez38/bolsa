@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Categoria;
 use App\Models\Organizacion;
+use App\Models\Trabajo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -60,17 +61,18 @@ class OrganizacionController extends Controller
     {
         $usuario = Auth::user();
 
-        $categorias = Categoria::with([
-            'subcategorias' => function ($query) {
-                $query->where('activo', true)
-                    ->orderBy('nombre');
-            }
+        $ofertas = Trabajo::with([
+            'organizacion',
+            'categoria',
+            'subcategoria',
         ])
-            ->where('activo', true)
-            ->orderBy('nombre')
+            ->orderBy('fecha_publicacion', 'desc')
             ->get();
 
-        return view('admin.ofertas-laborales.index', compact('usuario', 'categorias'));
+        return view(
+            'admin.ofertas-laborales.index',
+            compact('usuario', 'ofertas')
+        );
     }
 
     /**

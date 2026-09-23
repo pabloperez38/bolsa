@@ -3144,3 +3144,9 @@ input[type="color"],
     font-size: 20px;
     font-weight: 600;
 }
+.avatar {
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    object-fit: cover;
+}

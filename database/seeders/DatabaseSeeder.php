@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             TrabajoSeeder::class,
             TipoUsuarioSeeder::class,
             UserSeeder::class,
+            LocalidadSeeder::class,
 
         ]);
         // User::factory(10)->create();

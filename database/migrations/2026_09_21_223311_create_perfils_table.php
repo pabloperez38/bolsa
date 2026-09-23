@@ -27,8 +27,10 @@ return new class extends Migration
 
             // Ubicación
             $table->string('direccion', 255)->nullable();
-            $table->string('localidad', 100)->nullable();
-            $table->string('provincia', 100)->nullable();
+            $table->foreignId('localidad_id')
+                ->nullable()
+                ->constrained('localidades')
+                ->nullOnDelete();
 
             // Información profesional
             $table->text('biografia')->nullable();
