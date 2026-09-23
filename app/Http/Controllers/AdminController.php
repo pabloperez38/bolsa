@@ -12,7 +12,7 @@ class AdminController extends Controller
     {
         $usuario = Auth::user();
 
-         $categorias = Categoria::with([
+        $categorias = Categoria::with([
             'subcategorias' => function ($query) {
                 $query->where('activo', true)
                     ->orderBy('nombre');

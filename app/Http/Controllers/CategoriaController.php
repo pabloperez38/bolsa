@@ -4,62 +4,64 @@ namespace App\Http\Controllers;
 
 use App\Models\Categoria;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CategoriaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function categorias()
     {
-        //
+        $usuario = Auth::user();
+
+        $categorias = Categoria::with([
+            'subcategorias' => function ($query) {
+                $query->where('activo', true)
+                    ->orderBy('nombre');
+            }
+        ])
+            ->where('activo', true)
+            ->orderBy('nombre')
+            ->paginate(10);
+
+        return view('admin.categorias.index', compact('usuario', 'categorias'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('admin.categorias.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function storeCategoria(Request $request)
     {
-        //
-    }
+        // Validar los datos recibidos
+        $datos = $request->validate([
+            'nombre' => [
+                'required',
+                'string',
+                'max:255',
+                'unique:categorias,nombre',
+            ],
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Categoria $categoria)
-    {
-        //
-    }
+            'descripcion' => [
+                'nullable',
+                'string',
+                'max:1000',
+            ],
+        ], [
+            'nombre.required' => 'El nombre de la categoría es obligatorio.',
+            'nombre.string' => 'El nombre de la categoría debe ser texto.',
+            'nombre.max' => 'El nombre no puede superar los 255 caracteres.',
+            'nombre.unique' => 'Ya existe una categoría con ese nombre.',
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Categoria $categoria)
-    {
-        //
-    }
+            'descripcion.string' => 'La descripción debe ser texto.',
+            'descripcion.max' => 'La descripción no puede superar los 1000 caracteres.',
+        ]);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Categoria $categoria)
-    {
-        //
-    }
+        // Crear la categoría
+        Categoria::create($datos);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Categoria $categoria)
-    {
-        //
+        // Volver al listado
+        return redirect()
+            ->route('admin.categorias.index')
+            ->with('success', 'Categoría creada correctamente.');
     }
 }

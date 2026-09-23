@@ -505,13 +505,7 @@
   };
   /* dropOptionForm 
   ------------------------------------------------------------------------------------- */
-  var dropOptionForm = function () {
-    if ($("select").length > 0) {
-      $(
-        "select:not(#billing_country):not(.country_select):not(#billing_state)"
-      ).niceSelect();
-    }
-  };
+
 
   new WOW().init();
 
@@ -785,7 +779,7 @@
   $(function () {
     headerFixed();
     showsearch();
-    dropOptionForm();
+
     flatProgressBar();
     accordion();
     goTop();

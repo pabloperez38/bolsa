@@ -14,7 +14,6 @@
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="{{ asset('assets/stylesheets/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/stylesheets/boostrap-select.min.css') }}">
 
     <!-- Swiper -->
     <link rel="stylesheet" href="{{ asset('assets/stylesheets/swiper-bundle.min.css') }}">
@@ -27,19 +26,23 @@
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}">
     <link rel="apple-touch-icon-precomposed" href="{{ asset('assets/images/favicon.png') }}">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css"
+        integrity="sha512-QeR2VH+lsBE5LSAe1Q5EnTBbe7XTBubt8dG93Y7gidSgdMCr8nVqKcfKAMyN96SV8KDbZVTDXChatu5G2KQGzg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
     <!-- Responsive -->
     <link rel="stylesheet" href="{{ asset('assets/stylesheets/responsive.css') }}">
+
 
 </head>
 
 <body class="dashboard show">
     <a id="scroll-top"></a>
     @yield('content')
-   
+
     <script src="{{ asset('assets/javascript/jquery.min.js') }}"></script>
     <script src="{{ asset('assets/javascript/swiper-bundle.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ asset('assets/javascript/boostrap-select.min.js') }}"></script>
+
     <script src="{{ asset('assets/javascript/jquery.nice-select.min.js') }}"></script>
     <script src="{{ asset('assets/javascript/countto.js') }}"></script>
     <script src="{{ asset('assets/javascript/wow.min.js') }}"></script>
@@ -50,6 +53,37 @@
     <script src="{{ asset('assets/javascript/main.js') }}"></script>
     <script src="{{ asset('assets/javascript/dashboard-menu.min.js') }}"></script>
     <script src="{{ asset('assets/javascript/dashboard-menu.js') }}"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: @json(session('success')),
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true
+            });
+        </script>
+    @endif
+
+    @if ($errors->any())
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: @json($errors->first()),
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true
+            });
+        </script>
+    @endif
+
+    @stack('scripts')
+
 </body>
 
 </html>

@@ -649,19 +649,17 @@ tbody tr td:nth-child(2) {
 }
 
 .dashboard button {
-    background: #3c65f5;
+    background: #29adeb;
     color: #fff;
-    border: 1px solid #e7e7e7;
-    border-bottom: 2px solid #ddd;
-    border-radius: 5px;
-    padding: 20px 17px;
+    line-height: 26px;
+    border-radius: 4px;
+    padding: 10px 15px;
+    border: none;
 }
 
-.dashboard button.active {
+.dashboard button:hover {
     color: #fff;
-    background: rgba(20, 160, 119, 1);
-    border: 1px solid #1da8ef;
-    border-bottom: 2px solid #1da8ef;
+    background: #1f8ec2;
 }
 
 .dashboard button:focus {
@@ -1494,27 +1492,17 @@ tbody tr td:nth-child(2) {
     border-radius: 6px;
     -moz-border-radius: 6px;
     -webkit-border-radius: 6px;
-    background: transparent;
     font-size: 14px;
     font-weight: 400;
     line-height: 26px;
     border-radius: 4px;
-    color: #000;
+    color: #ffffff;
     z-index: 10;
-    background-color: #f1f1f1;
-    width: 176px;
+    background-color: #1da8ef;
+    /*width: 176px;*/
 }
-
-.dashboard .dropdown > a::after {
-    font-family: "icomoon";
-    content: "\e9b0";
-    font-size: 17px;
-    font-weight: 600;
-    position: absolute;
-    color: #b1b1b1;
-    right: 20px;
-    top: 45%;
-    transform: translateY(-50%);
+.dashboard .dropdown > a:hover {
+    background-color: #1490ce;
 }
 
 .dashboard .dropdown > a ul {
@@ -1584,7 +1572,7 @@ tbody tr td:nth-child(2) {
 }
 
 .flat-dashboard-setting .button-style {
-    text-align: end;
+    /*text-align: end;*/
     width: 23.2%;
 }
 

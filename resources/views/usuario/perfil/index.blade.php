@@ -48,12 +48,7 @@
                             @csrf
                             @method('PUT')
 
-
-                            <div class="profile-setting bg-white">
-
-                                {{-- ==========================================
-     FOTO DE PERFIL
-=========================================== --}}
+                            <div class="profile-setting bg-white">                             
 
                                 <div class="author-profile flex2 border-bt">
 

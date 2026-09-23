@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\OrganizacionController;
 use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\TrabajoController;
@@ -20,6 +21,9 @@ Route::post('/login', [AuthController::class, 'login'])
 Route::post('/logout', [AuthController::class, 'logout'])
     ->name('logout');
 
+
+//Rutas de admin
+
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])
         ->name('admin.index');
@@ -36,6 +40,19 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::get('/organizaciones', [OrganizacionController::class, 'index'])
             ->name('admin.organizaciones.index');
     });
+
+    Route::prefix('admin')->group(function () {
+        Route::get('/categorias', [CategoriaController::class, 'categorias'])
+            ->name('admin.categorias.index');
+    });
+
+    Route::prefix('admin')->group(function () {
+        Route::get('/categorias/create', [CategoriaController::class, 'create'])
+            ->name('admin.categorias.create');
+    });
+
+    Route::post('/categorias', [CategoriaController::class, 'storeCategoria'])
+        ->name('admin.categorias.store');
 });
 
 Route::middleware(['auth', 'organizacion'])->group(function () {
