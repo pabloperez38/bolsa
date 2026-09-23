@@ -5,16 +5,15 @@
                 <div class="sticky-area-wrap">
                     <div class="header-ct-left">
                         <div id="logo" class="logo">
-                            <a href="../home-01.html">
+                            <a href="/">
                                 <img class="site-logo" src="../images/logo.png" alt="Image" />
-
                             </a>
                         </div>
 
                     </div>
 
                     <div class="header-ct-right">
-                        <div class="header-customize-item help">
+                       {{--  <div class="header-customize-item help">
                             <a href="../term-of-use.html"><span class="icon-help-circle"></span></a>
                         </div>
                         <div class="header-customize-item bell">
@@ -68,7 +67,7 @@
                                     <a href="#">Read All</a>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="header-customize-item account">
 
                             <div class="name">
