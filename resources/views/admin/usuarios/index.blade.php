@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Mi cuenta')
+@section('title', 'Usuarios')
 
 @section('content')
 
@@ -13,7 +13,7 @@
             <div class="row">
                 <div class="col-lg-12 col-md-12">
                     <div class="title-dashboard">
-                        <div class="title-dash flex2">Dashboard</div>
+                        <div class="title-dash flex2">Usuarios</div>
                     </div>
                 </div>
             </div>

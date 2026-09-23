@@ -19,6 +19,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'organizacion' => EsOrganizacion::class,
             'usuario' => EsUsuario::class,
         ]);
+
+        $middleware->redirectGuestsTo('/');
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

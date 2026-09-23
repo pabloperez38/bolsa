@@ -9,10 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class OrganizacionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function dashboard()
     {
         $usuario = Auth::user();
 
@@ -27,6 +24,53 @@ class OrganizacionController extends Controller
             ->get();
 
         return view('organizacion.index', compact('usuario', 'categorias'));
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        $usuario = Auth::user();
+
+        $organizaciones = Organizacion::orderBy('nombre')->get();
+
+
+        return view('admin.organizaciones.index', compact('usuario', 'organizaciones'));
+    }
+
+    public function usuarios()
+    {
+        $usuario = Auth::user();
+
+        $categorias = Categoria::with([
+            'subcategorias' => function ($query) {
+                $query->where('activo', true)
+                    ->orderBy('nombre');
+            }
+        ])
+            ->where('activo', true)
+            ->orderBy('nombre')
+            ->get();
+
+        return view('admin.usuarios.index', compact('usuario', 'categorias'));
+    }
+
+    public function ofertasLaborales()
+    {
+        $usuario = Auth::user();
+
+        $categorias = Categoria::with([
+            'subcategorias' => function ($query) {
+                $query->where('activo', true)
+                    ->orderBy('nombre');
+            }
+        ])
+            ->where('activo', true)
+            ->orderBy('nombre')
+            ->get();
+
+        return view('admin.ofertas-laborales.index', compact('usuario', 'categorias'));
     }
 
     /**

@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Mi cuenta')
+@section('title', 'Ofertas Laborales')
 
 @section('content')
 
@@ -13,11 +13,13 @@
             <div class="row">
                 <div class="col-lg-12 col-md-12">
                     <div class="title-dashboard">
-                        <div class="title-dash flex2">Dashboard</div>
+                        <div class="title-dash flex2">Ofertas Laborales</div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
+
 
 @endsection

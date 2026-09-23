@@ -3181,7 +3181,7 @@ input[type="radio"]:checked:after {
 
 /* dashboard following employers */
 .flat-dashboard-following .applicants .wrap-applicants {
-    padding: 0px 42px 1px 40px;
+    padding: 0px;
 }
 
 .flat-dashboard-following tbody tr:nth-child(1) td {

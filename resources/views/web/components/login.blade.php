@@ -22,7 +22,7 @@
                         <input type="email" name="email" placeholder="Email"
                             class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}">
                         @error('email')
-                            <div class="invalid-feedback">
+                            <div class="text-danger mt-1">
                                 {{ $message }}
                             </div>
                         @enderror
@@ -47,13 +47,13 @@
                         @enderror
                     </div>
                     <div class="group-ant-choice">
-                        <div class="sub-ip"><input type="checkbox">Recordarme</div>
+                        <div class="sub-ip"><input type="checkbox" name="remember" id="remember">Recordarme</div>
                         <a href="#" class="forgot">¿Olvidaste tu contraseña?</a>
                     </div>
                     <p class="line-ip"><span>o ingrese con redes sociales</span></p>
                     <a href="#" class="btn-social">Continuar con Facebook</a>
-                    <a href="#" class="btn-social">  Continuar con Google</a>
-                  
+                    <a href="#" class="btn-social"> Continuar con Google</a>
+
                     <button type="submit">Ingresar</button>
                     <div class="sign-up">Todavía no estás registrado? <a href="#">Registrarme</a></div>
                 </form>

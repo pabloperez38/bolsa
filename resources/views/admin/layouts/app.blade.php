@@ -32,54 +32,10 @@
 
 </head>
 
-<body class="dashboard show ">
+<body class="dashboard show">
     <a id="scroll-top"></a>
-
-
-    <div class="menu-mobile-popup">
-        <div class="modal-menu__backdrop"></div>
-        <div class="widget-filter">
-
-            <div class="mobile-header">
-                <div id="logo" class="logo">
-                    <a href="../home-01.html
-">
-                        <img class="site-logo" src="../images/logo.png" alt="Image" />
-                    </a>
-                </div>
-                <a class="title-button-group"><i class="icon-close"></i></a>
-
-            </div>        
-
-            <div class="mobile-footer">
-                <div class="icon-infor d-flex aln-center">
-                    <div class="icon">
-                        <span class="icon-call-calling"><span class="path1"></span><span class="path2"></span><span
-                                class="path3"></span><span class="path4"></span></span>
-                    </div>
-                    <div class="content">
-                        <p>Need help? 24/7</p>
-                        <h6><a href="tel:0123456678">001-1234-88888</a></h6>
-                    </div>
-                </div>
-                <div class="wd-social d-flex aln-center">
-                    <ul class="list-social d-flex aln-center">
-                        <li><a href="#"><i class="icon-facebook"></i></a></li>
-                        <li><a href="#"><i class="icon-linkedin2"></i></a></li>
-                        <li><a href="#"><i class="icon-twitter"></i></a></li>
-                        <li><a href="#"><i class="icon-pinterest"></i></a></li>
-                        <li><a href="#"><i class="icon-instagram1"></i></a></li>
-                        <li><a href="#"><i class="icon-youtube"></i></a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
     @yield('content')
-
-
+   
     <script src="{{ asset('assets/javascript/jquery.min.js') }}"></script>
     <script src="{{ asset('assets/javascript/swiper-bundle.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>

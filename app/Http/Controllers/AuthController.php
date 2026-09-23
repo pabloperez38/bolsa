@@ -37,7 +37,7 @@ class AuthController extends Controller
             ]
         );
 
-        if (!Auth::attempt($credenciales)) {
+        if (!Auth::attempt($credenciales, $request->boolean('remember'))) {
             return back()
                 ->withErrors([
                     'email' => 'El email o la contraseña son incorrectos.',
@@ -83,6 +83,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login');
+        return redirect()->route('web.index');
     }
 }

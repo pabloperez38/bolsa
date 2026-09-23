@@ -32,12 +32,12 @@
 
 </head>
 
-<body> 
+<body>
 
     <div class="boxed">
 
         @yield('content')
-   
+
     </div><!-- /.boxed -->
 
     <script src="{{ asset('assets/javascript/jquery.min.js') }}"></script>
