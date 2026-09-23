@@ -82,6 +82,19 @@
         </script>
     @endif
 
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: @json(session('error')),
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true
+            });
+        </script>
+    @endif
+
     @stack('scripts')
 
 </body>

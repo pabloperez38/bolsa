@@ -109,4 +109,25 @@ class CategoriaController extends Controller
             ->route('admin.categorias.index')
             ->with('success', 'Categoría actualizada correctamente.');
     }
+
+    public function destroyCategoria($id)
+    {
+        // Buscar la categoría
+        $categoria = Categoria::findOrFail($id);
+
+        // Verificar si tiene subcategorías
+        if ($categoria->subcategorias()->exists()) {
+
+            return redirect()
+                ->route('admin.categorias.index')
+                ->with('error', 'No se puede eliminar la categoría porque tiene subcategorías asociadas.');
+        }
+
+        // Eliminar la categoría
+        $categoria->delete();
+
+        return redirect()
+            ->route('admin.categorias.index')
+            ->with('success', 'Categoría eliminada correctamente.');
+    }
 }

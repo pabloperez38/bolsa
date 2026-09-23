@@ -56,7 +56,6 @@
                                             <tr>
                                                 <th>Categoría</th>
                                                 <th>Descripción</th>
-                                                <th>Icono</th>
                                                 <th>Acciones</th>
                                             </tr>
                                         </thead>
@@ -79,13 +78,6 @@
                                                             </div>
                                                         </div>
                                                     </td>
-                                                    <td>
-                                                        <div class="status-wrap">
-                                                            <div class="">
-                                                                {{ $categoria->icono }}
-                                                            </div>
-                                                        </div>
-                                                    </td>
 
                                                     <td>
                                                         <div id="items_1" class="dropdown titles-dropdown">
@@ -98,9 +90,19 @@
                                                                         <span>Editar</span>
                                                                     </a>
                                                                 </li>
-                                                                <li class="remove-file"><span
-                                                                        class="icon-trash more-ic"></span><span>Eliminar</span>
-                                                                </li>
+                                                                <form
+                                                                    action="{{ route('admin.categorias.destroy', $categoria->id) }}"
+                                                                    method="POST" class="form-eliminar-categoria d-inline">
+
+                                                                    @csrf
+                                                                    @method('DELETE')
+
+                                                                    <button type="submit" class="btn-eliminar-categoria">
+                                                                        <span class="icon-trash more-ic"></span>
+                                                                        <span>Eliminar</span>
+                                                                    </button>
+
+                                                                </form>
                                                             </ul>
                                                         </div>
                                                     </td>
@@ -122,3 +124,31 @@
         </section>
     </div>
 @endsection
+@push('scripts')
+    <script>
+        document.querySelectorAll('.form-eliminar-categoria').forEach(form => {
+
+            form.addEventListener('submit', function(event) {
+
+                event.preventDefault();
+
+                Swal.fire({
+                    title: '¿Eliminar categoría?',
+                    text: 'La categoría será eliminada permanentemente.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+
+                });
+
+            });
+
+        });
+    </script>
+@endpush

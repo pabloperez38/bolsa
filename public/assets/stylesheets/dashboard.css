@@ -651,15 +651,15 @@ tbody tr td:nth-child(2) {
 .dashboard button {
     background: #29adeb;
     color: #fff;
-    line-height: 26px;
-    border-radius: 4px;
-    padding: 10px 15px;
+    line-height: 24px;
+    /*border-radius: 4px;*/
+    padding: 8px 16px;
     border: none;
 }
 
 .dashboard button:hover {
     color: #fff;
-    background: #1f8ec2;
+    background: #485ae0;
 }
 
 .dashboard button:focus {
@@ -1481,7 +1481,7 @@ tbody tr td:nth-child(2) {
 .dashboard .dropdown li.active,
 .dashboard .dropdown ul,
 .dashboard .dropdown li:hover {
-    background: #1da8ef;
+    /*background: #1da8ef;*/
     color: #fff;
 }
 
@@ -1518,20 +1518,22 @@ tbody tr td:nth-child(2) {
 }
 
 .dashboard .dropdown li {
-    border-top: 0.5px solid rgba(122, 121, 138, 0.1);
+    border: 0.5px solid rgba(122, 121, 138, 0.1);
     background: #fff;
     color: #000;
     /*width: 100%;*/
-    padding: 9px 10px 8px 16px;
+    padding: 5px 10px 8px 16px;
     list-style: none;
     display: inline-block;
     margin: 0;
     cursor: pointer;
     transition: all 0.3s ease;
     font-size: 14px;
-    box-shadow: 0px 2px 4px rgb(0 0 0 / 10%);
+    
 }
-
+.dashboard .dropdown li:hover {
+    background: #485ae0;
+}
 .dashboard .dropdown .country {
     position: absolute;
     z-index: 99;
