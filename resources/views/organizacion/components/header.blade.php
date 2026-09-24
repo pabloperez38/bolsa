@@ -5,8 +5,9 @@
                 <div class="sticky-area-wrap">
                     <div class="header-ct-left">
                         <div id="logo" class="logo">
-                            <a href="../home-01.html">
-                                <img class="site-logo" src="../images/logo.png" alt="Image" />
+                            <a href="/">
+                              <img class="site-logo" src="{{ asset('assets/img/logo-2.png') }}"
+                                     alt="Logo">
 
                             </a>
                         </div>

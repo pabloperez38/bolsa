@@ -6,7 +6,8 @@
                     <div class="header-ct-left">
                         <div id="logo" class="logo">
                             <a href="/">
-                                <img class="site-logo" src="../images/logo.png" alt="Image" />
+                                <img class="site-logo" src="{{ asset('assets/img/logo-2.png') }}"
+                                     alt="Logo">
                             </a>
                         </div>
 
