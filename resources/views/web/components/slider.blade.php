@@ -23,32 +23,26 @@
                                      <span class="icon-map-pin"></span>
                                      <select id="select-location" class="select-location">
                                          <option value="">
-                                           Todas las ubicaciones
+                                             Todas las ubicaciones
                                          </option>
-                                         <option value="">
-                                             Concordia
-                                         </option>
-                                         <option value="">
-                                             Federación
-                                         </option>
-                                         <option value="">
-                                            Colón
-                                         </option>
-                                         <option value="">
-                                             Chajarí
-                                         </option>                                        
+                                         @foreach ($localidades as $localidad)
+                                             <option value="{{ $localidad->id }}">
+                                                 {{ $localidad->nombre }}
+                                             </option>
+                                         @endforeach
+
                                      </select>
                                  </div>
                                  <div class="form-group-4">
                                      <button type="submit" class="btn btn-find">
-                                        Buscar
+                                         Buscar
                                      </button>
                                  </div>
                              </div>
                          </form>
                          <!-- End Job  Search Form-->
                      </div>
-                   
+
                  </div>
              </div>
          </div>

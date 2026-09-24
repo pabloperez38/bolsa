@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categoria;
+use App\Models\Localidad;
 use App\Models\Trabajo;
 
 class WebController extends Controller
@@ -29,6 +30,8 @@ class WebController extends Controller
             ->limit(6)
             ->get();
 
-        return view('web.index', compact('categorias', 'trabajos'));
+        $localidades = Localidad::orderBy('nombre', 'asc')->get();
+
+        return view('web.index', compact('categorias', 'trabajos', 'localidades'));
     }
 }
