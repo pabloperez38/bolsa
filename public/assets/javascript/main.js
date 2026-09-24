@@ -83,11 +83,11 @@
           if ($(window).scrollTop() > offsetTop + headerHeight) {
             nav.addClass("is-fixed");
             injectSpace.show();
-            $("#trans-logo").attr("src", "images/logo.png");
+            $("#trans-logo").attr("src", "/assets/img/logo-2.png");
           } else {
             nav.removeClass("is-fixed");
             injectSpace.hide();
-            $("#trans-logo").attr("src", "images/logo-white.png");
+            $("#trans-logo").attr("src", "/assets/img/logo.png");
           }
 
           if ($(window).scrollTop() > 150) {

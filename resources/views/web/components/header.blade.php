@@ -17,8 +17,9 @@
                      <div class="header-ct-left">
                          <div id="logo" class="logo">
                              <a href="/">
-                                 <img class="site-logo" id="trans-logo" src="images/logo-white.png" alt="Image" />
-                             </a>
+                                 <img class="site-logo" id="trans-logo" src="{{ asset('assets/img/logo.png') }}"
+                                     alt="Logo">
+
                          </div>
                          <div class="categories">
                              <a href="#"><span class="icon-grid"></span>Categorías</a>
