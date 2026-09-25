@@ -36,10 +36,6 @@
                                          <a href="#">
                                              {{ $trabajo->titulo }}
                                          </a>
-
-                                         @if ($trabajo->destacado)
-                                             <span class="icon-bolt"></span>
-                                         @endif
                                      </h3>
 
                                      <ul>
@@ -54,7 +50,11 @@
                                          </li>
                                      </ul>
 
-                                     <span class="icon-heart"></span>
+                                     <span class="tipo_oferta"> {{-- Tipo de oferta: Trabajo / Pasantía --}}
+                                         @if ($trabajo->tipoOferta)
+                                             {{ $trabajo->tipoOferta->nombre }}
+                                         @endif
+                                     </span>
 
                                  </div>
                              </div>
@@ -65,18 +65,20 @@
                              <div class="job-footer-left">
                                  <ul class="job-tag">
 
-                                     @if ($trabajo->tipo_contratacion)
+                                     {{-- Tipo de contratación: Full-time / Part-time / etc. --}}
+                                     @if ($trabajo->tipoContratacion)
                                          <li>
                                              <a href="#">
-                                                 {{ $trabajo->tipo_contratacion }}
+                                                 {{ $trabajo->tipoContratacion->nombre }}
                                              </a>
                                          </li>
                                      @endif
 
+                                     {{-- Modalidad: Presencial / Remoto / Híbrido --}}
                                      @if ($trabajo->modalidad)
                                          <li>
                                              <a href="#">
-                                                 {{ $trabajo->modalidad }}
+                                                 {{ $trabajo->modalidad->nombre }}
                                              </a>
                                          </li>
                                      @endif
@@ -86,23 +88,9 @@
 
                              <div class="job-footer-right">
 
-                                 <div class="price">
-                                     <span class="icon-dolar1"></span>
-
-                                     <p>
-                                         @if ($trabajo->salario_minimo && $trabajo->salario_maximo)
-                                             ${{ number_format($trabajo->salario_minimo, 0, ',', '.') }}
-                                             -
-                                             ${{ number_format($trabajo->salario_maximo, 0, ',', '.') }}
-                                         @elseif ($trabajo->salario_minimo)
-                                             ${{ number_format($trabajo->salario_minimo, 0, ',', '.') }}
-                                         @endif
-                                     </p>
-                                 </div>
-
                                  <p class="days">
                                      @if ($trabajo->fecha_cierre)
-                                         {{ $trabajo->fecha_cierre->diffForHumans() }}
+                                         Termina en {{ $trabajo->fecha_cierre->diffForHumans() }}
                                      @endif
                                  </p>
 
@@ -118,7 +106,7 @@
              <div class="col-md-12">
                  <div class="wrap-button">
                      <a href="find-jobs-list.html" class="tf-button style-1">
-                        Ver todas las ofertas
+                         Ver todas las ofertas
                          <span class="icon-keyboard_arrow_right"></span>
                      </a>
                  </div>

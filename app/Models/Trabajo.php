@@ -10,24 +10,16 @@ class Trabajo extends Model
     protected $fillable = [
 
         'titulo',
-        'organizacion_id',
         'descripcion',
-
+        'organizacion_id',
+        'tipo_oferta_id',
         'categoria_id',
         'subcategoria_id',
-
         'ubicacion',
-        'modalidad',
+        'modalidad_id',
         'tipo_contratacion',
-
-        'salario_minimo',
-        'salario_maximo',
-        'moneda',
-
         'fecha_publicacion',
         'fecha_cierre',
-
-        'destacado',
         'activo',
     ];
 
@@ -36,8 +28,6 @@ class Trabajo extends Model
         'fecha_cierre' => 'date',
         'destacado' => 'boolean',
         'activo' => 'boolean',
-        'salario_minimo' => 'decimal:2',
-        'salario_maximo' => 'decimal:2',
     ];
 
     public function organizacion(): BelongsTo
@@ -61,5 +51,22 @@ class Trabajo extends Model
     public function subcategoria(): BelongsTo
     {
         return $this->belongsTo(Subcategoria::class);
+    }
+
+    public function modalidad(): BelongsTo
+    {
+        return $this->belongsTo(Modalidad::class, 'modalidad_id');
+    }
+
+    public function tipoOferta(): BelongsTo
+    {
+        return $this->belongsTo(TipoOferta::class, 'tipo_oferta_id');
+    }
+    public function tipoContratacion(): BelongsTo
+    {
+        return $this->belongsTo(
+            TipoContratacion::class,
+            'tipo_contratacion_id'
+        );
     }
 }

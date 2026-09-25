@@ -18,76 +18,72 @@ return new class extends Migration
 
             $table->string('titulo', 150);
 
+            $table->text('descripcion');
+
             $table->foreignId('organizacion_id')
                 ->constrained('organizaciones')
                 ->cascadeOnDelete();
 
-            $table->text('descripcion')->nullable();
+            // ==========================================
+            // TIPO DE OFERTA
+            // ==========================================
+            // Trabajo / Pasantía
+
+            $table->foreignId('tipo_oferta_id')
+                ->constrained('tipos_oferta')
+                ->restrictOnDelete();
 
             // ==========================================
             // CATEGORÍA
             // ==========================================
 
             $table->foreignId('categoria_id')
-                ->nullable()
                 ->constrained('categorias')
-                ->nullOnDelete();
+                ->restrictOnDelete();
 
             $table->foreignId('subcategoria_id')
-                ->nullable()
                 ->constrained('subcategorias')
-                ->nullOnDelete();
+                ->restrictOnDelete();
 
             // ==========================================
             // UBICACIÓN
             // ==========================================
 
-            $table->string('ubicacion', 150)->nullable();
+            $table->string('ubicacion', 150);
 
-            // Ejemplo:
-            // Presencial
-            // Remoto
-            // Híbrido
+            // ==========================================
+            // MODALIDAD
+            // ==========================================
+            // Presencial / Remoto / Híbrido
 
-            $table->string('modalidad', 30)->default('Presencial');
+            $table->foreignId('modalidad_id')
+                ->constrained('modalidades')
+                ->restrictOnDelete();
 
             // ==========================================
             // TIPO DE CONTRATACIÓN
             // ==========================================
+            // Full-time / Part-time / Freelance /
+            // Temporal / Por proyecto
 
-            // Full-time
-            // Part-time
-            // Freelance
-            // Pasantía
-            // Temporal
-
-            $table->string('tipo_contratacion', 50)->nullable();
-
-            // ==========================================
-            // SALARIO
-            // ==========================================
-
-            $table->decimal('salario_minimo', 12, 2)->nullable();
-
-            $table->decimal('salario_maximo', 12, 2)->nullable();
-
-            $table->string('moneda', 10)->default('ARS');
+            $table->foreignId('tipo_contratacion_id')
+                ->constrained('tipos_contratacion')
+                ->restrictOnDelete();
 
             // ==========================================
             // FECHAS
             // ==========================================
 
-            $table->date('fecha_publicacion')->nullable();
+            $table->date('fecha_publicacion');
 
-            $table->date('fecha_cierre')->nullable();
+            $table->date('fecha_cierre');
 
             // ==========================================
             // ESTADO
             // ==========================================
 
-            $table->boolean('destacado')->default(false);
-
-            $table->boolean('activo')->default(true);
+            $table->boolean('activo')
+                ->default(true);
 
             $table->timestamps();
         });

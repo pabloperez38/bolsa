@@ -21,12 +21,13 @@ return new class extends Migration
             // Datos personales
             $table->string('nombre', 100)->nullable();
             $table->string('apellido', 100)->nullable();
-            $table->string('dni', 20)->nullable()->unique();
+            $table->string('dni', 20)->required()->unique();
+            $table->string('legajo', 10)->required()->unique();
             $table->string('telefono', 50)->nullable();
-            $table->date('fecha_nacimiento')->nullable();
+            $table->date('fecha_nacimiento')->required();
 
             // Ubicación
-            $table->string('direccion', 255)->nullable();
+            $table->string('direccion', 255)->required();
             $table->foreignId('localidad_id')
                 ->nullable()
                 ->constrained('localidades')

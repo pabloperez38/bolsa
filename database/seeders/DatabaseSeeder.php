@@ -17,10 +17,13 @@ class DatabaseSeeder extends Seeder
             CategoriaSeeder::class,
             SubcategoriaSeeder::class,
             OrganizacionSeeder::class,
-            TrabajoSeeder::class,
             TipoUsuarioSeeder::class,
             UserSeeder::class,
             LocalidadSeeder::class,
+            TipoOfertaSeeder::class,
+            ModalidadSeeder::class,
+            TipoContratacionSeeder::class,
+            TrabajoSeeder::class,
 
         ]);
         // User::factory(10)->create();
