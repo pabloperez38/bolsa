@@ -24,7 +24,7 @@ class Perfil extends Model
         'foto',
         'cv',
         'linkedin',
-        'sitio_web',
+        'legajo',
     ];
 
     protected $casts = [
@@ -42,5 +42,13 @@ class Perfil extends Model
     public function localidad(): BelongsTo
     {
         return $this->belongsTo(Localidad::class, 'localidad_id');
+    }
+    public function estaCompleto(): bool
+    {
+        return !empty($this->legajo)           
+            && !empty($this->direccion)
+            && !empty($this->dni)
+            && !empty($this->localidad)
+            && !empty($this->telefono);
     }
 }

@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
             ModalidadSeeder::class,
             TipoContratacionSeeder::class,
             TrabajoSeeder::class,
-
+            PersonaInstitucionalSeeder::class,
         ]);
         // User::factory(10)->create();
 

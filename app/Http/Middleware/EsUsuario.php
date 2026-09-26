@@ -19,7 +19,7 @@ class EsUsuario
         if (!in_array($tipo, [
             'estudiante',
             'graduado',
-            'personal',
+            'docente',
         ])) {
             abort(403);
         }

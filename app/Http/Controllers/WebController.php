@@ -26,7 +26,7 @@ class WebController extends Controller
             'Empresa',
         ])
             ->where('activo', true)
-            ->orderByDesc('fecha_publicacion')
+            ->inRandomOrder()
             ->limit(6)
             ->get();
 

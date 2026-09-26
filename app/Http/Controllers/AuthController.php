@@ -58,11 +58,11 @@ class AuthController extends Controller
                 return redirect('/admin');
 
             case 'Empresa':
-                return redirect('/Empresa');
+                return redirect('/empresa');
 
             case 'estudiante':
             case 'graduado':
-            case 'personal':
+            case 'docente':
                 return redirect('/usuario');
 
             default:

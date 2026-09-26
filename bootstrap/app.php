@@ -3,6 +3,7 @@
 use App\Http\Middleware\EsAdministrador;
 use App\Http\Middleware\EsEmpresa;
 use App\Http\Middleware\EsUsuario;
+use App\Http\Middleware\VerificarPerfilCompleto;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -16,8 +17,9 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'admin' => EsAdministrador::class,
-            'Empresa' => EsEmpresa::class,
+            'empresa' => EsEmpresa::class,
             'usuario' => EsUsuario::class,
+            'perfil.completo' => VerificarPerfilCompleto::class,
         ]);
 
         $middleware->redirectGuestsTo('/');

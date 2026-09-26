@@ -14,6 +14,7 @@ class PerfilController extends Controller
      */
     public function edit()
     {
+        
         $usuario = Auth::user();
 
         $perfil = $usuario->perfil;
@@ -61,31 +62,31 @@ class PerfilController extends Controller
                 // ==========================================
 
                 'dni' => [
-                    'nullable',
+                    'required',
                     'digits_between:7,8',
                     'unique:perfiles,dni,' . optional($usuario->perfil)->id,
                 ],
 
                 'telefono' => [
-                    'nullable',
+                    'required',
                     'string',
                     'max:50',
                 ],
 
                 'fecha_nacimiento' => [
-                    'nullable',
+                    'required',
                     'date',
                     'before:today',
                 ],
 
                 'direccion' => [
-                    'nullable',
+                    'required',
                     'string',
                     'max:255',
                 ],
 
                 'localidad_id' => [
-                    'nullable',
+                    'required',
                     'exists:localidades,id',
                 ],
 
@@ -101,10 +102,10 @@ class PerfilController extends Controller
                     'max:255',
                 ],
 
-                'sitio_web' => [
-                    'nullable',
-                    'url',
-                    'max:255',
+                'legajo' => [
+                    'required',
+                    'digits_between:5,6',
+                    'max:10',
                 ],
 
                 // ==========================================
@@ -145,6 +146,9 @@ class PerfilController extends Controller
                 'name.max' =>
                 'El nombre y apellido no pueden superar los 255 caracteres.',
 
+                'dni.required' =>
+                'El DNI es obligatorio.',
+
                 'dni.digits_between' =>
                 'El DNI debe contener entre 7 y 8 números.',
 
@@ -154,8 +158,17 @@ class PerfilController extends Controller
                 'telefono.string' =>
                 'El teléfono no es válido.',
 
+                'telefono.required' =>
+                'El teléfono es obligatorio.',
+
                 'telefono.max' =>
                 'El teléfono no puede superar los 50 caracteres.',
+
+                'direccion.required' =>
+                'La dirección es obligatoria.',
+
+                'fecha_nacimiento.required' =>
+                'La fecha de nacimiento es obligatoria.',
 
                 'fecha_nacimiento.date' =>
                 'La fecha de nacimiento no es válida.',
@@ -165,6 +178,9 @@ class PerfilController extends Controller
 
                 'direccion.max' =>
                 'La dirección no puede superar los 255 caracteres.',
+                
+                'localidad_id.required' =>
+                'La localidad es obligatoria.',
 
                 'localidad_id.exists' =>
                 'La localidad seleccionada no es válida.',
@@ -178,11 +194,14 @@ class PerfilController extends Controller
                 'linkedin.max' =>
                 'El enlace de LinkedIn no puede superar los 255 caracteres.',
 
-                'sitio_web.url' =>
-                'El sitio web no es válido.',
+                'legajo.required' =>
+                'El legajo es obligatorio.',
 
-                'sitio_web.max' =>
-                'El sitio web no puede superar los 255 caracteres.',
+                'legajo.url' =>
+                'El legajo no es válido.',
+
+                'legajo.max' =>
+                'El legajo no puede superar los 10 caracteres.',
 
                 'foto.image' =>
                 'El archivo seleccionado debe ser una imagen.',
@@ -238,7 +257,7 @@ class PerfilController extends Controller
 
             'linkedin' => $datos['linkedin'] ?? null,
 
-            'sitio_web' => $datos['sitio_web'] ?? null,
+            'legajo' => $datos['legajo'] ?? null,
         ];
 
 

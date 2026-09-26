@@ -30,4 +30,11 @@ class UsuarioController extends Controller
 
         return view('usuario.perfil.index', compact('usuario'));
     }
+
+    public function postulaciones()
+    {
+        $usuario = Auth::user();
+
+        return view('usuario.postulaciones.index', compact('usuario'));
+    }
 }

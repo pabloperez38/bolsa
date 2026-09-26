@@ -77,8 +77,13 @@ Route::middleware(['auth', 'empresa'])->group(function () {
 
 //Usuarios
 Route::get('/usuario', [UsuarioController::class, 'index'])
-    ->middleware('auth', 'usuario')
+    ->middleware('auth', 'usuario', 'perfil.completo')
     ->name('usuario.index');
+
+Route::get('/usuario/postulaciones', [UsuarioController::class, 'postulaciones'])
+    ->middleware('auth', 'usuario', 'perfil.completo')
+    ->name('usuario.postulaciones');
+
 
 Route::middleware(['auth', 'usuario'])->group(function () {
 

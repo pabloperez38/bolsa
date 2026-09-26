@@ -58,39 +58,45 @@
 
     @if (session('success'))
         <script>
-            Swal.fire({
-                icon: 'success',
-                title: '¡Éxito!',
-                text: @json(session('success')),
-                showConfirmButton: false,
-                timer: 2000,
-                timerProgressBar: true
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: @json(session('success')),
+                    showConfirmButton: false,
+                    timer: 2000,
+                    timerProgressBar: true
+                });
             });
         </script>
     @endif
 
     @if ($errors->any())
         <script>
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: @json($errors->first()),
-                showConfirmButton: false,
-                timer: 2000,
-                timerProgressBar: true
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: @json($errors->first()),
+                    showConfirmButton: false,
+                    timer: 2000,
+                    timerProgressBar: true
+                });
             });
         </script>
     @endif
 
     @if (session('error'))
         <script>
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: @json(session('error')),
-                showConfirmButton: false,
-                timer: 2000,
-                timerProgressBar: true
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: @json(session('error')),
+                    showConfirmButton: false,
+                    timer: 2000,
+                    timerProgressBar: true
+                });
             });
         </script>
     @endif

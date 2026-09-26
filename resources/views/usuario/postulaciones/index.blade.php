@@ -1,14 +1,29 @@
 @extends('usuario.layouts.app')
 
-@section('title', 'Mis postulaciones')
+@section('title', 'Mi cuenta')
 
 @section('content')
-    <div class="container py-4">
-        <h1 class="h3 mb-4">Mis postulaciones</h1>
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <p class="mb-0">Lista de postulaciones del usuario.</p>
+
+    @include('usuario.components.header')
+
+    @include('usuario.components.leftmenu')
+
+    <div class="dashboard__content">
+
+        <section class="page-title-dashboard">
+            <div class="themes-container">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12">
+                        <div class="title-dashboard">
+                            <div class="title-dash flex2">
+                                Mis postulaciones
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
+        </section>
+
     </div>
+
 @endsection

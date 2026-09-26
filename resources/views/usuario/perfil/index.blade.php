@@ -1,3 +1,4 @@
+
 @extends('usuario.layouts.app')
 
 @section('title', 'Mi cuenta')
@@ -32,23 +33,12 @@
 
                     <div class="col-lg-12 col-md-12">
 
-                        {{-- Mensaje de éxito --}}
-                        @if (session('success'))
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                {{ session('success') }}
-
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar">
-                                </button>
-                            </div>
-                        @endif
-
-
                         <form action="{{ route('usuario.perfil.update') }}" method="POST" enctype="multipart/form-data">
 
                             @csrf
                             @method('PUT')
 
-                            <div class="profile-setting bg-white">                             
+                            <div class="profile-setting bg-white">
 
                                 <div class="author-profile flex2 border-bt">
 
@@ -217,6 +207,28 @@
                                             </fieldset>
 
 
+                                            {{-- Legajo --}}
+
+                                            <fieldset>
+
+                                                <label class="title-user fw-7">
+                                                    Legajo
+                                                </label>
+
+                                                <input type="number" name="legajo"
+                                                    class="input-form @error('legajo') is-invalid @enderror"
+                                                    value="{{ old('legajo', $perfil?->legajo) }}" placeholder=""
+                                                    maxlength="10">
+
+                                                @error('legajo')
+                                                    <div class="text-danger mt-1">
+                                                        {{ $message }}
+                                                    </div>
+                                                @enderror
+
+                                            </fieldset>
+
+
                                             {{-- Dirección --}}
 
                                             <fieldset>
@@ -265,28 +277,6 @@
                                                 </select>
 
                                                 @error('localidad_id')
-                                                    <div class="text-danger mt-1">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
-
-                                            </fieldset>
-
-
-                                            {{-- Sitio web --}}
-
-                                            <fieldset>
-
-                                                <label class="title-user fw-7">
-                                                    Sitio web
-                                                </label>
-
-                                                <input type="url" name="sitio_web"
-                                                    class="input-form @error('sitio_web') is-invalid @enderror"
-                                                    value="{{ old('sitio_web', $perfil?->sitio_web) }}"
-                                                    placeholder="https://..." maxlength="255">
-
-                                                @error('sitio_web')
                                                     <div class="text-danger mt-1">
                                                         {{ $message }}
                                                     </div>
