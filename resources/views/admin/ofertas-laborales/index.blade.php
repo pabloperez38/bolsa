@@ -63,7 +63,7 @@
                                                                 <h3>{{ $oferta->titulo }}</h3>
                                                                 <div class="now-box flex2">
                                                                     <div class="map color-4">
-                                                                        {{ $oferta->organizacion->nombre }} </div>
+                                                                        {{ $oferta->Empresa->nombre }} </div>
                                                                     <div class="days"> @php
                                                                         $hoy = now()->startOfDay();
                                                                         $cierre = $oferta->fecha_cierre?->startOfDay();

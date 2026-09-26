@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Trabajo;
-use App\Models\Organizacion;
+use App\Models\Empresa;
 use App\Models\Categoria;
 use App\Models\Subcategoria;
 use Illuminate\Database\Seeder;
@@ -13,13 +13,13 @@ class TrabajoSeeder extends Seeder
     public function run(): void
     {
         // ==================================================
-        // ORGANIZACIONES
+        // Empresa
         // ==================================================
 
-        $tech = Organizacion::where('nombre', 'Tech Solutions')->first();
-        $grupo = Organizacion::where('nombre', 'Grupo Empresarial del Litoral')->first();
-        $industria = Organizacion::where('nombre', 'Industria del Litoral')->first();
-        $servicios = Organizacion::where('nombre', 'Servicios Profesionales ER')->first();
+        $tech = Empresa::where('nombre', 'Tech Solutions')->first();
+        $grupo = Empresa::where('nombre', 'Grupo Empresarial del Litoral')->first();
+        $industria = Empresa::where('nombre', 'Industria del Litoral')->first();
+        $servicios = Empresa::where('nombre', 'Servicios Profesionales ER')->first();
 
         // ==================================================
         // CATEGORÍAS
@@ -73,7 +73,7 @@ class TrabajoSeeder extends Seeder
         Trabajo::create([
             'titulo' => 'Desarrollador Web Junior',
             'descripcion' => 'Buscamos desarrollador web para incorporarse a nuestro equipo de desarrollo.',
-            'organizacion_id' => $tech->id,
+            'Empresa_id' => $tech->id,
             'tipo_oferta_id' => 1,
             'categoria_id' => $tecnologia->id,
             'subcategoria_id' => $desarrolloWeb->id,
@@ -93,7 +93,7 @@ class TrabajoSeeder extends Seeder
         Trabajo::create([
             'titulo' => 'Desarrollador de Software',
             'descripcion' => 'Desarrollo y mantenimiento de aplicaciones web y sistemas empresariales.',
-            'organizacion_id' => $tech->id,
+            'Empresa_id' => $tech->id,
             'tipo_oferta_id' => 1,
             'categoria_id' => $tecnologia->id,
             'subcategoria_id' => $desarrolloSoftware->id,
@@ -113,7 +113,7 @@ class TrabajoSeeder extends Seeder
         Trabajo::create([
             'titulo' => 'Técnico de Soporte IT',
             'descripcion' => 'Soporte a usuarios, mantenimiento de equipos y resolución de incidentes informáticos.',
-            'organizacion_id' => $tech->id,
+            'Empresa_id' => $tech->id,
             'tipo_oferta_id' => 1,
             'categoria_id' => $tecnologia->id,
             'subcategoria_id' => $soporte->id,
@@ -133,7 +133,7 @@ class TrabajoSeeder extends Seeder
         Trabajo::create([
             'titulo' => 'Analista Administrativo',
             'descripcion' => 'Gestión administrativa, elaboración de informes y tareas de soporte al área.',
-            'organizacion_id' => $grupo->id,
+            'Empresa_id' => $grupo->id,
             'tipo_oferta_id' => 1,
             'categoria_id' => $administracion->id,
             'subcategoria_id' => $administracionSub->id,
@@ -153,7 +153,7 @@ class TrabajoSeeder extends Seeder
         Trabajo::create([
             'titulo' => 'Analista Contable',
             'descripcion' => 'Tareas contables, conciliaciones bancarias y preparación de informes.',
-            'organizacion_id' => $grupo->id,
+            'Empresa_id' => $grupo->id,
             'tipo_oferta_id' => 1,
             'categoria_id' => $administracion->id,
             'subcategoria_id' => $contabilidad->id,
@@ -173,7 +173,7 @@ class TrabajoSeeder extends Seeder
         Trabajo::create([
             'titulo' => 'Ingeniero Industrial',
             'descripcion' => 'Planificación y mejora de procesos productivos.',
-            'organizacion_id' => $industria->id,
+            'Empresa_id' => $industria->id,
             'tipo_oferta_id' => 1,
             'categoria_id' => $ingenieria->id,
             'subcategoria_id' => $ingenieriaIndustrial->id,
@@ -193,7 +193,7 @@ class TrabajoSeeder extends Seeder
         Trabajo::create([
             'titulo' => 'Técnico de Mantenimiento Industrial',
             'descripcion' => 'Mantenimiento preventivo y correctivo de maquinaria industrial.',
-            'organizacion_id' => $industria->id,
+            'Empresa_id' => $industria->id,
             'tipo_oferta_id' => 1,
             'categoria_id' => $ingenieria->id,
             'subcategoria_id' => $mantenimiento->id,
@@ -213,7 +213,7 @@ class TrabajoSeeder extends Seeder
         Trabajo::create([
             'titulo' => 'Docente de Programación',
             'descripcion' => 'Docente para cursos de programación y desarrollo de software.',
-            'organizacion_id' => $servicios->id,
+            'Empresa_id' => $servicios->id,
             'tipo_oferta_id' => 1,
             'categoria_id' => $educacion->id,
             'subcategoria_id' => $docencia->id,
@@ -233,7 +233,7 @@ class TrabajoSeeder extends Seeder
         Trabajo::create([
             'titulo' => 'Analista de Sistemas',
             'descripcion' => 'Análisis, documentación y seguimiento de proyectos de software.',
-            'organizacion_id' => $tech->id,
+            'Empresa_id' => $tech->id,
             'tipo_oferta_id' => 1,
             'categoria_id' => $tecnologia->id,
             'subcategoria_id' => $desarrolloSoftware->id,
@@ -253,7 +253,7 @@ class TrabajoSeeder extends Seeder
         Trabajo::create([
             'titulo' => 'Asistente de Administración',
             'descripcion' => 'Asistencia en tareas administrativas y organización de documentación.',
-            'organizacion_id' => $servicios->id,
+            'Empresa_id' => $servicios->id,
             'tipo_oferta_id' => 1,
             'categoria_id' => $administracion->id,
             'subcategoria_id' => $administracionSub->id,
@@ -273,7 +273,7 @@ class TrabajoSeeder extends Seeder
         Trabajo::create([
             'titulo' => 'Pasantía en Desarrollo Web',
             'descripcion' => 'Pasantía destinada a estudiantes interesados en adquirir experiencia en desarrollo web.',
-            'organizacion_id' => $tech->id,
+            'Empresa_id' => $tech->id,
             'tipo_oferta_id' => 2,
             'categoria_id' => $tecnologia->id,
             'subcategoria_id' => $desarrolloWeb->id,
@@ -293,7 +293,7 @@ class TrabajoSeeder extends Seeder
         Trabajo::create([
             'titulo' => 'Pasantía en Administración',
             'descripcion' => 'Pasantía para estudiantes interesados en adquirir experiencia en tareas administrativas.',
-            'organizacion_id' => $grupo->id,
+            'Empresa_id' => $grupo->id,
             'tipo_oferta_id' => 2,
             'categoria_id' => $administracion->id,
             'subcategoria_id' => $administracionSub->id,

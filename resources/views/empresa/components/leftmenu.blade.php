@@ -6,26 +6,26 @@
          <ul class="downmenu list-unstyled" id="side-menu">
 
              <li>
-                 <a href="{{ route('organizacion.index') }}" class="tf-effect">
+                 <a href="{{ route('Empresa.index') }}" class="tf-effect">
                      <span class="icon-dashboard dash-icon"></span>
                      <span class="dash-titles">Dashboard</span>
                  </a>
              </li>
              <li>
-                 <a href="/organizacion/mi-organizacion" class="tf-effect">
+                 <a href="/Empresa/mi-Empresa" class="tf-effect">
                      <span class="icon-my-apply dash-icon"></span>
                      <span class="dash-titles">Mi organización</span>
                  </a>
              </li>
 
              <li>
-                 <a href="/organizacion/mis-ofertas" class="tf-effect">
+                 <a href="/Empresa/mis-ofertas" class="tf-effect">
                      <span class="icon-my-apply dash-icon"></span>
                      <span class="dash-titles">Mis ofertas</span>
                  </a>
              </li>
              <li>
-                 <a href="/organizacion/postulaciones" class="tf-effect">
+                 <a href="/Empresa/postulaciones" class="tf-effect">
                      <span class="icon-my-apply dash-icon"></span>
                      <span class="dash-titles">Postulaciones</span>
                  </a>

@@ -41,11 +41,11 @@ class UserSeeder extends Seeder
         );
 
         User::updateOrCreate(
-            ['email' => 'personal@bolsatrabajo.com'],
+            ['email' => 'docente@bolsatrabajo.com'],
             [
-                'name' => 'Carlos Personal',
+                'name' => 'Carlos Docente',
                 'password' => Hash::make('12345678'),
-                'tipo_usuario_id' => $tipos['personal'],
+                'tipo_usuario_id' => $tipos['docente'],
             ]
         );
 
@@ -54,7 +54,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Tech Solutions',
                 'password' => Hash::make('12345678'),
-                'tipo_usuario_id' => $tipos['organizacion'],
+                'tipo_usuario_id' => $tipos['empresa'],
             ]
         );
     }

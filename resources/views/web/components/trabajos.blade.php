@@ -20,7 +20,7 @@
 
                                  <div class="logo-company">
                                      <div class="logo-iniciales">
-                                         {{ strtoupper(substr($trabajo->organizacion->nombre, 0, 2)) }}
+                                         {{ strtoupper(substr($trabajo->Empresa->nombre, 0, 2)) }}
                                      </div>
                                  </div>
 
@@ -28,7 +28,7 @@
 
                                      <h4>
                                          <a href="#">
-                                             {{ $trabajo->organizacion->nombre }}
+                                             {{ $trabajo->Empresa->nombre }}
                                          </a>
                                      </h4>
 

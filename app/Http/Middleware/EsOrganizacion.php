@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class EsOrganizacion
+class EsEmpresa
 {
     public function handle(Request $request, Closure $next): Response
     {
@@ -14,7 +14,7 @@ class EsOrganizacion
             return redirect()->route('login');
         }
 
-        if (auth()->user()->tipoUsuario->nombre !== 'organizacion') {
+        if (auth()->user()->tipoUsuario->nombre !== 'Empresa') {
             abort(403);
         }
 

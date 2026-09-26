@@ -8,7 +8,7 @@
                              Encontrá el trabajo que se adapte a vos
                          </h2>
                          <p class="text-white">
-                             Descubrí oportunidades laborales, pasantías y propuestas profesionales de organizaciones
+                             Descubrí oportunidades laborales, pasantías y propuestas profesionales de Empresa
                              vinculadas con nuestra comunidad universitaria.
                          </p>
                      </div>

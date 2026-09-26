@@ -57,8 +57,8 @@ class AuthController extends Controller
             case 'administrador':
                 return redirect('/admin');
 
-            case 'organizacion':
-                return redirect('/organizacion');
+            case 'Empresa':
+                return redirect('/Empresa');
 
             case 'estudiante':
             case 'graduado':

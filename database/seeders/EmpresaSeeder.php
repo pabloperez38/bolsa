@@ -2,14 +2,14 @@
 
 namespace Database\Seeders;
 
-use App\Models\Organizacion;
+use App\Models\Empresa;
 use Illuminate\Database\Seeder;
 
-class OrganizacionSeeder extends Seeder
+class EmpresaSeeder extends Seeder
 {
     public function run(): void
     {
-        Organizacion::create([
+        Empresa::create([
             'nombre' => 'Tech Solutions',
             'descripcion' => 'Empresa dedicada al desarrollo de soluciones de software y servicios tecnológicos.',
             'logo' => null,
@@ -22,7 +22,7 @@ class OrganizacionSeeder extends Seeder
             'activo' => true,
         ]);
 
-        Organizacion::create([
+        Empresa::create([
             'nombre' => 'Grupo Empresarial del Litoral',
             'descripcion' => 'Organización dedicada a servicios administrativos, comerciales y financieros.',
             'logo' => null,
@@ -35,7 +35,7 @@ class OrganizacionSeeder extends Seeder
             'activo' => true,
         ]);
 
-        Organizacion::create([
+        Empresa::create([
             'nombre' => 'Industria del Litoral',
             'descripcion' => 'Empresa dedicada a la producción industrial y mantenimiento de instalaciones.',
             'logo' => null,
@@ -48,7 +48,7 @@ class OrganizacionSeeder extends Seeder
             'activo' => true,
         ]);
 
-        Organizacion::create([
+        Empresa::create([
             'nombre' => 'Servicios Profesionales ER',
             'descripcion' => 'Empresa de servicios profesionales, capacitación y consultoría.',
             'logo' => null,

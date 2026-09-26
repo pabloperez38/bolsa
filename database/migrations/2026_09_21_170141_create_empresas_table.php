@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('organizaciones', function (Blueprint $table) {
+        Schema::create('empresas', function (Blueprint $table) {
 
             $table->id();
 
@@ -31,6 +31,7 @@ return new class extends Migration
             $table->string('provincia', 100)->nullable();
 
             $table->boolean('activo')->default(true);
+            $table->softDeletes();
 
             $table->timestamps();
         });
@@ -38,6 +39,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('organizaciones');
+        Schema::dropIfExists('empresa');
     }
 };

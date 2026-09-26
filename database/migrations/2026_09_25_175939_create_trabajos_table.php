@@ -20,8 +20,8 @@ return new class extends Migration
 
             $table->text('descripcion');
 
-            $table->foreignId('organizacion_id')
-                ->constrained('organizaciones')
+            $table->foreignId('empresa_id')
+                ->constrained('empresas')
                 ->cascadeOnDelete();
 
             // ==========================================
@@ -84,7 +84,7 @@ return new class extends Migration
 
             $table->boolean('activo')
                 ->default(true);
-
+            $table->softDeletes();
             $table->timestamps();
         });
     }

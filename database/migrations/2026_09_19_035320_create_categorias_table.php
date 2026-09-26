@@ -17,6 +17,7 @@ return new class extends Migration
             $table->text('descripcion')->nullable();
             $table->string('icono')->nullable();
             $table->boolean('activo')->default(true);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

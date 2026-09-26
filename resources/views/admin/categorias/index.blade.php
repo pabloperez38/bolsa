@@ -83,26 +83,46 @@
                                                         <div id="items_1" class="dropdown titles-dropdown">
 
                                                             <ul>
-                                                                <li>
-                                                                    <a
-                                                                        href="{{ route('admin.categorias.edit', $categoria->id) }}">
-                                                                        <i class="fa-solid fa-pen-to-square"></i>
-                                                                        <span>Editar</span>
-                                                                    </a>
-                                                                </li>
-                                                                <form
-                                                                    action="{{ route('admin.categorias.destroy', $categoria->id) }}"
-                                                                    method="POST" class="form-eliminar-categoria d-inline">
+                                                                @if (!$categoria->trashed())
+                                                                    <li>
+                                                                        <a
+                                                                            href="{{ route('admin.categorias.edit', $categoria->id) }}">
+                                                                            <i class="fa-solid fa-pen-to-square"></i>
+                                                                            <span>Editar</span>
+                                                                        </a>
+                                                                    </li>
+                                                                @endif
+                                                                @if ($categoria->trashed())
+                                                                    <form
+                                                                        action="{{ route('admin.categorias.restore', $categoria->id) }}"
+                                                                        method="POST" class="d-inline">
 
-                                                                    @csrf
-                                                                    @method('DELETE')
+                                                                        @csrf
 
-                                                                    <button type="submit" class="btn-eliminar-categoria">
-                                                                        <span class="icon-trash more-ic"></span>
-                                                                        <span>Eliminar</span>
-                                                                    </button>
+                                                                        <button type="submit"
+                                                                            class="btn-restaurar-categoria">
+                                                                            <span class="icon-refresh more-ic"></span>
+                                                                            <span>Restaurar</span>
+                                                                        </button>
 
-                                                                </form>
+                                                                    </form>
+                                                                @else
+                                                                    <form
+                                                                        action="{{ route('admin.categorias.destroy', $categoria->id) }}"
+                                                                        method="POST"
+                                                                        class="form-eliminar-categoria d-inline">
+
+                                                                        @csrf
+                                                                        @method('DELETE')
+
+                                                                        <button type="submit"
+                                                                            class="btn-eliminar-categoria">
+                                                                            <span class="icon-trash more-ic"></span>
+                                                                            <span>Eliminar</span>
+                                                                        </button>
+
+                                                                    </form>
+                                                                @endif
                                                             </ul>
                                                         </div>
                                                     </td>

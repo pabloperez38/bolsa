@@ -3,7 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoriaController;
-use App\Http\Controllers\OrganizacionController;
+use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\TrabajoController;
 use App\Http\Controllers\UsuarioController;
@@ -29,16 +29,16 @@ Route::middleware(['auth', 'admin'])->group(function () {
         ->name('admin.index');
 
     Route::prefix('admin')->group(function () {
-        Route::get('/usuarios', [OrganizacionController::class, 'usuarios'])
+        Route::get('/usuarios', [EmpresaController::class, 'usuarios'])
             ->name('admin.usuarios.index');
     });
     Route::prefix('admin')->group(function () {
-        Route::get('/ofertas-laborales', [OrganizacionController::class, 'ofertasLaborales'])
+        Route::get('/ofertas-laborales', [EmpresaController::class, 'ofertasLaborales'])
             ->name('admin.ofertas-laborales.index');
     });
     Route::prefix('admin')->group(function () {
-        Route::get('/organizaciones', [OrganizacionController::class, 'index'])
-            ->name('admin.organizaciones.index');
+        Route::get('/empresas', [EmpresaController::class, 'index'])
+            ->name('admin.empresa.index');
     });
 
     Route::prefix('admin')->group(function () {
@@ -62,12 +62,17 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
         Route::delete('/categorias/{id}', [CategoriaController::class, 'destroyCategoria'])
             ->name('admin.categorias.destroy');
+
+        Route::post(
+            '/categorias/{id}/restore',
+            [CategoriaController::class, 'restoreCategoria']
+        )->name('admin.categorias.restore');
     });
 });
 
-Route::middleware(['auth', 'organizacion'])->group(function () {
-    Route::get('/organizacion', [OrganizacionController::class, 'dashboard'])
-        ->name('organizacion.index');
+Route::middleware(['auth', 'empresa'])->group(function () {
+    Route::get('/empresa', [EmpresaController::class, 'dashboard'])
+        ->name('empresa.index');
 });
 
 //Usuarios

@@ -12,17 +12,21 @@ class CategoriaController extends Controller
     {
         $usuario = Auth::user();
 
-        $categorias = Categoria::with([
-            'subcategorias' => function ($query) {
-                $query->where('activo', true)
-                    ->orderBy('nombre');
-            }
-        ])
+        $categorias = Categoria::withTrashed()
+            ->with([
+                'subcategorias' => function ($query) {
+                    $query->where('activo', true)
+                        ->orderBy('nombre');
+                }
+            ])
             ->where('activo', true)
             ->orderBy('nombre')
             ->paginate(10);
 
-        return view('admin.categorias.index', compact('usuario', 'categorias'));
+        return view(
+            'admin.categorias.index',
+            compact('usuario', 'categorias')
+        );
     }
 
     public function create()
@@ -112,22 +116,48 @@ class CategoriaController extends Controller
 
     public function destroyCategoria($id)
     {
-        // Buscar la categoría
+        // Buscar la categoría.
+        // Como estamos en el listado normal del administrador,
+        // solamente encontrará categorías que NO estén eliminadas.
         $categoria = Categoria::findOrFail($id);
 
-        // Verificar si tiene subcategorías
+        // Verificar si tiene subcategorías asociadas.
         if ($categoria->subcategorias()->exists()) {
-
             return redirect()
                 ->route('admin.categorias.index')
-                ->with('error', 'No se puede eliminar la categoría porque tiene subcategorías asociadas.');
+                ->with(
+                    'error',
+                    'No se puede eliminar la categoría porque tiene subcategorías asociadas.'
+                );
         }
 
-        // Eliminar la categoría
+        // Soft Delete.
+        // NO elimina físicamente el registro.
+        // Laravel establece deleted_at con la fecha y hora actual.
         $categoria->delete();
 
         return redirect()
             ->route('admin.categorias.index')
-            ->with('success', 'Categoría eliminada correctamente.');
+            ->with(
+                'success',
+                'Categoría eliminada correctamente.'
+            );
+    }
+
+    public function restoreCategoria($id)
+    {
+        // Buscar la categoría incluyendo las que fueron eliminadas.
+        $categoria = Categoria::withTrashed()->findOrFail($id);
+
+        // Restaurar la categoría.
+        // Esto vuelve a establecer deleted_at = NULL.
+        $categoria->restore();
+
+        return redirect()
+            ->route('admin.categorias.index')
+            ->with(
+                'success',
+                'Categoría restaurada correctamente.'
+            );
     }
 }

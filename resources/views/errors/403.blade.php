@@ -32,8 +32,8 @@
                             <a href="{{ route('admin.index') }}" class="btn btn-primary">
                                 Volver al panel de administración
                             </a>
-                        @elseif ($tipo === 'organizacion')
-                            <a href="{{ route('organizacion.index') }}" class="btn btn-primary">
+                        @elseif ($tipo === 'Empresa')
+                            <a href="{{ route('Empresa.index') }}" class="btn btn-primary">
                                 Volver al panel de organización
                             </a>
                         @elseif (in_array($tipo, ['estudiante', 'graduado', 'personal']))

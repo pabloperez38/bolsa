@@ -18,9 +18,9 @@
                  </a>
              </li>
              <li>
-                 <a href="/admin/organizaciones" class="tf-effect">
+                 <a href="/admin/empresas" class="tf-effect">
                      <span class="icon-dashboard dash-icon"></span>
-                     <span class="dash-titles">Organizaciones</span>
+                     <span class="dash-titles">Empresas</span>
                  </a>
              </li>
              <li>

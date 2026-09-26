@@ -22,6 +22,7 @@ return new class extends Migration
                 ->nullable()
                 ->constrained('tipos_usuario')
                 ->nullOnDelete();
+            $table->softDeletes();
             $table->timestamps();
         });
 

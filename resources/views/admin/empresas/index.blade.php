@@ -15,7 +15,7 @@
                 <div class="row">
                     <div class="col-lg-12 col-md-12">
                         <div class="title-dashboard">
-                            <div class="title-dash flex2">Organizaciones</div>
+                            <div class="title-dash flex2">Empresa</div>
                         </div>
                     </div>
                 </div>
@@ -47,7 +47,7 @@
                                     <table>
 
                                         <tbody>
-                                            @foreach ($organizaciones as $organizacion)
+                                            @foreach ($empresas as $empresa)
                                                 <tr class="file-delete">
                                                     <td>
                                                         <div class="candidates-wrap flex2">
@@ -58,7 +58,7 @@
                                                             <div class="content">
 
                                                                 <div class="title-box flex2">
-                                                                    <h3>{{ $organizacion->nombre }}</h3>
+                                                                    <h3>{{ $empresa->nombre }}</h3>
                                                                     <svg width="20" height="20" viewBox="0 0 20 20"
                                                                         fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                         <path fill-rule="evenodd" clip-rule="evenodd"
@@ -70,7 +70,7 @@
                                                                     </svg>
                                                                 </div>
                                                                 <div class="now-box flex2">
-                                                                    <div class="map color-4">{{ $organizacion->direccion }}
+                                                                    <div class="map color-4">{{ $empresa->direccion }}
                                                                     </div>
 
                                                                     <div class="briefcase flex2 color-4">
@@ -86,7 +86,7 @@
                                                                                 stroke="#64666C" stroke-linecap="round"
                                                                                 stroke-linejoin="round" />
                                                                         </svg>
-                                                                        {{ $organizacion->descripcion }}
+                                                                        {{ $empresa->descripcion }}
                                                                     </div>
                                                                 </div>
                                                             </div>

@@ -43,10 +43,10 @@ class RoleAccessTest extends TestCase
 
     public function test_organization_can_access_organization_dashboard(): void
     {
-        $organizacion = $this->createUserWithRole('organizacion');
+        $Empresa = $this->createUserWithRole('Empresa');
 
-        $this->actingAs($organizacion)
-            ->get('/organizacion')
+        $this->actingAs($Empresa)
+            ->get('/Empresa')
             ->assertOk();
     }
 

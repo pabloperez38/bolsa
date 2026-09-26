@@ -4,14 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Trabajo extends Model
 {
+    use SoftDeletes;
+
+    protected $table = 'trabajos';
+
     protected $fillable = [
 
         'titulo',
         'descripcion',
-        'organizacion_id',
+        'Empresa_id',
         'tipo_oferta_id',
         'categoria_id',
         'subcategoria_id',
@@ -30,9 +35,9 @@ class Trabajo extends Model
         'activo' => 'boolean',
     ];
 
-    public function organizacion(): BelongsTo
+    public function Empresa(): BelongsTo
     {
-        return $this->belongsTo(Organizacion::class);
+        return $this->belongsTo(Empresa::class);
     }
 
     // ==========================================

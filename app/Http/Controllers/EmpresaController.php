@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categoria;
-use App\Models\Organizacion;
+use App\Models\Empresa;
 use App\Models\Trabajo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class OrganizacionController extends Controller
+class EmpresaController extends Controller
 {
     public function dashboard()
     {
@@ -24,7 +24,7 @@ class OrganizacionController extends Controller
             ->orderBy('nombre')
             ->get();
 
-        return view('organizacion.index', compact('usuario', 'categorias'));
+        return view('empresa.index', compact('usuario', 'categorias'));
     }
 
     /**
@@ -34,10 +34,10 @@ class OrganizacionController extends Controller
     {
         $usuario = Auth::user();
 
-        $organizaciones = Organizacion::orderBy('nombre')->get();
+        $empresas = Empresa::orderBy('nombre')->get();
 
 
-        return view('admin.organizaciones.index', compact('usuario', 'organizaciones'));
+        return view('admin.empresas.index', compact('usuario', 'empresas'));
     }
 
     public function usuarios()
@@ -62,7 +62,7 @@ class OrganizacionController extends Controller
         $usuario = Auth::user();
 
         $ofertas = Trabajo::with([
-            'organizacion',
+            'Empresa',
             'categoria',
             'subcategoria',
         ])
@@ -94,7 +94,7 @@ class OrganizacionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Organizacion $organizacion)
+    public function show(Empresa $Empresa)
     {
         //
     }
@@ -102,7 +102,7 @@ class OrganizacionController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Organizacion $organizacion)
+    public function edit(Empresa $Empresa)
     {
         //
     }
@@ -110,7 +110,7 @@ class OrganizacionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Organizacion $organizacion)
+    public function update(Request $request, Empresa $Empresa)
     {
         //
     }
@@ -118,7 +118,7 @@ class OrganizacionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Organizacion $organizacion)
+    public function destroy(Empresa $Empresa)
     {
         //
     }

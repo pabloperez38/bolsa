@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('nombre', 150);
             $table->string('descripcion')->nullable();
             $table->boolean('activo')->default(true);
+            $table->softDeletes();
             $table->timestamps();
             // Evita repetir una subcategoría dentro de la misma categoría
             $table->unique(['categoria_id', 'nombre']);

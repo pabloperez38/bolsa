@@ -23,12 +23,12 @@ class TipoUsuarioSeeder extends Seeder
                 'descripcion' => 'Graduado o exalumno de la universidad',
             ],
             [
-                'nombre' => 'personal',
-                'descripcion' => 'Personal de la universidad',
+                'nombre' => 'docente',
+                'descripcion' => 'Docentes de la universidad',
             ],
             [
-                'nombre' => 'organizacion',
-                'descripcion' => 'Usuario perteneciente a una organización',
+                'nombre' => 'empresa',
+                'descripcion' => 'Usuario perteneciente a una empresa',
             ],
         ];
 

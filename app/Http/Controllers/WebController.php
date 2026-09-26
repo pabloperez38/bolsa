@@ -23,7 +23,7 @@ class WebController extends Controller
         $trabajos = Trabajo::with([
             'categoria',
             'subcategoria',
-            'organizacion',
+            'Empresa',
         ])
             ->where('activo', true)
             ->orderByDesc('fecha_publicacion')
