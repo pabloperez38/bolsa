@@ -17,7 +17,21 @@
                      <span class="dash-titles">Mi perfil</span>
                  </a>
              </li>
+             @php
+                 $tipoUsuario = auth()->user()->tipoUsuario?->nombre;
+             @endphp
+             <li>
+                 <a href="{{ $tipoUsuario === 'estudiante' ? '/usuario/pasantias' : '/usuario/trabajos' }}"
+                     class="tf-effect">
 
+                     <span class="icon-my-apply dash-icon"></span>
+
+                     <span class="dash-titles">
+                         {{ $tipoUsuario === 'estudiante' ? 'Buscar pasantías' : 'Buscar trabajos' }}
+                     </span>
+
+                 </a>
+             </li>
              <li>
                  <a href="/usuario/postulaciones" class="tf-effect">
                      <span class="icon-my-apply dash-icon"></span>

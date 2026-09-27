@@ -42,6 +42,7 @@ class AuthController extends Controller
         );
 
         if (!Auth::attempt($credenciales, $request->boolean('remember'))) {
+
             return back()
                 ->withErrors([
                     'email' => 'El email o la contraseña son incorrectos.',
@@ -50,26 +51,46 @@ class AuthController extends Controller
                 ->withInput($request->only('email'));
         }
 
-        $request->session()->regenerate();
-
+        // Recuperar usuario autenticado
         $usuario = Auth::user();
 
-        $tipoUsuario = $usuario->tipoUsuario->nombre;
+        // Verificar que el email haya sido confirmado
+        if (!$usuario->hasVerifiedEmail()) {
+
+            // Cerrar inmediatamente la sesión
+            Auth::logout();
+
+            // Invalidar la sesión
+            $request->session()->invalidate();
+
+            // Regenerar token CSRF
+            $request->session()->regenerateToken();
+
+            return back()
+                ->withInput($request->only('email'))
+                ->with('warning', 'Debés confirmar tu correo electrónico antes de iniciar sesión.');
+        }
+
+        // Regenerar la sesión después del login correcto
+        $request->session()->regenerate();
+
+        $tipoUsuario = $usuario->tipoUsuario?->nombre;
 
         switch ($tipoUsuario) {
 
             case 'administrador':
                 return redirect('/admin');
 
-            case 'Empresa':
+            case 'empresa':
                 return redirect('/empresa');
 
             case 'estudiante':
             case 'graduado':
             case 'docente':
-                return redirect('/usuario');
+                return redirect('/usuario/perfil');
 
             default:
+
                 Auth::logout();
 
                 return redirect()
@@ -236,7 +257,7 @@ class AuthController extends Controller
         event(new Registered($usuario));
 
         return redirect()
-            ->route('registro.exito')
+            ->route('web.index')
             ->with(
                 'success',
                 'Registro realizado correctamente. Revisá tu correo electrónico para confirmar tu cuenta.'

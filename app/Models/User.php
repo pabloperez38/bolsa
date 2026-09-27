@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Notifications\VerificarEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -35,21 +36,19 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
+    /**
+     * Tipo de usuario.
+     */
     public function tipoUsuario(): BelongsTo
     {
-        return $this->belongsTo(TipoUsuario::class, 'tipo_usuario_id');
+        return $this->belongsTo(
+            TipoUsuario::class,
+            'tipo_usuario_id'
+        );
     }
 
     /**
-     * Perfil del usuario.
-     */
-    public function perfil(): HasOne
-    {
-        return $this->hasOne(Perfil::class, 'user_id');
-    }
-
-    /**
-     * Persona institucional asociada al usuario.
+     * Persona del padrón institucional.
      */
     public function personaInstitucional(): BelongsTo
     {
@@ -57,5 +56,25 @@ class User extends Authenticatable implements MustVerifyEmail
             PersonaInstitucional::class,
             'persona_institucional_id'
         );
+    }
+
+    /**
+     * Perfil del usuario.
+     */
+    public function perfil(): HasOne
+    {
+        return $this->hasOne(
+            Perfil::class,
+            'user_id'
+        );
+    }
+
+    /**
+     * Enviar notificación personalizada
+     * para verificar el correo electrónico.
+     */
+    public function sendEmailVerificationNotification(): void
+    {
+        $this->notify(new VerificarEmail());
     }
 }

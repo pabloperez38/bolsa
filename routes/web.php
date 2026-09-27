@@ -23,7 +23,7 @@ Route::get('/register', [AuthController::class, 'showRegister'])
     ->name('register');
 
 Route::get('/registro/exito', function () {
-    return view('web.auth.registro-exito');
+    return view('web.index');
 })->name('registro.exito');
 
 Route::get('/email/verificar/{id}/{hash}', [AuthController::class, 'verificarEmail'])

@@ -63,12 +63,13 @@
                     title: '¡Éxito!',
                     text: @json(session('success')),
                     showConfirmButton: false,
-                    timer: 2000,
+                    timer: 3000,
                     timerProgressBar: true
                 });
             });
         </script>
     @endif
+
 
     @if ($errors->any())
         <script>
@@ -78,12 +79,13 @@
                     title: 'Error',
                     text: @json($errors->first()),
                     showConfirmButton: false,
-                    timer: 2000,
+                    timer: 3000,
                     timerProgressBar: true
                 });
             });
         </script>
     @endif
+
 
     @if (session('error'))
         <script>
@@ -93,7 +95,23 @@
                     title: 'Error',
                     text: @json(session('error')),
                     showConfirmButton: false,
-                    timer: 2000,
+                    timer: 3000,
+                    timerProgressBar: true
+                });
+            });
+        </script>
+    @endif
+
+
+    @if (session('warning'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Atención',
+                    text: @json(session('warning')),
+                    showConfirmButton: false,
+                    timer: 3000,
                     timerProgressBar: true
                 });
             });
