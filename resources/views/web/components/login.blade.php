@@ -55,7 +55,7 @@
                     <a href="#" class="btn-social"> Continuar con Google</a>
 
                     <button type="submit">Ingresar</button>
-                    <div class="sign-up">Todavía no estás registrado? <a href="#">Registrarme</a></div>
+                    <div class="sign-up">Todavía no estás registrado? <a href="/register">Registrarme</a></div>
                 </form>
             </div>
         </div>

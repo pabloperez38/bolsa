@@ -17,30 +17,25 @@ return new class extends Migration
                 ->unique()
                 ->constrained('users')
                 ->cascadeOnDelete();
-
             // Datos personales
             $table->string('nombre', 100)->nullable();
             $table->string('apellido', 100)->nullable();
-            $table->string('dni', 20)->required()->unique();
-            $table->string('legajo', 10)->required()->unique();
+            $table->string('dni', 20)->unique();
+            $table->string('legajo', 10)->unique();
             $table->string('telefono', 50)->nullable();
-            $table->date('fecha_nacimiento')->required();
-
+            $table->date('fecha_nacimiento')->nullable();
             // Ubicación
-            $table->string('direccion', 255)->required();
+            $table->string('direccion', 255)->nullable();
             $table->foreignId('localidad_id')
                 ->nullable()
                 ->constrained('localidades')
                 ->nullOnDelete();
-
             // Información profesional
             $table->text('biografia')->nullable();
             $table->string('foto')->nullable();
             $table->string('cv')->nullable();
-
             // Redes / sitios profesionales
-            $table->string('linkedin', 255)->nullable();
-            $table->string('sitio_web', 255)->nullable();
+            $table->string('linkedin', 255)->nullable();        
 
             $table->timestamps();
         });

@@ -228,6 +228,16 @@ class PersonaInstitucionalSeeder extends Seeder
                 'carrera' => null,
                 'materias_aprobadas' => 0,
                 'activo' => true,
+            ], 
+            [
+                'dni' => '27529355',
+                'legajo' => '92452',
+                'nombre' => 'Pablo',
+                'apellido' => 'Pérez',
+                'tipo' => 'docente',
+                'carrera' => null,
+                'materias_aprobadas' => 0,
+                'activo' => true,
             ],
         ];
 

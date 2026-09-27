@@ -5,10 +5,11 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\PerfilController;
-use App\Http\Controllers\TrabajoController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\WebController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 Route::get('/', [WebController::class, 'index'])->name('web.index');
 
@@ -17,6 +18,27 @@ Route::get('/login', [AuthController::class, 'showLogin'])
 
 Route::post('/login', [AuthController::class, 'login'])
     ->name('login.post');
+
+Route::get('/register', [AuthController::class, 'showRegister'])
+    ->name('register');
+
+Route::get('/registro/exito', function () {
+    return view('web.auth.registro-exito');
+})->name('registro.exito');
+
+Route::get('/email/verificar/{id}/{hash}', [AuthController::class, 'verificarEmail'])
+    ->middleware('signed')
+    ->name('verification.verify');
+
+// =====================================================
+// REGISTRO
+// =====================================================
+
+Route::post('/registro/candidato', [AuthController::class, 'registroCandidato'])
+    ->name('registro.candidato');
+
+Route::post('/registro/empresa', [AuthController::class, 'registroEmpresa'])
+    ->name('registro.empresa');
 
 Route::post('/logout', [AuthController::class, 'logout'])
     ->name('logout');
