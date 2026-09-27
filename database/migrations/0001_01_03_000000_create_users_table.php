@@ -25,7 +25,6 @@ return new class extends Migration
 
             $table->rememberToken();
 
-
             // ==========================================
             // TIPO DE USUARIO
             // ==========================================
@@ -33,19 +32,7 @@ return new class extends Migration
             $table->foreignId('tipo_usuario_id')
                 ->nullable()
                 ->constrained('tipos_usuario')
-                ->nullOnDelete();
-
-
-            // ==========================================
-            // PERSONA INSTITUCIONAL
-            // ==========================================
-
-            $table->foreignId('persona_institucional_id')
-                ->nullable()
-                ->unique()
-                ->constrained('personas_institucionales')
-                ->nullOnDelete();
-
+                ->nullOnDelete();         
 
             // ==========================================
             // ELIMINACIÓN LÓGICA

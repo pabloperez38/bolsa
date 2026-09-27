@@ -11,6 +11,7 @@ class EmpresaSeeder extends Seeder
     {
         Empresa::create([
             'nombre' => 'Tech Solutions',
+            'cuit' => '20-22222222-6',
             'descripcion' => 'Empresa dedicada al desarrollo de soluciones de software y servicios tecnológicos.',
             'logo' => null,
             'email' => 'contacto@techsolutions.com',
@@ -24,6 +25,7 @@ class EmpresaSeeder extends Seeder
 
         Empresa::create([
             'nombre' => 'Grupo Empresarial del Litoral',
+            'cuit' => '20-11111111-6',
             'descripcion' => 'Organización dedicada a servicios administrativos, comerciales y financieros.',
             'logo' => null,
             'email' => 'rrhh@grupolitoral.com',
@@ -37,6 +39,7 @@ class EmpresaSeeder extends Seeder
 
         Empresa::create([
             'nombre' => 'Industria del Litoral',
+            'cuit' => '20-33333333-6',
             'descripcion' => 'Empresa dedicada a la producción industrial y mantenimiento de instalaciones.',
             'logo' => null,
             'email' => 'empleos@industriadellitoral.com',
@@ -50,6 +53,7 @@ class EmpresaSeeder extends Seeder
 
         Empresa::create([
             'nombre' => 'Servicios Profesionales ER',
+            'cuit' => '20-44444444-6',
             'descripcion' => 'Empresa de servicios profesionales, capacitación y consultoría.',
             'logo' => null,
             'email' => 'info@servicioser.com',

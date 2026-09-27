@@ -1,4 +1,3 @@
-
 @extends('usuario.layouts.app')
 
 @section('title', 'Mi cuenta')
@@ -93,14 +92,11 @@
                                         Información personal
                                     </h3>
 
-
                                     <div class="form-infor flex flat-form">
-
 
                                         {{-- COLUMNA 1 --}}
 
                                         <div class="info-box info-wd">
-
 
                                             {{-- Nombre y apellido --}}
 
@@ -131,15 +127,12 @@
                                                     DNI
                                                 </label>
 
-                                                <input type="text" name="dni"
-                                                    class="input-form @error('dni') is-invalid @enderror"
-                                                    value="{{ old('dni', $perfil?->dni) }}" maxlength="20">
+                                                <input type="text" name="dni" class="input-form"
+                                                    value="{{ $perfil->dni }}" readonly>
 
-                                                @error('dni')
-                                                    <div class="text-danger mt-1">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
+                                                <small class="text-muted">
+                                                    El DNI no puede modificarse.
+                                                </small>
 
                                             </fieldset>
 
@@ -215,19 +208,14 @@
                                                     Legajo
                                                 </label>
 
-                                                <input type="number" name="legajo"
-                                                    class="input-form @error('legajo') is-invalid @enderror"
-                                                    value="{{ old('legajo', $perfil?->legajo) }}" placeholder=""
-                                                    maxlength="10">
+                                                <input type="number" name="legajo" value="{{ $perfil->legajo }}"
+                                                    class="input-form" readonly>
 
-                                                @error('legajo')
-                                                    <div class="text-danger mt-1">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
+                                                <small class="text-muted">
+                                                    El legajo no puede modificarse.
+                                                </small>
 
                                             </fieldset>
-
 
                                             {{-- Dirección --}}
 
@@ -381,13 +369,35 @@
                                                 </div>
                                             @enderror
 
-
                                             @if ($perfil?->cv)
                                                 <div class="mt-2">
 
-                                                    <a href="{{ asset('storage/' . $perfil->cv) }}" target="_blank">
-                                                        Ver CV actual
-                                                    </a>
+                                                    <section class="flat-dashboard-resumes flat-dashboard-setting">
+                                                        <div class="wd-file-apply style2">
+                                                            <div class="content">
+                                                                <div class="group-seclect-file">
+                                                                    <div class="group-file">
+                                                                        <div class="inner left ">
+                                                                            <div class="title-box">
+                                                                                <div class="sub-title fs-12 fw-6">
+                                                                                    <a href="{{ asset('storage/' . $perfil->cv) }}"
+                                                                                        target="_blank">
+                                                                                        Ver CV actual
+                                                                                    </a>
+                                                                                </div>
+                                                                                <div class="fs-16 fw-7">PDF</div>
+                                                                            </div>
+                                                                            <i class="file-icon icon-file-pdf"></i>
+
+                                                                        </div>
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </section>
+
+
 
                                                 </div>
                                             @endif
@@ -395,7 +405,6 @@
                                         </fieldset>
 
                                     </div>
-
 
                                     {{-- Botón guardar --}}
 

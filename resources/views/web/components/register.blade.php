@@ -182,7 +182,6 @@
 
                             </div>
 
-
                             <button type="submit">
                                 Registrarme
                             </button>

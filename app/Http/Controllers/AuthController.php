@@ -42,7 +42,6 @@ class AuthController extends Controller
         );
 
         if (!Auth::attempt($credenciales, $request->boolean('remember'))) {
-
             return back()
                 ->withErrors([
                     'email' => 'El email o la contraseña son incorrectos.',
@@ -57,18 +56,17 @@ class AuthController extends Controller
         // Verificar que el email haya sido confirmado
         if (!$usuario->hasVerifiedEmail()) {
 
-            // Cerrar inmediatamente la sesión
             Auth::logout();
 
-            // Invalidar la sesión
             $request->session()->invalidate();
-
-            // Regenerar token CSRF
             $request->session()->regenerateToken();
 
             return back()
                 ->withInput($request->only('email'))
-                ->with('warning', 'Debés confirmar tu correo electrónico antes de iniciar sesión.');
+                ->with(
+                    'warning',
+                    'Debés confirmar tu correo electrónico antes de iniciar sesión.'
+                );
         }
 
         // Regenerar la sesión después del login correcto
@@ -87,6 +85,13 @@ class AuthController extends Controller
             case 'estudiante':
             case 'graduado':
             case 'docente':
+
+                // Si el perfil está completo → inicio público
+                if ($usuario->perfil && $usuario->perfil->estaCompleto()) {
+                    return redirect('/usuario');
+                }
+
+                // Si el perfil está incompleto → completar perfil
                 return redirect('/usuario/perfil');
 
             default:
@@ -238,7 +243,6 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => $request->password,
             'tipo_usuario_id' => $tipoUsuario->id,
-            'persona_institucional_id' => $persona->id,
         ]);
 
         $usuario->perfil()->create([

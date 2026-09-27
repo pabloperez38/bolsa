@@ -95,6 +95,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
 Route::middleware(['auth', 'empresa'])->group(function () {
     Route::get('/empresa', [EmpresaController::class, 'dashboard'])
         ->name('empresa.index');
+
+    Route::get('/empresa/perfil', [EmpresaController::class, 'perfil'])
+        ->name('empresa.perfil');
 });
 
 //Usuarios
@@ -106,6 +109,13 @@ Route::get('/usuario/postulaciones', [UsuarioController::class, 'postulaciones']
     ->middleware('auth', 'usuario', 'perfil.completo')
     ->name('usuario.postulaciones');
 
+Route::get('/usuario/trabajos', [UsuarioController::class, 'trabajos'])
+    ->middleware('auth', 'usuario', 'perfil.completo')
+    ->name('usuario.trabajos');
+
+Route::get('/usuario/pasantias', [UsuarioController::class, 'pasantias'])
+    ->middleware('auth', 'usuario', 'perfil.completo')
+    ->name('usuario.pasantias');
 
 Route::middleware(['auth', 'usuario'])->group(function () {
 

@@ -4,6 +4,7 @@
 
 @section('content')
     @include('usuario.components.header')
+    
     @include('usuario.components.leftmenu')
 
     <div class="dashboard__content">

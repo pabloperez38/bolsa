@@ -28,7 +28,7 @@
 
                                      <h4>
                                          <a href="#">
-                                             {{ $trabajo->Empresa->nombre }}
+                                             {{ $trabajo->empresa->nombre }}
                                          </a>
                                      </h4>
 

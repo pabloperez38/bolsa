@@ -28,11 +28,5 @@ class PersonaInstitucional extends Model
         'activo' => 'boolean',
     ];
 
-    public function usuario(): HasOne
-    {
-        return $this->hasOne(
-            User::class,
-            'persona_institucional_id'
-        );
-    }
+   
 }

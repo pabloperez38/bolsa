@@ -30,9 +30,8 @@
                     <div class="ip">
                         <label>Password<span>*</span></label>
                         <div class="inputs-group auth-pass-inputgroup">
-
                             <input type="password"
-                                class="input-form password-input @error('password') is-invalid @enderror"
+                                class="form-control input-form password-input @error('password') is-invalid @enderror"
                                 placeholder="Contraseña" id="password-input" name="password">
 
                             <a class="icon-eye-off password-addon" id="password-addon">

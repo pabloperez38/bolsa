@@ -19,8 +19,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
-        'tipo_usuario_id',
-        'persona_institucional_id',
+        'tipo_usuario_id',      
     ];
 
     protected $hidden = [
@@ -44,17 +43,6 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsTo(
             TipoUsuario::class,
             'tipo_usuario_id'
-        );
-    }
-
-    /**
-     * Persona del padrón institucional.
-     */
-    public function personaInstitucional(): BelongsTo
-    {
-        return $this->belongsTo(
-            PersonaInstitucional::class,
-            'persona_institucional_id'
         );
     }
 

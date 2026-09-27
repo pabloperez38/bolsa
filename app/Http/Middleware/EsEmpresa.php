@@ -14,7 +14,7 @@ class EsEmpresa
             return redirect()->route('login');
         }
 
-        if (auth()->user()->tipoUsuario->nombre !== 'Empresa') {
+        if (auth()->user()->tipoUsuario->nombre !== 'empresa') {
             abort(403);
         }
 

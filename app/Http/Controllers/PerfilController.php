@@ -60,12 +60,7 @@ class PerfilController extends Controller
                 // ==========================================
                 // DATOS DE PERFIL
                 // ==========================================
-
-                'dni' => [
-                    'required',
-                    'digits_between:7,8',
-                    'unique:perfiles,dni,' . optional($usuario->perfil)->id,
-                ],
+             
 
                 'telefono' => [
                     'required',
@@ -100,12 +95,6 @@ class PerfilController extends Controller
                     'nullable',
                     'url',
                     'max:255',
-                ],
-
-                'legajo' => [
-                    'required',
-                    'digits_between:5,6',
-                    'max:10',
                 ],
 
                 // ==========================================
@@ -144,16 +133,7 @@ class PerfilController extends Controller
                 'El nombre y apellido no son válidos.',
 
                 'name.max' =>
-                'El nombre y apellido no pueden superar los 255 caracteres.',
-
-                'dni.required' =>
-                'El DNI es obligatorio.',
-
-                'dni.digits_between' =>
-                'El DNI debe contener entre 7 y 8 números.',
-
-                'dni.unique' =>
-                'El DNI ya está registrado.',
+                'El nombre y apellido no pueden superar los 255 caracteres.',             
 
                 'telefono.string' =>
                 'El teléfono no es válido.',
@@ -192,16 +172,7 @@ class PerfilController extends Controller
                 'El enlace de LinkedIn no es válido.',
 
                 'linkedin.max' =>
-                'El enlace de LinkedIn no puede superar los 255 caracteres.',
-
-                'legajo.required' =>
-                'El legajo es obligatorio.',
-
-                'legajo.url' =>
-                'El legajo no es válido.',
-
-                'legajo.max' =>
-                'El legajo no puede superar los 10 caracteres.',
+                'El enlace de LinkedIn no puede superar los 255 caracteres.',              
 
                 'foto.image' =>
                 'El archivo seleccionado debe ser una imagen.',
@@ -241,23 +212,13 @@ class PerfilController extends Controller
     |--------------------------------------------------------------------------
     */
 
-        $datosPerfil = [
-
-            'dni' => $datos['dni'] ?? null,
-
+        $datosPerfil = [          
             'telefono' => $datos['telefono'] ?? null,
-
             'fecha_nacimiento' => $datos['fecha_nacimiento'] ?? null,
-
             'direccion' => $datos['direccion'] ?? null,
-
             'localidad_id' => $datos['localidad_id'] ?? null,
-
             'biografia' => $datos['biografia'] ?? null,
-
-            'linkedin' => $datos['linkedin'] ?? null,
-
-            'legajo' => $datos['legajo'] ?? null,
+            'linkedin' => $datos['linkedin'] ?? null,            
         ];
 
 

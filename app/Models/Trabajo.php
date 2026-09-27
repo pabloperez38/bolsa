@@ -29,15 +29,15 @@ class Trabajo extends Model
     ];
 
     protected $casts = [
-        'fecha_publicacion' => 'date',
-        'fecha_cierre' => 'date',
+        'fecha_publicacion' => 'datetime',
+        'fecha_cierre' => 'datetime',
         'destacado' => 'boolean',
         'activo' => 'boolean',
     ];
 
-    public function Empresa(): BelongsTo
+    public function empresa()
     {
-        return $this->belongsTo(Empresa::class);
+        return $this->belongsTo(Empresa::class, 'empresa_id');
     }
 
     // ==========================================

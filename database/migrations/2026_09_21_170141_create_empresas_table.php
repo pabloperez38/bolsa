@@ -14,11 +14,13 @@ return new class extends Migration
 
             $table->string('nombre', 150);
 
+            $table->string('cuit', 20);
+
             $table->string('descripcion')->nullable();
 
             $table->string('logo')->nullable();
 
-            $table->string('email', 150)->nullable();
+            $table->string('email', 150);
 
             $table->string('telefono', 50)->nullable();
 
@@ -31,6 +33,7 @@ return new class extends Migration
             $table->string('provincia', 100)->nullable();
 
             $table->boolean('activo')->default(true);
+            
             $table->softDeletes();
 
             $table->timestamps();

@@ -36,7 +36,6 @@ class EmpresaController extends Controller
 
         $empresas = Empresa::orderBy('nombre')->get();
 
-
         return view('admin.empresas.index', compact('usuario', 'empresas'));
     }
 
@@ -72,6 +71,16 @@ class EmpresaController extends Controller
         return view(
             'admin.ofertas-laborales.index',
             compact('usuario', 'ofertas')
+        );
+    }
+
+    public function perfil()
+    {
+        $usuario = Auth::user();
+
+        return view(
+            'empresa.perfil.index',
+            compact('usuario')
         );
     }
 

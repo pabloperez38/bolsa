@@ -70,8 +70,7 @@
         </script>
     @endif
 
-
-    @if ($errors->any())
+{{--     @if ($errors->any())
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 Swal.fire({
@@ -85,7 +84,7 @@
             });
         </script>
     @endif
-
+ --}}
 
     @if (session('error'))
         <script>

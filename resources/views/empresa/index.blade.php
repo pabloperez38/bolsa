@@ -1,17 +1,13 @@
-@extends('Empresa.layouts.app')
+@extends('empresa.layouts.app')
 
-@section('title', 'Mi organización')
+@section('title', 'Mi Empresa')
 
 @section('content')
 
-    @include('Empresa.components.header')
+    @include('empresa.components.header')
 
-    {{-- @include('admin.components.sidebarmenu') --}}
+    @include('empresa.components.leftmenu')
 
-    @include('Empresa.components.principal')
-
-    @include('Empresa.components.leftmenu')
-
-    @include('Empresa.components.footer')
+    @include('empresa.components.footer')
 
 @endsection
