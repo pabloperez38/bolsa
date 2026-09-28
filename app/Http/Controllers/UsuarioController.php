@@ -93,7 +93,22 @@ class UsuarioController extends Controller
     {
         $usuario = Auth::user();
 
-        return view('usuario.postulaciones.index', compact('usuario'));
+        $postulaciones = Postulacion::with([
+            'trabajo.categoria',
+            'trabajo.subcategoria',
+            'trabajo.empresa',
+            'trabajo.tipoOferta',
+            'trabajo.modalidad',
+            'trabajo.tipoContratacion',
+        ])
+            ->where('user_id', $usuario->id)
+            ->orderByDesc('fecha_postulacion')
+            ->get();
+
+        return view(
+            'usuario.postulaciones.index',
+            compact('usuario', 'postulaciones')
+        );
     }
 
     public function postularse($id)
@@ -152,19 +167,37 @@ class UsuarioController extends Controller
             abort(403);
         }
 
-        // Verificar si ya existe una postulación
-        $yaPostulado = Postulacion::where('user_id', $usuario->id)
+        // Buscar la postulación existente
+        $postulacion = Postulacion::where('user_id', $usuario->id)
             ->where('trabajo_id', $trabajo->id)
-            ->exists();
+            ->first();
 
-        if ($yaPostulado) {
+        // Si existe una postulación y NO está retirada,
+        // significa que ya está postulado.
+        if ($postulacion && $postulacion->estado !== 'retirado') {
             return back()->with(
                 'warning',
                 'Ya te postulaste a esta oferta.'
             );
         }
 
-        // Crear la postulación
+        // Si existe pero está retirada,
+        // reutilizamos el registro.
+        if ($postulacion && $postulacion->estado === 'retirado') {
+
+            $postulacion->update([
+                'estado' => 'pendiente',
+                'fecha_postulacion' => now(),
+                'observaciones' => null,
+            ]);
+
+            return back()->with(
+                'success',
+                'Tu postulación fue registrada nuevamente.'
+            );
+        }
+
+        // Si nunca se postuló, crear la postulación.
         Postulacion::create([
             'user_id' => $usuario->id,
             'trabajo_id' => $trabajo->id,
@@ -175,6 +208,32 @@ class UsuarioController extends Controller
         return back()->with(
             'success',
             'Tu postulación fue registrada correctamente.'
+        );
+    }
+
+    public function retirarPostulacion($id)
+    {
+        $usuario = Auth::user();
+
+        $postulacion = Postulacion::where('id', $id)
+            ->where('user_id', $usuario->id)
+            ->firstOrFail();
+
+        // Solo se puede retirar una postulación que todavía está pendiente
+        if (!in_array($postulacion->estado, ['pendiente', 'en_revision'])) {
+            return back()->with(
+                'warning',
+                'Esta postulación ya no puede retirarse.'
+            );
+        }
+
+        $postulacion->update([
+            'estado' => 'retirado',
+        ]);
+
+        return back()->with(
+            'success',
+            'Te retiraste correctamente de la postulación.'
         );
     }
 }

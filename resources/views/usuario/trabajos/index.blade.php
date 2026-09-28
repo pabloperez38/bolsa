@@ -104,8 +104,19 @@
                                                         <div id="items_1" class="dropdown titles-dropdown">
 
                                                             <ul>
-                                                                <li><span class="icon-eye more-ic"></span> <span>Ver
-                                                                        detalle</span>
+                                                                <li> <a
+                                                                        href="{{ route('web.oferta.detalle', [
+                                                                            'slug' => $trabajo->slug,
+                                                                            'id' => $trabajo->id,
+                                                                        ]) }}">
+
+                                                                        <span class="icon-eye more-ic"></span>
+
+                                                                        <span>
+                                                                            Ver detalle
+                                                                        </span>
+
+                                                                    </a>
                                                                 </li>
 
                                                             </ul>

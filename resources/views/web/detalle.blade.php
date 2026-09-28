@@ -19,7 +19,7 @@
                                     alt="{{ $trabajo->empresa->nombre ?? 'Empresa' }}">
                             </div>
 
-                            <div class="content">                                
+                            <div class="content">
 
                                 {{-- Título --}}
                                 <h6>
@@ -103,12 +103,14 @@
                                     @else
                                         <form method="POST" action="{{ route('usuario.postularse', $trabajo->id) }}"
                                             id="formPostulacion">
+
                                             @csrf
 
                                             <button type="submit" class="btn btn-popup">
                                                 <i class="icon-send"></i>
                                                 Postularme
                                             </button>
+
                                         </form>
                                     @endif
 
@@ -243,7 +245,7 @@
                                     @endif
                                 </div>
                             </li>
-                            <li>                              
+                            <li>
                                 <div class="detail"> {{ $trabajo->empresa->descripcion }}</div>
                             </li>
                             <li>

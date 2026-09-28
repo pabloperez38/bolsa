@@ -1519,8 +1519,8 @@ tbody tr td:nth-child(2) {
 
 .dashboard .dropdown li {
     border: 0.5px solid rgba(122, 121, 138, 0.1);
-    background: #fff;
-    color: #000;
+    background: #29adeb;
+    color: #fff;
     /*width: 100%;*/
     padding: 5px 10px 8px 16px;
     list-style: none;
@@ -1529,7 +1529,6 @@ tbody tr td:nth-child(2) {
     cursor: pointer;
     transition: all 0.3s ease;
     font-size: 14px;
-    
 }
 .dashboard .dropdown li:hover {
     background: #485ae0;

@@ -81,9 +81,11 @@ class WebController extends Controller
             abort(403);
         }
 
-        // Verificar si el usuario ya se postuló
+        // Verificar si el usuario tiene una postulación ACTIVA
+        // Una postulación retirada no cuenta.
         $yaPostulado = Postulacion::where('user_id', $usuario->id)
             ->where('trabajo_id', $trabajo->id)
+            ->where('estado', '!=', 'retirado')
             ->exists();
 
         // Cargar relaciones
