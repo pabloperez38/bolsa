@@ -8,10 +8,11 @@ use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\WebController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 Route::get('/', [WebController::class, 'index'])->name('web.index');
+
+Route::get('/oferta/{slug}/{id}', [WebController::class, 'detalle'])
+    ->name('web.oferta.detalle');
 
 Route::get('/login', [AuthController::class, 'showLogin'])
     ->name('login');
@@ -72,7 +73,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::get('/categorias/create', [CategoriaController::class, 'create'])
             ->name('admin.categorias.create');
 
-
         Route::post('/categorias', [CategoriaController::class, 'storeCategoria'])
             ->name('admin.categorias.store');
 
@@ -116,6 +116,10 @@ Route::get('/usuario/trabajos', [UsuarioController::class, 'trabajos'])
 Route::get('/usuario/pasantias', [UsuarioController::class, 'pasantias'])
     ->middleware('auth', 'usuario', 'perfil.completo')
     ->name('usuario.pasantias');
+
+Route::post('/usuario/postularse/{id}', [UsuarioController::class, 'postularse'])
+    ->middleware(['auth', 'usuario', 'perfil.completo'])
+    ->name('usuario.postularse');
 
 Route::middleware(['auth', 'usuario'])->group(function () {
 

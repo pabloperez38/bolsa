@@ -6,8 +6,7 @@
                      <div class="header-ct-left">
                          <div id="logo" class="logo">
                              <a href="/">
-                                 <img class="site-logo" src="{{ asset('assets/img/logo-2.png') }}"
-                                     alt="Logo">
+                                 <img class="site-logo" src="{{ asset('assets/img/logo-2.png') }}" alt="Logo">
 
                              </a>
                          </div>
@@ -108,7 +107,40 @@
                          </div>
 
                          <div class="header-customize-item button">
-                             <a href="/login">Iniciar sesión</a>
+                             @auth
+
+                                 @php
+                                     $tipoUsuario = Auth::user()->tipoUsuario?->nombre;
+                                 @endphp
+
+                                 @switch($tipoUsuario)
+                                     @case('administrador')
+                                         <a href="{{ url('/admin') }}">
+                                             Panel de administración
+                                         </a>
+                                     @break
+
+                                     @case('empresa')
+                                         <a href="{{ url('/empresa/perfil') }}">
+                                             Mi perfil
+                                         </a>
+                                     @break
+
+                                     @case('estudiante')
+                                     @case('graduado')
+
+                                     @case('docente')
+                                         <a href="{{ url('/usuario/perfil') }}">
+                                             Mi perfil
+                                         </a>
+                                     @break
+                                 @endswitch
+                             @else
+                                 <a href="{{ route('login') }}">
+                                     Iniciar sesión
+                                 </a>
+
+                             @endauth
                          </div>
                      </div>
                      <div class="nav-filter">

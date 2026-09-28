@@ -27,15 +27,15 @@
                                  <div class="box-content">
 
                                      <h4>
-                                         <a href="#">
-                                             {{ $trabajo->empresa->nombre }}
-                                         </a>
+
+                                         {{ $trabajo->empresa->nombre }}
+
                                      </h4>
 
                                      <h3>
-                                         <a href="#">
-                                             {{ $trabajo->titulo }}
-                                         </a>
+
+                                         {{ $trabajo->titulo }}
+
                                      </h3>
 
                                      <ul>
@@ -68,7 +68,11 @@
                                      {{-- Tipo de contratación: Full-time / Part-time / etc. --}}
                                      @if ($trabajo->tipoContratacion)
                                          <li>
-                                             <a href="#">
+                                             <a
+                                                 href="{{ route('web.oferta.detalle', [
+                                                     'slug' => $trabajo->slug,
+                                                     'id' => $trabajo->id,
+                                                 ]) }}">
                                                  {{ $trabajo->tipoContratacion->nombre }}
                                              </a>
                                          </li>
@@ -77,7 +81,11 @@
                                      {{-- Modalidad: Presencial / Remoto / Híbrido --}}
                                      @if ($trabajo->modalidad)
                                          <li>
-                                             <a href="#">
+                                             <a
+                                                 href="{{ route('web.oferta.detalle', [
+                                                     'slug' => $trabajo->slug,
+                                                     'id' => $trabajo->id,
+                                                 ]) }}">
                                                  {{ $trabajo->modalidad->nombre }}
                                              </a>
                                          </li>
@@ -97,7 +105,11 @@
                              </div>
                          </div>
 
-                         <a href="#" class="jobtex-link-item" tabindex="0"></a>
+                         <a href="{{ route('web.oferta.detalle', [
+                             'slug' => $trabajo->slug,
+                             'id' => $trabajo->id,
+                         ]) }}"
+                             class="jobtex-link-item" tabindex="0"></a>
 
                      </div>
                  </div>

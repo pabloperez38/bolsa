@@ -19,7 +19,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
-        'tipo_usuario_id',      
+        'tipo_usuario_id',
     ];
 
     protected $hidden = [
@@ -64,5 +64,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function sendEmailVerificationNotification(): void
     {
         $this->notify(new VerificarEmail());
+    }
+
+    public function postulaciones()
+    {
+        return $this->hasMany(Postulacion::class, 'user_id');
     }
 }

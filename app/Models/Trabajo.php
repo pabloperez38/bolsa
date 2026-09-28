@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class Trabajo extends Model
 {
@@ -73,5 +74,15 @@ class Trabajo extends Model
             TipoContratacion::class,
             'tipo_contratacion_id'
         );
+    }
+
+    public function getSlugAttribute()
+    {
+        return Str::slug($this->titulo);
+    }
+
+    public function postulaciones()
+    {
+        return $this->hasMany(Postulacion::class, 'trabajo_id');
     }
 }
