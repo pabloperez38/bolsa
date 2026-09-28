@@ -25,7 +25,7 @@
                     ================================================== --}}
                     <div class="inner">
 
-                        <form action="{{ route('registro.candidato') }}" method="POST">
+                        <form action="{{ route('registro.candidato') }}" method="POST" id="registerForm">
 
                             @csrf
 
@@ -66,13 +66,8 @@
                                     DNI<span>*</span>
                                 </label>
 
-                                <input
-                                    type="text"
-                                    name="dni"
-                                    value="{{ old('dni') }}"
-                                    placeholder="Ingrese su DNI"
-                                    required
-                                >
+                                <input type="text" name="dni" value="{{ old('dni') }}"
+                                    placeholder="Ingrese su DNI" required>
 
                             </div>
 
@@ -84,13 +79,8 @@
                                     Legajo<span>*</span>
                                 </label>
 
-                                <input
-                                    type="text"
-                                    name="legajo"
-                                    value="{{ old('legajo') }}"
-                                    placeholder="Ingrese su legajo"
-                                    required
-                                >
+                                <input type="text" name="legajo" value="{{ old('legajo') }}"
+                                    placeholder="Ingrese su legajo" required>
 
                             </div>
 
@@ -102,13 +92,8 @@
                                     Correo electrónico<span>*</span>
                                 </label>
 
-                                <input
-                                    type="email"
-                                    name="email"
-                                    value="{{ old('email') }}"
-                                    placeholder="Correo electrónico"
-                                    required
-                                >
+                                <input type="email" name="email" value="{{ old('email') }}"
+                                    placeholder="Correo electrónico" required>
 
                             </div>
 
@@ -122,13 +107,8 @@
 
                                 <div class="inputs-group auth-pass-inputgroup">
 
-                                    <input
-                                        type="password"
-                                        name="password"
-                                        class="input-form password-input"
-                                        placeholder="Contraseña"
-                                        required
-                                    >
+                                    <input type="password" name="password" class="input-form password-input"
+                                        placeholder="Contraseña" required>
 
                                     <a class="icon-eye-off password-addon"></a>
 
@@ -146,13 +126,8 @@
 
                                 <div class="inputs-group auth-pass-inputgroup">
 
-                                    <input
-                                        type="password"
-                                        name="password_confirmation"
-                                        class="input-form password-input"
-                                        placeholder="Confirmar contraseña"
-                                        required
-                                    >
+                                    <input type="password" name="password_confirmation"
+                                        class="input-form password-input" placeholder="Confirmar contraseña" required>
 
                                     <a class="icon-eye-off password-addon"></a>
 
@@ -166,12 +141,7 @@
 
                                 <div class="sub-ip">
 
-                                    <input
-                                        type="checkbox"
-                                        name="terminos"
-                                        value="1"
-                                        required
-                                    >
+                                    <input type="checkbox" name="terminos" value="1" required>
 
                                     Acepto los
                                     <a href="#">
@@ -207,7 +177,7 @@
                     ================================================== --}}
                     <div class="inner">
 
-                        <form action="{{ route('registro.empresa') }}" method="POST">
+                        <form action="{{ route('registro.empresa') }}" method="POST" id="empresaRegisterForm">
 
                             @csrf
 
@@ -218,13 +188,8 @@
                                     Razón social / Nombre de empresa<span>*</span>
                                 </label>
 
-                                <input
-                                    type="text"
-                                    name="razon_social"
-                                    value="{{ old('razon_social') }}"
-                                    placeholder="Nombre de la empresa"
-                                    required
-                                >
+                                <input type="text" name="razon_social" value="{{ old('razon_social') }}"
+                                    placeholder="Nombre de la empresa" required>
 
                             </div>
 
@@ -236,13 +201,8 @@
                                     CUIT<span>*</span>
                                 </label>
 
-                                <input
-                                    type="text"
-                                    name="cuit"
-                                    value="{{ old('cuit') }}"
-                                    placeholder="Ingrese el CUIT"
-                                    required
-                                >
+                                <input type="text" name="cuit" value="{{ old('cuit') }}"
+                                    placeholder="Ingrese el CUIT" required>
 
                             </div>
 
@@ -254,13 +214,8 @@
                                     Correo electrónico<span>*</span>
                                 </label>
 
-                                <input
-                                    type="email"
-                                    name="email"
-                                    value="{{ old('email') }}"
-                                    placeholder="Correo electrónico"
-                                    required
-                                >
+                                <input type="email" name="email" value="{{ old('email') }}"
+                                    placeholder="Correo electrónico" required>
 
                             </div>
 
@@ -274,13 +229,8 @@
 
                                 <div class="inputs-group auth-pass-inputgroup">
 
-                                    <input
-                                        type="password"
-                                        name="password"
-                                        class="input-form password-input"
-                                        placeholder="Contraseña"
-                                        required
-                                    >
+                                    <input type="password" name="password" class="input-form password-input"
+                                        placeholder="Contraseña" required>
 
                                     <a class="icon-eye-off password-addon"></a>
 
@@ -298,13 +248,8 @@
 
                                 <div class="inputs-group auth-pass-inputgroup">
 
-                                    <input
-                                        type="password"
-                                        name="password_confirmation"
-                                        class="input-form password-input"
-                                        placeholder="Confirmar contraseña"
-                                        required
-                                    >
+                                    <input type="password" name="password_confirmation"
+                                        class="input-form password-input" placeholder="Confirmar contraseña" required>
 
                                     <a class="icon-eye-off password-addon"></a>
 
@@ -318,12 +263,7 @@
 
                                 <div class="sub-ip">
 
-                                    <input
-                                        type="checkbox"
-                                        name="terminos"
-                                        value="1"
-                                        required
-                                    >
+                                    <input type="checkbox" name="terminos" value="1" required>
 
                                     Acepto los
                                     <a href="#">
@@ -361,3 +301,32 @@
         </div>
     </div>
 </section>
+<script>
+    const formulariosRegistro = [
+        document.getElementById('registerForm'),
+        document.getElementById('empresaRegisterForm')
+    ];
+
+    formulariosRegistro.forEach(formulario => {
+
+        if (!formulario) {
+            return;
+        }
+
+        formulario.addEventListener('submit', function() {
+
+            Swal.fire({
+                title: 'Creando cuenta...',
+                text: 'Estamos registrando tus datos.',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                showConfirmButton: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+        });
+
+    });
+</script>

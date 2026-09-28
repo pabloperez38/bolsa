@@ -14,7 +14,7 @@
                     </div>
                 @endif
 
-                <form action="{{ route('login.post') }}" method="POST">
+                <form action="{{ route('login.post') }}" method="POST" id="loginForm">
 
                     @csrf
                     <div class="ip">
@@ -60,3 +60,19 @@
         </div>
     </div>
 </section>
+<script>
+    document.getElementById('loginForm').addEventListener('submit', function() {
+
+        Swal.fire({
+            title: 'Ingresando...',
+            text: 'Estamos validando tus datos.',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            showConfirmButton: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+    });
+</script>

@@ -53,8 +53,12 @@ class AuthController extends Controller
         // Recuperar usuario autenticado
         $usuario = Auth::user();
 
-        // Verificar que el email haya sido confirmado
-        if (!$usuario->hasVerifiedEmail()) {
+        // Obtener tipo de usuario
+        $tipoUsuario = $usuario->tipoUsuario?->nombre;
+
+        // Verificar que el email haya sido confirmado.
+        // Los administradores NO necesitan verificar su email.
+        if ($tipoUsuario !== 'administrador' && !$usuario->hasVerifiedEmail()) {
 
             Auth::logout();
 
@@ -72,8 +76,6 @@ class AuthController extends Controller
         // Regenerar la sesión después del login correcto
         $request->session()->regenerate();
 
-        $tipoUsuario = $usuario->tipoUsuario?->nombre;
-
         switch ($tipoUsuario) {
 
             case 'administrador':
@@ -86,7 +88,7 @@ class AuthController extends Controller
             case 'graduado':
             case 'docente':
 
-                // Si el perfil está completo → inicio público
+                // Si el perfil está completo → usuario
                 if ($usuario->perfil && $usuario->perfil->estaCompleto()) {
                     return redirect('/usuario');
                 }

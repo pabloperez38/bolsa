@@ -18,11 +18,7 @@
                                 @php
                                     $tipoUsuario = auth()->user()->tipoUsuario?->nombre;
                                 @endphp
-                                @if ($tipoUsuario === 'estudiante')
-                                    Pasantías disponibles
-                                @elseif (in_array($tipoUsuario, ['graduado', 'docente']))
-                                    Trabajos disponibles
-                                @endif
+                                {{ $tipoUsuario === 'estudiante' ? 'Pasantías disponibles' : 'Trabajos disponibles' }}
                             </div>
                         </div>
                     </div>
