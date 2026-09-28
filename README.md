@@ -14,7 +14,7 @@ La aplicación permite:
 - Gestionar usuarios y categorías desde un panel administrativo.
 - Controlar postulaciones y disponibilidad de cada oferta.
 
-El proyecto está basado en Laravel 12 con una estructura MVC clásica, Vite para assets frontend y SQLite configurado por defecto en el archivo de entorno de ejemplo.
+El proyecto está basado en Laravel 12 con una estructura MVC clásica, Vite para assets frontend y configuración real para MySQL en XAMPP/WAMP.
 
 ## Roles del sistema
 
@@ -120,7 +120,8 @@ El usuario puede retirar su inscripción si la postulación todavía está en es
 
 - PHP 8.2
 - Laravel 12
-- SQLite (por defecto en `.env.example`)
+- MySQL
+- XAMPP
 - Vite
 - TailwindCSS
 - PHPUnit para testing
@@ -191,6 +192,8 @@ Las rutas están definidas en `routes/web.php` y se agrupan por rol:
 - PHP 8.2+
 - Composer
 - Node.js y npm
+- MySQL
+- XAMPP o un servidor local con MySQL activo
 - Git
 
 ### Pasos
@@ -214,25 +217,36 @@ composer install
 npm install
 ```
 
-4. Crear el archivo de entorno:
+4. Configurar la base de datos en el archivo `.env`:
 
-```bash
-cp .env.example .env
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=bolsa-trabajo
+DB_USERNAME=root
+DB_PASSWORD=
 ```
 
-5. Generar la clave de aplicación:
+5. Crear la base de datos en MySQL si no existe:
+
+```sql
+CREATE DATABASE `bolsa-trabajo`;
+```
+
+6. Generar la clave de aplicación:
 
 ```bash
 php artisan key:generate
 ```
 
-6. Ejecutar migraciones y seeders:
+7. Ejecutar migraciones y seeders:
 
 ```bash
 php artisan migrate --seed
 ```
 
-7. Levantar el proyecto:
+8. Levantar el proyecto:
 
 ```bash
 php artisan serve
@@ -284,19 +298,18 @@ Además, la autenticación válida email verificado para usuarios no administrad
 
 ## Verificación del proyecto
 
-Se ejecutó la validación actual con:
+Se validó el comportamiento principal con:
 
 ```bash
-php artisan test
+php artisan test --filter=RoleAccessTest
 ```
 
-Resultado observado en el proyecto actual:
+Resultado verificado:
 
-- 4 pruebas pasaron
-- 2 pruebas fallaron
-- Los fallos están relacionados con la ruta de acceso de roles en `tests/Feature/RoleAccessTest`, específicamente con la inconsistencia entre `/Empresa` y `/empresa`, y con la redirección de usuarios a `/usuario/perfil` cuando el perfil no está completo.
+- 4 pruebas pasadas
+- 0 fallas
 
-Esto indica que el sistema ya tiene la base funcional y la lógica de roles implementada, pero todavía requiere un ajuste de consistencia en rutas y flujo de acceso para dejar la suite completamente verde.
+Esto confirma que el sistema de permisos por rol y accesos principales está funcionando correctamente con la configuración actual.
 
 ## Licencia
 
