@@ -14,7 +14,9 @@ class EsAdministrador
             return redirect()->route('login');
         }
 
-        if (auth()->user()->tipoUsuario->nombre !== 'administrador') {
+        $tipo = strtolower((string) (auth()->user()->tipoUsuario?->nombre ?? ''));
+
+        if ($tipo !== 'administrador') {
             abort(403);
         }
 

@@ -22,9 +22,9 @@ class VerificarPerfilCompleto
             'docente',
         ];
 
-        $tipoUsuario = $usuario->tipoUsuario?->nombre;
+        $tipoUsuario = strtolower((string) ($usuario->tipoUsuario?->nombre ?? ''));
 
-        if (!in_array($tipoUsuario, $tiposConPerfil)) {
+        if (!in_array($tipoUsuario, $tiposConPerfil, true)) {
             return $next($request);
         }
 

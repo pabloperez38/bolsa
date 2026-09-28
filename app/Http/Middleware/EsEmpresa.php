@@ -14,7 +14,9 @@ class EsEmpresa
             return redirect()->route('login');
         }
 
-        if (auth()->user()->tipoUsuario->nombre !== 'empresa') {
+        $tipo = strtolower((string) (auth()->user()->tipoUsuario?->nombre ?? ''));
+
+        if ($tipo !== 'empresa') {
             abort(403);
         }
 

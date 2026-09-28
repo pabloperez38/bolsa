@@ -14,13 +14,13 @@ class EsUsuario
             return redirect()->route('login');
         }
 
-        $tipo = auth()->user()->tipoUsuario->nombre;
+        $tipo = strtolower((string) (auth()->user()->tipoUsuario?->nombre ?? ''));
 
         if (!in_array($tipo, [
             'estudiante',
             'graduado',
             'docente',
-        ])) {
+        ], true)) {
             abort(403);
         }
 

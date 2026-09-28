@@ -54,7 +54,7 @@ class AuthController extends Controller
         $usuario = Auth::user();
 
         // Obtener tipo de usuario
-        $tipoUsuario = $usuario->tipoUsuario?->nombre;
+        $tipoUsuario = strtolower((string) ($usuario->tipoUsuario?->nombre ?? ''));
 
         // Verificar que el email haya sido confirmado.
         // Los administradores NO necesitan verificar su email.

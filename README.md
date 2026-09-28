@@ -1,66 +1,303 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Bolsa de Trabajo
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistema web desarrollado en Laravel para gestionar ofertas laborales, postulaciones y accesos por perfiles institucionales dentro de una bolsa de trabajo universitaria.
 
-## About Laravel
+## Descripción general
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+La aplicación permite:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- Publicar y listar ofertas de trabajo y pasantías.
+- Registrar candidatos según su tipo: estudiante, graduado o docente.
+- Verificar la cuenta por correo electrónico.
+- Completar un perfil personal y restringir acceso hasta que esté completo.
+- Permitir que empresas gestionen su presencia dentro del sistema.
+- Gestionar usuarios y categorías desde un panel administrativo.
+- Controlar postulaciones y disponibilidad de cada oferta.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+El proyecto está basado en Laravel 12 con una estructura MVC clásica, Vite para assets frontend y SQLite configurado por defecto en el archivo de entorno de ejemplo.
 
-## Learning Laravel
+## Roles del sistema
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 1. Administrador
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+El administrador puede:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- Acceder al panel principal de administración.
+- Listar usuarios, ofertas laborales y empresas.
+- Gestionar categorías y subcategorías.
+- Supervisar la actividad del sistema.
 
-## Laravel Sponsors
+Ruta principal:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- `/admin`
 
-### Premium Partners
+### 2. Empresa
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+Las cuentas de tipo empresa tienen acceso a una vista específica para consultorios de la organización y su perfil.
 
-## Contributing
+Ruta principal:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- `/empresa`
 
-## Code of Conduct
+### 3. Candidato
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Los usuarios candidatos se registran como:
 
-## Security Vulnerabilities
+- estudiante
+- graduado
+- docente
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Estos roles pueden:
 
-## License
+- completar su perfil personal,
+- navegar ofertas disponibles según el tipo de perfil,
+- postularse a trabajos o pasantías,
+- consultar su historial de postulaciones,
+- retirar postulaciones activas.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Rutas principales:
+
+- `/usuario`
+- `/usuario/perfil`
+- `/usuario/trabajos`
+- `/usuario/pasantias`
+- `/usuario/postulaciones`
+
+## Flujo funcional
+
+### Registro de candidato
+
+El candidato debe:
+
+1. Elegir un tipo de usuario: estudiante, graduado o docente.
+2. Ingresar DNI y legajo.
+3. Validar que esos datos existan en el padrón institucional activo.
+4. Registrar un correo y contraseña.
+5. Aceptar los términos.
+
+Si coincide con una persona institucional validada, se crea la cuenta y se envía la verificación de correo.
+
+### Verificación de email
+
+El usuario no puede iniciar sesión mientras su email no esté verificado, salvo los administradores.
+
+La verificación se realiza mediante:
+
+- `/email/verificar/{id}/{hash}`
+
+### Perfil completo
+
+Para acceder a funciones de postulaciones, el usuario debe completar su perfil. El middleware `perfil.completo` exige que el perfil contenga datos mínimos como:
+
+- legajo
+- dirección
+- DNI
+- localidad
+- teléfono
+
+Si falta información, se redirige a `/usuario/perfil`.
+
+### Postulación
+
+Un usuario puede postularse a una oferta si:
+
+- es estudiante, graduado o docente,
+- tiene el perfil completo,
+- la oferta está activa,
+- la oferta no está vencida,
+- la oferta corresponde a su tipo de perfil.
+
+Reglas de acceso por tipo:
+
+- estudiante → solo pasantías
+- graduado/docente → solo trabajos
+
+### Retiro de postulación
+
+El usuario puede retirar su inscripción si la postulación todavía está en estado pendiente o en revisión.
+
+## Stack tecnológico
+
+- PHP 8.2
+- Laravel 12
+- SQLite (por defecto en `.env.example`)
+- Vite
+- TailwindCSS
+- PHPUnit para testing
+
+## Estructura principal
+
+```text
+app/
+├── Http/
+│   ├── Controllers/
+│   └── Middleware/
+├── Models/
+├── Notifications/
+└── Providers/
+bootstrap/
+config/
+Database/
+├── migrations/
+├── seeders/
+resources/
+├── css/
+├── js/
+└── views/
+routes/
+└── web.php
+tests/
+public/
+```
+
+## Rutas principales
+
+Las rutas están definidas en `routes/web.php` y se agrupan por rol:
+
+- Público:
+    - `/`
+    - `/login`
+    - `/register`
+    - `/oferta/{slug}/{id}`
+
+- Autenticación:
+    - `/registro/candidato`
+    - `/registro/empresa`
+    - `/logout`
+    - `/email/verificar/{id}/{hash}`
+
+- Administración:
+    - `/admin`
+    - `/admin/usuarios`
+    - `/admin/ofertas-laborales`
+    - `/admin/empresas`
+    - `/admin/categorias`
+
+- Empresa:
+    - `/empresa`
+    - `/empresa/perfil`
+
+- Usuario:
+    - `/usuario`
+    - `/usuario/perfil`
+    - `/usuario/trabajos`
+    - `/usuario/pasantias`
+    - `/usuario/postulaciones`
+
+## Instalación
+
+### Prerrequisitos
+
+- PHP 8.2+
+- Composer
+- Node.js y npm
+- Git
+
+### Pasos
+
+1. Clonar el proyecto:
+
+```bash
+git clone <url-del-repositorio>
+cd bolsa-trabajo
+```
+
+2. Instalar dependencias de PHP:
+
+```bash
+composer install
+```
+
+3. Instalar dependencias frontend:
+
+```bash
+npm install
+```
+
+4. Crear el archivo de entorno:
+
+```bash
+cp .env.example .env
+```
+
+5. Generar la clave de aplicación:
+
+```bash
+php artisan key:generate
+```
+
+6. Ejecutar migraciones y seeders:
+
+```bash
+php artisan migrate --seed
+```
+
+7. Levantar el proyecto:
+
+```bash
+php artisan serve
+```
+
+Y en otra terminal:
+
+```bash
+npm run dev
+```
+
+## Usuarios semilla
+
+El proyecto incluye usuarios de prueba predefinidos para desarrollo y pruebas locales:
+
+- Administrador: `admin@bolsatrabajo.com` / `12345678`
+- Estudiante: `estudiante@bolsatrabajo.com` / `12345678`
+- Graduado: `graduado@bolsatrabajo.com` / `12345678`
+- Docente: `docente@bolsatrabajo.com` / `12345678`
+- Empresa: `empresa@bolsatrabajo.com` / `12345678`
+
+> Estos usuarios son útiles para verificar permisos y flujos por rol.
+
+## Base de datos y datos maestros
+
+El seeder principal carga los siguientes registros:
+
+- categorías y subcategorías
+- empresas
+- tipos de usuario
+- usuarios base
+- localidades
+- tipos de oferta
+- modalidades
+- tipos de contratación
+- trabajos
+- personas institucionales
+
+## Seguridad y validaciones
+
+El sistema aplica capas de validación y control de acceso mediante middleware:
+
+- `admin` → restringe acceso a administradores
+- `empresa` → restringe acceso a empresas
+- `usuario` → restringe acceso a candidatos
+- `perfil.completo` → obliga completar datos mínimos antes de acceder a funciones del usuario
+
+Además, la autenticación válida email verificado para usuarios no administradores y el registro de candidatos valida la existencia institucional.
+
+## Verificación del proyecto
+
+Se ejecutó la validación actual con:
+
+```bash
+php artisan test
+```
+
+Resultado observado en el proyecto actual:
+
+- 4 pruebas pasaron
+- 2 pruebas fallaron
+- Los fallos están relacionados con la ruta de acceso de roles en `tests/Feature/RoleAccessTest`, específicamente con la inconsistencia entre `/Empresa` y `/empresa`, y con la redirección de usuarios a `/usuario/perfil` cuando el perfil no está completo.
+
+Esto indica que el sistema ya tiene la base funcional y la lógica de roles implementada, pero todavía requiere un ajuste de consistencia en rutas y flujo de acceso para dejar la suite completamente verde.
+
+## Licencia
+
+Este proyecto se distribuye bajo la licencia MIT, en línea con el esqueleto base de Laravel.

@@ -36,9 +36,10 @@ class UsuarioController extends Controller
     public function trabajos()
     {
         $usuario = Auth::user();
+        $tipoUsuario = strtolower((string) ($usuario->tipoUsuario?->nombre ?? ''));
 
         // Los estudiantes no pueden acceder a trabajos
-        if ($usuario->tipoUsuario->nombre === 'estudiante') {
+        if ($tipoUsuario === 'estudiante') {
             abort(403);
         }
 
@@ -64,9 +65,10 @@ class UsuarioController extends Controller
     public function pasantias()
     {
         $usuario = Auth::user();
+        $tipoUsuario = strtolower((string) ($usuario->tipoUsuario?->nombre ?? ''));
 
         // Solo los estudiantes pueden acceder a pasantías
-        if ($usuario->tipoUsuario->nombre !== 'estudiante') {
+        if ($tipoUsuario !== 'estudiante') {
             abort(403);
         }
 

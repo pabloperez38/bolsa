@@ -58,10 +58,10 @@ class WebController extends Controller
 
         $usuario = auth()->user();
 
-        $tipoUsuario = $usuario->tipoUsuario?->nombre;
+        $tipoUsuario = strtolower((string) ($usuario->tipoUsuario?->nombre ?? ''));
 
         // Administrador y empresa no acceden al detalle como usuario
-        if (in_array($tipoUsuario, ['administrador', 'empresa'])) {
+        if (in_array($tipoUsuario, ['administrador', 'empresa'], true)) {
             abort(403);
         }
 
