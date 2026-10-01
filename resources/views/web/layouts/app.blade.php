@@ -69,8 +69,22 @@
             });
         </script>
     @endif
+    @if (session('error'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oferta no disponible',
+                    text: @json(session('error')),
+                    confirmButtonText: 'Entendido',
+                    timer: 4000,
+                    timerProgressBar: true
+                });
+            });
+        </script>
+    @endif
 
-{{--     @if ($errors->any())
+    {{--     @if ($errors->any())
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 Swal.fire({

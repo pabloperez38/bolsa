@@ -14,17 +14,12 @@
 
                         <div class="content-left">
 
-                            <div class="thumb">
-                                <img src="{{ asset('assets/images/logo-company/cty4.png') }}"
-                                    alt="{{ $trabajo->empresa->nombre ?? 'Empresa' }}">
-                            </div>
-
                             <div class="content">
 
                                 {{-- Título --}}
-                                <h6>
+                                <h3>
                                     {{ $trabajo->titulo }}
-                                </h6>
+                                </h3>
 
                                 <ul class="job-info">
 
@@ -163,72 +158,131 @@
 
                         <div class="content-tab">
                             <div class="inner-content">
-                                <h5>Descripción</h5>
+                                <h4>Descripción</h4>
 
                                 <p>{{ $trabajo->descripcion }} </p>
 
-                                <div class="related-job">
-                                    <h6>Related Jobs</h6>
+                                <hr>
 
+                                @if ($relacionados->count() > 0)
 
-                                    <div class="features-job mg-bt-0">
-                                        <div class="job-archive-header">
-                                            <div class="inner-box">
-                                                <div class="logo-company">
-                                                    <img src="images/logo-company/cty8.png"
-                                                        alt="images/logo-company/cty8.png" />
+                                    <div class="related-job">
+
+                                        <h6>Ofertas relacionadas</h6>
+
+                                        @foreach ($relacionados as $relacionado)
+                                            <div class="features-job">
+
+                                                <div class="job-archive-header">
+
+                                                    <div class="inner-box">
+
+                                                        <div class="box-content">
+
+                                                            <h4>
+                                                                {{ $relacionado->empresa->nombre }}
+                                                            </h4>
+
+                                                            <h3>
+                                                                {{ $relacionado->titulo }}
+                                                            </h3>
+
+                                                            <ul>
+
+                                                                <li>
+                                                                    <span class="icon-map-pin"></span>
+                                                                    {{ $relacionado->ubicacion }}
+                                                                </li>
+
+                                                                <li>
+                                                                    <span class="icon-calendar"></span>
+                                                                    {{ $relacionado->fecha_publicacion?->diffForHumans() }}
+                                                                </li>
+
+                                                            </ul>
+
+                                                            <span class="tipo_oferta">
+
+                                                                {{-- Tipo de oferta: Trabajo / Pasantía --}}
+                                                                @if ($relacionado->tipoOferta)
+                                                                    {{ $relacionado->tipoOferta->nombre }}
+                                                                @endif
+
+                                                            </span>
+
+                                                        </div>
+
+                                                    </div>
+
                                                 </div>
-                                                <div class="box-content">
-                                                    <h4>
-                                                        <a href="jobs-single.html">Tamari Law Group LLC</a>
-                                                    </h4>
-                                                    <h3>
-                                                        <a href="jobs-single.html">HR Administration</a>
-                                                        <span class="icon-bolt"></span>
-                                                    </h3>
-                                                    <ul>
-                                                        <li>
-                                                            <span class="icon-map-pin"></span>
-                                                            Las Vegas, NV 89107, USA
-                                                        </li>
-                                                        <li>
-                                                            <span class="icon-calendar"></span>
-                                                            2 days ago
-                                                        </li>
-                                                    </ul>
-                                                    <span class="icon-heart"></span>
+
+                                                <div class="job-archive-footer">
+
+                                                    <div class="job-footer-left">
+
+                                                        <ul class="job-tag">
+
+                                                            {{-- Tipo de contratación --}}
+                                                            @if ($relacionado->tipoContratacion)
+                                                                <li>
+                                                                    <a
+                                                                        href="{{ route('web.oferta.detalle', [
+                                                                            'slug' => $relacionado->slug,
+                                                                            'id' => $relacionado->id,
+                                                                        ]) }}">
+                                                                        {{ $relacionado->tipoContratacion->nombre }}
+                                                                    </a>
+                                                                </li>
+                                                            @endif
+
+                                                            {{-- Modalidad --}}
+                                                            @if ($relacionado->modalidad)
+                                                                <li>
+                                                                    <a
+                                                                        href="{{ route('web.oferta.detalle', [
+                                                                            'slug' => $relacionado->slug,
+                                                                            'id' => $relacionado->id,
+                                                                        ]) }}">
+                                                                        {{ $relacionado->modalidad->nombre }}
+                                                                    </a>
+                                                                </li>
+                                                            @endif
+
+                                                        </ul>
+
+                                                    </div>
+
+                                                    <div class="job-footer-right">
+
+                                                        <p class="days">
+
+                                                            @if ($relacionado->fecha_cierre)
+                                                                Termina en
+                                                                {{ $relacionado->fecha_cierre->diffForHumans() }}
+                                                            @endif
+
+                                                        </p>
+
+                                                    </div>
+
                                                 </div>
+
+                                                <a href="{{ route('web.oferta.detalle', [
+                                                    'slug' => $relacionado->slug,
+                                                    'id' => $relacionado->id,
+                                                ]) }}"
+                                                    class="jobtex-link-item" tabindex="0">
+                                                </a>
+
                                             </div>
-                                        </div>
-                                        <div class="job-archive-footer">
-                                            <div class="job-footer-left">
-                                                <ul class="job-tag">
-                                                    <li><a href="#"> Part-time</a></li>
-                                                    <li><a href="#"> Remote</a></li>
-                                                </ul>
-                                                <div class="star">
-                                                    <span class="icon-star-full"></span>
-                                                    <span class="icon-star-full"></span>
-                                                    <span class="icon-star-full"></span>
-                                                    <span class="icon-star-full"></span>
-                                                    <span class="icon-star-full"></span>
-                                                </div>
-                                            </div>
-                                            <div class="job-footer-right">
-                                                <div class="price">
-                                                    <span class="icon-dolar1"></span>
-                                                    <p>$83,000 - $110,000 <span class="year">/year</span></p>
-                                                </div>
-                                                <p class="days">24 days left to apply</p>
-                                            </div>
-                                        </div>
+                                        @endforeach
+
                                     </div>
 
-
-                                </div>
+                                @endif
                             </div>
 
-                            < </div>
+                        </div>
                     </article>
                 </div>
                 <div class="col-lg-4">
@@ -284,4 +338,5 @@
         </div>
     </section>
 
+    @include('web.components.footer')
 @endsection

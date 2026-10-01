@@ -4298,3 +4298,30 @@ input[type="radio"]:checked:after {
         margin-bottom: 3px;
     }
 }
+.trabajo-postulado {
+    background-color: #f1f8f4 !important;
+}
+
+.trabajo-postulado td {
+    background-color: #f1f8f4 !important;
+}
+
+.estado-postulado {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background-color: #dff3e5;
+    color: #198754;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.estado-disponible {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background-color: #e9f2ff;
+    color: #0d6efd;
+    font-weight: 500;
+    font-size: 13px;
+}

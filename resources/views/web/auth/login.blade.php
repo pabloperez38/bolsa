@@ -25,4 +25,6 @@
 
     @include('web.components.login')
 
+    @include('web.components.footer')
+
 @endsection

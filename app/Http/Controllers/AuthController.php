@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categoria;
+use App\Models\Empresa;
 use App\Models\PersonaInstitucional;
+use App\Models\TipoUsuario;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,17 +16,8 @@ class AuthController extends Controller
 {
     public function showLogin()
     {
-        $categorias = Categoria::with([
-            'subcategorias' => function ($query) {
-                $query->where('activo', true)
-                    ->orderBy('nombre');
-            }
-        ])
-            ->where('activo', true)
-            ->orderBy('nombre')
-            ->get();
 
-        return view('web.auth.login', compact('categorias'));
+        return view('web.auth.login');
     }
 
     public function login(Request $request)
@@ -260,6 +253,142 @@ class AuthController extends Controller
         // Regeneramos la sesión por seguridad
         //$request->session()->regenerate();
 
+        event(new Registered($usuario));
+
+        return redirect()
+            ->route('web.index')
+            ->with(
+                'success',
+                'Registro realizado correctamente. Revisá tu correo electrónico para confirmar tu cuenta.'
+            );
+    }
+    public function registroEmpresa(Request $request)
+    {
+        $request->validate(
+            [
+                'razon_social' => [
+                    'required',
+                    'string',
+                    'max:255',
+                ],
+
+                'cuit' => [
+                    'required',
+                    'string',
+                    'max:20',
+                    'unique:empresas,cuit',
+                ],
+
+                'email' => [
+                    'required',
+                    'email',
+                    'unique:users,email',
+                ],
+
+                'password' => [
+                    'required',
+                    'confirmed',
+                    'min:8',
+                ],
+
+                'terminos' => [
+                    'accepted',
+                ],
+            ],
+            [
+                // Razón social
+                'razon_social.required' =>
+                'La razón social o nombre de la empresa es obligatorio.',
+
+                'razon_social.string' =>
+                'La razón social debe ser un texto válido.',
+
+                'razon_social.max' =>
+                'La razón social no puede superar los 255 caracteres.',
+
+                // CUIT
+                'cuit.required' =>
+                'El CUIT es obligatorio.',
+
+                'cuit.string' =>
+                'El CUIT debe ser un texto válido.',
+
+                'cuit.max' =>
+                'El CUIT no puede superar los 20 caracteres.',
+
+                'cuit.unique' =>
+                'El CUIT ingresado ya está registrado.',
+
+                // Email
+                'email.required' =>
+                'El correo electrónico es obligatorio.',
+
+                'email.email' =>
+                'Debe ingresar un correo electrónico válido.',
+
+                'email.unique' =>
+                'El correo electrónico ingresado ya está registrado.',
+
+                // Contraseña
+                'password.required' =>
+                'La contraseña es obligatoria.',
+
+                'password.confirmed' =>
+                'Las contraseñas no coinciden.',
+
+                'password.min' =>
+                'La contraseña debe tener al menos :min caracteres.',
+
+                // Términos
+                'terminos.accepted' =>
+                'Debe aceptar los términos de uso para registrarse.',
+            ],
+            [
+                'razon_social' => 'razón social',
+                'cuit' => 'CUIT',
+                'email' => 'correo electrónico',
+                'password' => 'contraseña',
+                'terminos' => 'términos de uso',
+            ]
+        );
+
+        // Buscamos el tipo de usuario EMPRESA
+        $tipoUsuario = TipoUsuario::where('nombre', 'empresa')->first();
+
+        if (!$tipoUsuario) {
+
+            return back()
+                ->withInput(
+                    $request->except(
+                        'password',
+                        'password_confirmation'
+                    )
+                )
+                ->with(
+                    'error',
+                    'El tipo de usuario empresa no está configurado correctamente.'
+                );
+        }
+
+        // Creamos el usuario
+        $usuario = User::create([
+            'name' => $request->razon_social,
+            'email' => $request->email,
+            'password' => $request->password,
+            'tipo_usuario_id' => $tipoUsuario->id,
+        ]);
+
+        // Creamos la empresa asociada al usuario
+        $empresa = Empresa::create([
+            'user_id' => $usuario->id,
+            'nombre' => $request->razon_social,
+            'cuit' => $request->cuit,
+            'email' => $request->email,
+        ]);
+        // NO iniciamos sesión automáticamente
+        // Auth::login($usuario);
+
+        // Enviamos correo de verificación
         event(new Registered($usuario));
 
         return redirect()

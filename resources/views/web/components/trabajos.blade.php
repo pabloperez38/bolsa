@@ -16,13 +16,7 @@
                      <div class="features-job">
 
                          <div class="job-archive-header">
-                             <div class="inner-box">
-
-                                 <div class="logo-company">
-                                     <div class="logo-iniciales">
-                                         {{ strtoupper(substr($trabajo->Empresa->nombre, 0, 2)) }}
-                                     </div>
-                                 </div>
+                             <div class="inner-box">                             
 
                                  <div class="box-content">
 
@@ -117,7 +111,7 @@
 
              <div class="col-md-12">
                  <div class="wrap-button">
-                     <a href="find-jobs-list.html" class="tf-button style-1">
+                     <a href="/ofertas" class="tf-button style-1">
                          Ver todas las ofertas
                          <span class="icon-keyboard_arrow_right"></span>
                      </a>

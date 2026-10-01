@@ -13,6 +13,7 @@ class UserSeeder extends Seeder
     {
         $tipos = TipoUsuario::pluck('id', 'nombre');
 
+        // Administrador
         User::updateOrCreate(
             ['email' => 'admin@bolsatrabajo.com'],
             [
@@ -22,6 +23,7 @@ class UserSeeder extends Seeder
             ]
         );
 
+        // Estudiante
         User::updateOrCreate(
             ['email' => 'estudiante@bolsatrabajo.com'],
             [
@@ -31,6 +33,7 @@ class UserSeeder extends Seeder
             ]
         );
 
+        // Graduado
         User::updateOrCreate(
             ['email' => 'graduado@bolsatrabajo.com'],
             [
@@ -40,6 +43,7 @@ class UserSeeder extends Seeder
             ]
         );
 
+        // Docente
         User::updateOrCreate(
             ['email' => 'docente@bolsatrabajo.com'],
             [
@@ -49,10 +53,41 @@ class UserSeeder extends Seeder
             ]
         );
 
+        // Empresa - Tech Solutions
         User::updateOrCreate(
             ['email' => 'empresa@bolsatrabajo.com'],
             [
                 'name' => 'Tech Solutions',
+                'password' => Hash::make('12345678'),
+                'tipo_usuario_id' => $tipos['empresa'],
+            ]
+        );
+
+        // Empresa - Grupo Empresarial del Litoral
+        User::updateOrCreate(
+            ['email' => 'empresa.litoral@bolsatrabajo.com'],
+            [
+                'name' => 'Grupo Empresarial del Litoral',
+                'password' => Hash::make('12345678'),
+                'tipo_usuario_id' => $tipos['empresa'],
+            ]
+        );
+
+        // Empresa - Industria del Litoral
+        User::updateOrCreate(
+            ['email' => 'industria@bolsatrabajo.com'],
+            [
+                'name' => 'Industria del Litoral',
+                'password' => Hash::make('12345678'),
+                'tipo_usuario_id' => $tipos['empresa'],
+            ]
+        );
+
+        // Empresa - Servicios Profesionales ER
+        User::updateOrCreate(
+            ['email' => 'servicios@bolsatrabajo.com'],
+            [
+                'name' => 'Servicios Profesionales ER',
                 'password' => Hash::make('12345678'),
                 'tipo_usuario_id' => $tipos['empresa'],
             ]

@@ -36,6 +36,7 @@ class UsuarioController extends Controller
     public function trabajos()
     {
         $usuario = Auth::user();
+
         $tipoUsuario = strtolower((string) ($usuario->tipoUsuario?->nombre ?? ''));
 
         // Los estudiantes no pueden acceder a trabajos
@@ -51,6 +52,11 @@ class UsuarioController extends Controller
             'modalidad',
             'tipoContratacion',
         ])
+            ->withExists([
+                'postulaciones as ya_postulado' => function ($query) use ($usuario) {
+                    $query->where('user_id', $usuario->id);
+                },
+            ])
             ->where('tipo_oferta_id', 1)
             ->where('activo', true)
             ->orderByDesc('fecha_publicacion')

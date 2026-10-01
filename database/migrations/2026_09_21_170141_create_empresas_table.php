@@ -14,6 +14,10 @@ return new class extends Migration
 
             $table->string('nombre', 150);
 
+            $table->foreignId('user_id')
+                ->constrained('users')
+                ->cascadeOnDelete();
+
             $table->string('cuit', 20);
 
             $table->string('descripcion')->nullable();
@@ -33,7 +37,7 @@ return new class extends Migration
             $table->string('provincia', 100)->nullable();
 
             $table->boolean('activo')->default(true);
-            
+
             $table->softDeletes();
 
             $table->timestamps();

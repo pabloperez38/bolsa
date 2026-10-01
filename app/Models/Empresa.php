@@ -13,7 +13,9 @@ class Empresa extends Model
     protected $table = 'empresas';
 
     protected $fillable = [
+        'user_id',
         'nombre',
+        'cuit',
         'descripcion',
         'logo',
         'email',
@@ -24,7 +26,6 @@ class Empresa extends Model
         'provincia',
         'activo',
     ];
-
     protected $casts = [
         'activo' => 'boolean',
     ];
@@ -35,5 +36,9 @@ class Empresa extends Model
     public function trabajos(): HasMany
     {
         return $this->hasMany(Trabajo::class);
+    }
+    public function usuario()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

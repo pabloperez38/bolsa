@@ -25,4 +25,6 @@
 
     @include('web.components.register')
 
+    @include('web.components.footer')
+
 @endsection

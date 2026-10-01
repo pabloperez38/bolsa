@@ -14,6 +14,9 @@ Route::get('/', [WebController::class, 'index'])->name('web.index');
 Route::get('/oferta/{slug}/{id}', [WebController::class, 'detalle'])
     ->name('web.oferta.detalle');
 
+Route::get('/ofertas', [WebController::class, 'ofertas'])
+    ->name('web.ofertas.index');
+
 Route::get('/login', [AuthController::class, 'showLogin'])
     ->name('login');
 

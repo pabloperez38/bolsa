@@ -45,6 +45,9 @@
                             </div>
                         @enderror
                     </div>
+                    <div class="ip">
+                        <button type="submit">Ingresar</button>
+                    </div>
                     <div class="group-ant-choice">
                         <div class="sub-ip"><input type="checkbox" name="remember" id="remember">Recordarme</div>
                         <a href="#" class="forgot">¿Olvidaste tu contraseña?</a>
@@ -53,7 +56,6 @@
                     <a href="#" class="btn-social">Continuar con Facebook</a>
                     <a href="#" class="btn-social"> Continuar con Google</a>
 
-                    <button type="submit">Ingresar</button>
                     <div class="sign-up">Todavía no estás registrado? <a href="/register">Registrarme</a></div>
                 </form>
             </div>

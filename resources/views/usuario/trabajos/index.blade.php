@@ -42,12 +42,14 @@
                                                 <th>Jornada</th>
                                                 <th>Modalidad</th>
                                                 <th>Finalización</th>
+                                                <th>Estado</th>
                                                 <th>Acciones</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($trabajos as $trabajo)
-                                                <tr class="file-delete">
+                                                <tr
+                                                    class="file-delete {{ $trabajo->ya_postulado ? 'trabajo-postulado' : '' }}">
                                                     <td>
                                                         <div class="candidates-wrap flex2">
 
@@ -99,6 +101,17 @@
                                                                 @endif
                                                             @endif
                                                         </div>
+                                                    </td>
+                                                    <td>
+                                                        @if ($trabajo->ya_postulado)
+                                                            <span class="estado-postulado">
+                                                                Ya te postulaste
+                                                            </span>
+                                                        @else
+                                                            <span class="estado-disponible">
+                                                                Disponible
+                                                            </span>
+                                                        @endif
                                                     </td>
                                                     <td>
                                                         <div id="items_1" class="dropdown titles-dropdown">

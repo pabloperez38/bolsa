@@ -14,7 +14,7 @@ class PerfilController extends Controller
      */
     public function edit()
     {
-        
+
         $usuario = Auth::user();
 
         $perfil = $usuario->perfil;
@@ -33,7 +33,6 @@ class PerfilController extends Controller
     /**
      * Guardar o actualizar el perfil.
      */
-
     public function update(Request $request)
     {
         $usuario = Auth::user();
@@ -60,7 +59,6 @@ class PerfilController extends Controller
                 // ==========================================
                 // DATOS DE PERFIL
                 // ==========================================
-             
 
                 'telefono' => [
                     'required',
@@ -126,74 +124,51 @@ class PerfilController extends Controller
                 // MENSAJES PERSONALIZADOS
                 // ==========================================
 
-                'name.required' =>
-                'El nombre y apellido son obligatorios.',
+                'name.required' => 'El nombre y apellido son obligatorios.',
 
-                'name.string' =>
-                'El nombre y apellido no son válidos.',
+                'name.string' => 'El nombre y apellido no son válidos.',
 
-                'name.max' =>
-                'El nombre y apellido no pueden superar los 255 caracteres.',             
+                'name.max' => 'El nombre y apellido no pueden superar los 255 caracteres.',
 
-                'telefono.string' =>
-                'El teléfono no es válido.',
+                'telefono.string' => 'El teléfono no es válido.',
 
-                'telefono.required' =>
-                'El teléfono es obligatorio.',
+                'telefono.required' => 'El teléfono es obligatorio.',
 
-                'telefono.max' =>
-                'El teléfono no puede superar los 50 caracteres.',
+                'telefono.max' => 'El teléfono no puede superar los 50 caracteres.',
 
-                'direccion.required' =>
-                'La dirección es obligatoria.',
+                'direccion.required' => 'La dirección es obligatoria.',
 
-                'fecha_nacimiento.required' =>
-                'La fecha de nacimiento es obligatoria.',
+                'fecha_nacimiento.required' => 'La fecha de nacimiento es obligatoria.',
 
-                'fecha_nacimiento.date' =>
-                'La fecha de nacimiento no es válida.',
+                'fecha_nacimiento.date' => 'La fecha de nacimiento no es válida.',
 
-                'fecha_nacimiento.before' =>
-                'La fecha de nacimiento debe ser anterior a la fecha actual.',
+                'fecha_nacimiento.before' => 'La fecha de nacimiento debe ser anterior a la fecha actual.',
 
-                'direccion.max' =>
-                'La dirección no puede superar los 255 caracteres.',
-                
-                'localidad_id.required' =>
-                'La localidad es obligatoria.',
+                'direccion.max' => 'La dirección no puede superar los 255 caracteres.',
 
-                'localidad_id.exists' =>
-                'La localidad seleccionada no es válida.',
+                'localidad_id.required' => 'La localidad es obligatoria.',
 
-                'biografia.max' =>
-                'La biografía no puede superar los 5000 caracteres.',
+                'localidad_id.exists' => 'La localidad seleccionada no es válida.',
 
-                'linkedin.url' =>
-                'El enlace de LinkedIn no es válido.',
+                'biografia.max' => 'La biografía no puede superar los 5000 caracteres.',
 
-                'linkedin.max' =>
-                'El enlace de LinkedIn no puede superar los 255 caracteres.',              
+                'linkedin.url' => 'El enlace de LinkedIn no es válido.',
 
-                'foto.image' =>
-                'El archivo seleccionado debe ser una imagen.',
+                'linkedin.max' => 'El enlace de LinkedIn no puede superar los 255 caracteres.',
 
-                'foto.mimes' =>
-                'La foto debe estar en formato JPG, JPEG o PNG.',
+                'foto.image' => 'El archivo seleccionado debe ser una imagen.',
 
-                'foto.max' =>
-                'La foto no puede superar los 2 MB.',
+                'foto.mimes' => 'La foto debe estar en formato JPG, JPEG o PNG.',
 
-                'cv.file' =>
-                'El archivo seleccionado no es válido.',
+                'foto.max' => 'La foto no puede superar los 2 MB.',
 
-                'cv.mimes' =>
-                'El CV debe estar en formato PDF.',
+                'cv.file' => 'El archivo seleccionado no es válido.',
 
-                'cv.max' =>
-                'El CV no puede superar los 5 MB.',
+                'cv.mimes' => 'El CV debe estar en formato PDF.',
+
+                'cv.max' => 'El CV no puede superar los 5 MB.',
             ]
         );
-
 
         /*
     |--------------------------------------------------------------------------
@@ -205,22 +180,20 @@ class PerfilController extends Controller
             'name' => $datos['name'],
         ]);
 
-
         /*
     |--------------------------------------------------------------------------
     | Datos que pertenecen a perfiles
     |--------------------------------------------------------------------------
     */
 
-        $datosPerfil = [          
+        $datosPerfil = [
             'telefono' => $datos['telefono'] ?? null,
             'fecha_nacimiento' => $datos['fecha_nacimiento'] ?? null,
             'direccion' => $datos['direccion'] ?? null,
             'localidad_id' => $datos['localidad_id'] ?? null,
             'biografia' => $datos['biografia'] ?? null,
-            'linkedin' => $datos['linkedin'] ?? null,            
+            'linkedin' => $datos['linkedin'] ?? null,
         ];
-
 
         /*
     |--------------------------------------------------------------------------
@@ -235,7 +208,6 @@ class PerfilController extends Controller
                 ->store('perfiles/fotos', 'public');
         }
 
-
         /*
     |--------------------------------------------------------------------------
     | Guardar CV
@@ -249,7 +221,6 @@ class PerfilController extends Controller
                 ->store('perfiles/cv', 'public');
         }
 
-
         /*
     |--------------------------------------------------------------------------
     | Crear o actualizar perfil
@@ -262,7 +233,6 @@ class PerfilController extends Controller
             ],
             $datosPerfil
         );
-
 
         /*
     |--------------------------------------------------------------------------

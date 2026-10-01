@@ -1,6 +1,6 @@
 @extends('web.layouts.app')
 
-@section('title', 'Inicio')
+@section('title', config('app.name'))
 
 @section('content')
 
