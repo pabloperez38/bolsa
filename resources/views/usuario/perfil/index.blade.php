@@ -515,20 +515,21 @@
                                         </div>
 
                                         <form action="{{ route('usuario.2fa.disable') }}" method="POST">
-
                                             @csrf
                                             @method('DELETE')
 
                                             <div class="tt-button button-style">
-
                                                 <button type="submit" class="btn-2">
                                                     Desactivar autenticación en dos pasos
                                                 </button>
-
                                             </div>
-
                                         </form>
 
+                                        <div class="tt-button button-style mt-3">
+                                            <a href="{{ route('usuario.2fa.recovery-codes') }}" class="btn-3">
+                                                Ver códigos de recuperación
+                                            </a>
+                                        </div>
 
                                         {{-- 2FA ACTIVADO PERO SIN CONFIRMAR --}}
                                     @elseif ($usuario->two_factor_secret)
@@ -644,10 +645,10 @@
     </div>
     <script>
         /*
-                                    |--------------------------------------------------------------------------
-                                    | Vista previa de foto de perfil
-                                    |--------------------------------------------------------------------------
-                                    */
+                                        |--------------------------------------------------------------------------
+                                        | Vista previa de foto de perfil
+                                        |--------------------------------------------------------------------------
+                                        */
 
         document.getElementById('tf-upload-img').addEventListener('change', function(event) {
 

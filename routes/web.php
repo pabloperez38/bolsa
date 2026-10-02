@@ -165,6 +165,13 @@ Route::middleware(['auth', 'usuario'])->group(function () {
     Route::get('/usuario/2fa/qr', [PerfilController::class, 'twoFactorQr'])->name('usuario.2fa.qr');
 
     Route::post('/usuario/2fa/confirmar', [PerfilController::class, 'twoFactorConfirm'])->name('usuario.2fa.confirmar');
+
+    Route::get('/usuario/2fa/codigos-recuperacion', [PerfilController::class, 'twoFactorRecoveryCodes'])->name('usuario.2fa.recovery-codes');
+
+    Route::post('/usuario/2fa/codigos-recuperacion/regenerar', [
+        PerfilController::class,
+        'twoFactorRegenerateRecoveryCodes'
+    ])->name('usuario.2fa.recovery-codes.regenerate');
 });
 Route::get('/csrf-token', function () {
     return response()->json([

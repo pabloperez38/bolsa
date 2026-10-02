@@ -87,6 +87,55 @@ class PerfilController extends Controller
         );
     }
 
+    public function twoFactorRecoveryCodes()
+    {
+        $usuario = Auth::user();
+
+        if (!$usuario->hasEnabledTwoFactorAuthentication()) {
+            return back()->with(
+                'error',
+                'La autenticación en dos pasos no está activada.'
+            );
+        }
+
+        return view('usuario.perfil.recovery-codes', compact('usuario'));
+    }
+
+
+    public function twoFactorRegenerateRecoveryCodes()
+    {
+        $usuario = Auth::user();
+
+        if (!$usuario->hasEnabledTwoFactorAuthentication()) {
+            return back()->with(
+                'error',
+                'La autenticación en dos pasos no está activada.'
+            );
+        }
+
+        $codigos = collect();
+
+        for ($i = 0; $i < 8; $i++) {
+            $codigos->push(
+                \Laravel\Fortify\RecoveryCode::generate()
+            );
+        }
+
+        $usuario->forceFill([
+            'two_factor_recovery_codes' =>
+            \Laravel\Fortify\Fortify::currentEncrypter()->encrypt(
+                json_encode($codigos->all())
+            ),
+        ])->save();
+
+        return redirect()
+            ->route('usuario.2fa.recovery-codes')
+            ->with(
+                'success',
+                'Los códigos de recuperación fueron regenerados correctamente.'
+            );
+    }
+
     /**
      * Guardar o actualizar el perfil.
      */

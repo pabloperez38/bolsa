@@ -25,6 +25,7 @@ class GoogleController extends Controller
         // ---------------------------------------------------------
         // SI NO EXISTE LA CUENTA
         // ---------------------------------------------------------
+
         if (!$usuario) {
 
             // Guardamos temporalmente los datos de Google
@@ -57,16 +58,14 @@ class GoogleController extends Controller
             $usuario->save();
         }
 
-        // Iniciamos sesión
-        Auth::login($usuario);
-
-        // Regeneramos la sesión por seguridad
-        request()->session()->regenerate();
-
         // Obtener tipo de usuario
         $tipoUsuario = strtolower(
             (string) ($usuario->tipoUsuario?->nombre ?? '')
         );
+
+        // ---------------------------------------------------------
+        // VERIFICAR EMAIL
+        // ---------------------------------------------------------
 
         // Los administradores no necesitan verificar email
         if (
@@ -76,9 +75,6 @@ class GoogleController extends Controller
 
             Auth::logout();
 
-            request()->session()->invalidate();
-            request()->session()->regenerateToken();
-
             return redirect()
                 ->route('login')
                 ->with(
@@ -87,13 +83,51 @@ class GoogleController extends Controller
                 );
         }
 
-        // Redirección según tipo de usuario
+        // ---------------------------------------------------------
+        // AUTENTICACIÓN EN DOS PASOS
+        // ---------------------------------------------------------
+
+        if ($usuario->hasEnabledTwoFactorAuthentication()) {
+
+            // Guardamos temporalmente el usuario pendiente de 2FA
+            session()->put(
+                'two_factor_user_id',
+                $usuario->id
+            );
+
+            // Google no utiliza el "recordarme" del login tradicional
+            session()->put(
+                'two_factor_remember',
+                false
+            );
+
+            // Todavía NO iniciamos la sesión definitiva.
+            // El usuario debe confirmar primero el código 2FA.
+
+            return redirect()->route('usuario.2fa.login');
+        }
+
+        // ---------------------------------------------------------
+        // LOGIN NORMAL SIN 2FA
+        // ---------------------------------------------------------
+
+        Auth::login($usuario);
+
+        // Regeneramos la sesión por seguridad
+        request()->session()->regenerate();
+
+        // ---------------------------------------------------------
+        // REDIRECCIÓN SEGÚN TIPO DE USUARIO
+        // ---------------------------------------------------------
+
         switch ($tipoUsuario) {
 
             case 'administrador':
+
                 return redirect('/admin');
 
             case 'empresa':
+
                 return redirect('/empresa');
 
             case 'estudiante':
@@ -105,6 +139,7 @@ class GoogleController extends Controller
                     $usuario->perfil
                     && $usuario->perfil->estaCompleto()
                 ) {
+
                     return redirect('/usuario');
                 }
 

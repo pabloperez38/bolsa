@@ -23,11 +23,11 @@
                         <div class="contact-wrap info-wd">
 
                             <p class="mb-4">
-                                Para continuar, ingresá el código de 6 dígitos
-                                que aparece en tu aplicación
+                                Para continuar, ingresá el código de
                                 <strong>Google Authenticator</strong>.
+                                Si no tenés acceso a tu teléfono, podés utilizar
+                                uno de tus <strong>códigos de recuperación</strong>.
                             </p>
-
                             @if ($errors->any())
 
                                 <div class="alert alert-danger">
@@ -52,9 +52,8 @@
                                         Código de autenticación
                                     </label>
 
-                                    <input type="text" name="code" class="input-form" maxlength="6" minlength="6"
-                                        inputmode="numeric" autocomplete="one-time-code"
-                                        placeholder="Ingresá el código de 6 dígitos" autofocus required>
+                                    <input type="text" name="code" class="input-form" autocomplete="one-time-code"
+                                        placeholder="Ingresá tu código de autenticación o recuperación" autofocus required>
 
                                 </fieldset>
 

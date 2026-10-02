@@ -146,11 +146,10 @@ class AuthController extends Controller
     {
         $request->validate(
             [
-                'code' => ['required', 'digits:6'],
+                'code' => ['required', 'string'],
             ],
             [
                 'code.required' => 'El código de autenticación es obligatorio.',
-                'code.digits' => 'El código debe tener 6 dígitos.',
             ]
         );
 
@@ -158,6 +157,7 @@ class AuthController extends Controller
         $userId = $request->session()->get('two_factor_user_id');
 
         if (!$userId) {
+
             return redirect()
                 ->route('login')
                 ->withErrors([
@@ -169,6 +169,7 @@ class AuthController extends Controller
         $usuario = \App\Models\User::find($userId);
 
         if (!$usuario) {
+
             $request->session()->forget([
                 'two_factor_user_id',
                 'two_factor_remember',
@@ -192,27 +193,69 @@ class AuthController extends Controller
             return redirect()->route('login');
         }
 
-        // Verificar código de Google Authenticator
+        /*
+    |--------------------------------------------------------------------------
+    | Verificar código de Google Authenticator
+    |--------------------------------------------------------------------------
+    */
+
         $provider = app(
             \Laravel\Fortify\Contracts\TwoFactorAuthenticationProvider::class
         );
 
-        $valido = $provider->verify(
-            \Laravel\Fortify\Fortify::currentEncrypter()->decrypt(
-                $usuario->two_factor_secret
-            ),
-            $request->code
-        );
+        $valido = false;
 
-        // Código incorrecto
-        if (!$valido) {
-            return back()
-                ->withErrors([
-                    'code' => 'El código de autenticación no es válido.',
-                ]);
+        // Solo intentar Google Authenticator si son 6 dígitos
+        if (preg_match('/^\d{6}$/', $request->code)) {
+
+            $valido = $provider->verify(
+                \Laravel\Fortify\Fortify::currentEncrypter()->decrypt(
+                    $usuario->two_factor_secret
+                ),
+                $request->code
+            );
         }
 
-        // Recuperar opción "Recordarme"
+        /*
+    |--------------------------------------------------------------------------
+    | Verificar código de recuperación
+    |--------------------------------------------------------------------------
+    */
+
+        if (!$valido) {
+
+            $recoveryCodes = $usuario->recoveryCodes();
+
+            if (in_array($request->code, $recoveryCodes, true)) {
+
+                // El código de recuperación utilizado queda invalidado
+                $usuario->replaceRecoveryCode($request->code);
+
+                $valido = true;
+            }
+        }
+
+        /*
+    |--------------------------------------------------------------------------
+    | Código incorrecto
+    |--------------------------------------------------------------------------
+    */
+
+        if (!$valido) {
+
+            return back()
+                ->withErrors([
+                    'code' => 'El código de autenticación o recuperación no es válido.',
+                ])
+                ->withInput();
+        }
+
+        /*
+    |--------------------------------------------------------------------------
+    | Recuperar opción "Recordarme"
+    |--------------------------------------------------------------------------
+    */
+
         $remember = $request->session()->pull(
             'two_factor_remember',
             false
@@ -236,9 +279,11 @@ class AuthController extends Controller
         switch ($tipoUsuario) {
 
             case 'administrador':
+
                 return redirect('/admin');
 
             case 'empresa':
+
                 return redirect('/empresa');
 
             case 'estudiante':
@@ -246,7 +291,10 @@ class AuthController extends Controller
             case 'docente':
 
                 // Si el perfil está completo
-                if ($usuario->perfil && $usuario->perfil->estaCompleto()) {
+                if (
+                    $usuario->perfil
+                    && $usuario->perfil->estaCompleto()
+                ) {
                     return redirect('/usuario');
                 }
 
