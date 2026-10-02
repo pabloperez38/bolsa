@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Carrera;
 use App\Models\Categoria;
 use App\Models\Empresa;
 use App\Models\PersonaInstitucional;
@@ -126,9 +127,12 @@ class AuthController extends Controller
         return view('web.auth.register', compact('categorias'));
     }
 
-    //Registro de candidadtos 
+    // Registro de candidatos
     public function registroCandidato(Request $request)
     {
+        // Detectamos si el registro comenzó desde Google
+        $googleRegister = session('google_register');
+
         // Validamos los datos ingresados
         $request->validate(
             [
@@ -136,29 +140,24 @@ class AuthController extends Controller
                     'required',
                     'in:estudiante,graduado,docente',
                 ],
-
                 'dni' => [
                     'required',
                     'string',
                 ],
-
                 'legajo' => [
                     'required',
                     'string',
                 ],
-
                 'email' => [
                     'required',
                     'email',
                     'unique:users,email',
                 ],
-
                 'password' => [
                     'required',
                     'confirmed',
                     'min:8',
                 ],
-
                 'terminos' => [
                     'accepted',
                 ],
@@ -199,6 +198,17 @@ class AuthController extends Controller
             ]
         );
 
+        // Si el registro comenzó desde Google,
+        // verificamos que el email coincida con el email de Google
+        if ($googleRegister && $request->email !== $googleRegister['email']) {
+            return back()
+                ->withInput($request->except('password', 'password_confirmation'))
+                ->with(
+                    'error',
+                    'El correo electrónico no coincide con la cuenta de Google utilizada para registrarse.'
+                );
+        }
+
         // Buscamos a la persona en el padrón institucional
         $persona = PersonaInstitucional::where('dni', $request->dni)
             ->where('legajo', $request->legajo)
@@ -206,22 +216,34 @@ class AuthController extends Controller
             ->where('activo', true)
             ->first();
 
+        $carrera = null;
+
+        if ($persona && !empty($persona->carrera)) {
+            $carrera = Carrera::where('nombre', $persona->carrera)->first();
+        }
+
         // Si no existe en el padrón, no puede registrarse
         if (!$persona) {
             return back()
                 ->withInput($request->except('password', 'password_confirmation'))
-                ->with('error', 'Los datos ingresados no coinciden con los registros institucionales.');
+                ->with(
+                    'error',
+                    'Los datos ingresados no coinciden con los registros institucionales.'
+                );
         }
 
         // Verificamos que esa persona todavía no tenga una cuenta
         if ($persona->usuario) {
             return back()
                 ->withInput($request->except('password', 'password_confirmation'))
-                ->with('error', 'Esta persona ya tiene una cuenta registrada.');
+                ->with(
+                    'error',
+                    'Esta persona ya tiene una cuenta registrada.'
+                );
         }
 
         // Buscamos el tipo de usuario
-        $tipoUsuario = \App\Models\TipoUsuario::where(
+        $tipoUsuario = TipoUsuario::where(
             'nombre',
             $request->tipo
         )->first();
@@ -229,7 +251,10 @@ class AuthController extends Controller
         if (!$tipoUsuario) {
             return back()
                 ->withInput($request->except('password', 'password_confirmation'))
-                ->with('error', 'El tipo de usuario no está configurado correctamente.');
+                ->with(
+                    'error',
+                    'El tipo de usuario no está configurado correctamente.'
+                );
         }
 
         // Creamos la cuenta
@@ -238,21 +263,30 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => $request->password,
             'tipo_usuario_id' => $tipoUsuario->id,
+
+            // Si viene desde Google, guardamos el ID de Google.
+            // Si es un registro normal, queda en null.
+            'google_id' => $googleRegister['google_id'] ?? null,
         ]);
 
+        // Creamos el perfil
         $usuario->perfil()->create([
             'nombre' => $persona->nombre,
             'apellido' => $persona->apellido,
             'dni' => $persona->dni,
             'legajo' => $persona->legajo,
+            'carrera_id' => $carrera?->id,
+            'materias_aprobadas' => $persona->materias_aprobadas ?? null,
         ]);
 
-        // Iniciamos sesión automáticamente
+        // Eliminamos los datos temporales de Google
+        session()->forget('google_register');
+
+        // NO iniciamos sesión automáticamente
         // Auth::login($usuario);
+        // $request->session()->regenerate();
 
-        // Regeneramos la sesión por seguridad
-        //$request->session()->regenerate();
-
+        // Enviamos correo de verificación
         event(new Registered($usuario));
 
         return redirect()
@@ -430,5 +464,10 @@ class AuthController extends Controller
                 'success',
                 '¡Cuenta verificada correctamente! Ya podés iniciar sesión.'
             );
+    }
+
+    public function passwordResetRequest()
+    {
+        return view('web.auth.recovery');
     }
 }

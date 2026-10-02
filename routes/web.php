@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\EmpresaController;
@@ -8,6 +9,13 @@ use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\WebController;
 use Illuminate\Support\Facades\Route;
+
+
+Route::get('/auth/google', [GoogleController::class, 'redirect'])
+    ->name('google.redirect');
+
+Route::get('/auth/google/callback', [GoogleController::class, 'callback'])
+    ->name('google.callback');
 
 Route::get('/', [WebController::class, 'index'])->name('web.index');
 
@@ -17,22 +25,25 @@ Route::get('/oferta/{slug}/{id}', [WebController::class, 'detalle'])
 Route::get('/ofertas', [WebController::class, 'ofertas'])
     ->name('web.ofertas.index');
 
-Route::get('/login', [AuthController::class, 'showLogin'])
-    ->name('login');
+Route::middleware('guest')->group(function () {
 
-Route::post('/login', [AuthController::class, 'login'])
-    ->name('login.post');
+    Route::get('/login', [AuthController::class, 'showLogin'])
+        ->name('login');
 
-Route::get('/register', [AuthController::class, 'showRegister'])
-    ->name('register');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 
-Route::get('/registro/exito', function () {
-    return view('web.index');
-})->name('registro.exito');
+    Route::get('/register', [AuthController::class, 'showRegister'])
+        ->name('register');
+
+    Route::post('/register', [AuthController::class, 'registroCandidato']);
+});
 
 Route::get('/email/verificar/{id}/{hash}', [AuthController::class, 'verificarEmail'])
     ->middleware('signed')
     ->name('verification.verify');
+
+Route::get('/recuperar', [AuthController::class, 'passwordResetRequest'])
+    ->name('password.request');
 
 // =====================================================
 // REGISTRO
@@ -139,3 +150,8 @@ Route::middleware(['auth', 'usuario'])->group(function () {
     Route::put('/usuario/perfil', [PerfilController::class, 'update'])
         ->name('usuario.perfil.update');
 });
+Route::get('/csrf-token', function () {
+    return response()->json([
+        'token' => csrf_token(),
+    ]);
+})->name('web.csrf');

@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="{{ asset('assets/stylesheets/style.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/stylesheets/dashboard.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/stylesheets/responsive.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css">
 </head>
 
 <body class="dashboard show">
@@ -96,6 +97,7 @@
             });
         </script>
     @endif
+   
 </body>
 
 </html>

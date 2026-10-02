@@ -127,11 +127,27 @@
                                                     DNI
                                                 </label>
 
-                                                <input type="text" name="dni" class="input-form"
-                                                    value="{{ $perfil->dni }}" readonly>
+                                                <input type="text" class="input-form" value="{{ $perfil->dni }}"
+                                                    readonly>
 
                                                 <small class="text-muted">
                                                     El DNI no puede modificarse.
+                                                </small>
+
+                                            </fieldset>
+
+                                            {{-- Carrera --}}
+                                            <fieldset>
+
+                                                <label class="title-user fw-7">
+                                                    Carrera
+                                                </label>
+
+                                                <input type="text" class="input-form"
+                                                    value="{{ $perfil->carrera->nombre }}" readonly>
+
+                                                <small class="text-muted">
+                                                    La carrera no puede modificarse.
                                                 </small>
 
                                             </fieldset>
@@ -213,6 +229,22 @@
 
                                                 <small class="text-muted">
                                                     El legajo no puede modificarse.
+                                                </small>
+
+                                            </fieldset>
+
+                                            {{-- Carrera --}}
+                                            <fieldset>
+
+                                                <label class="title-user fw-7">
+                                                    Cantidad de materias aprobadas
+                                                </label>
+
+                                                <input type="text" class="input-form"
+                                                    value="{{ $perfil->materias_aprobadas }}" readonly>
+
+                                                <small class="text-muted">
+                                                    La cantidad de materias aprobadas no puede modificarse.
                                                 </small>
 
                                             </fieldset>
@@ -331,11 +363,18 @@
 
                                                 </fieldset>
 
-                                                @error('linkedin')
-                                                    <div class="text-danger mt-1">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
+                                                {{-- LinkedIn --}}
+
+                                                <fieldset class="flex2">
+
+                                                    <span class="fa-brands fa-github"></span>
+
+                                                    <input type="url" name="github"
+                                                        class="input-form2 @error('github') is-invalid @enderror"
+                                                        placeholder="URL de GitHub"
+                                                        value="{{ old('github', $perfil?->github) }}" maxlength="255">
+
+                                                </fieldset>
 
                                             </div>
 
@@ -434,6 +473,12 @@
 
     </div>
     <script>
+        /*
+        |--------------------------------------------------------------------------
+        | Vista previa de foto de perfil
+        |--------------------------------------------------------------------------
+        */
+
         document.getElementById('tf-upload-img').addEventListener('change', function(event) {
 
             const archivo = event.target.files[0];
@@ -443,7 +488,6 @@
             }
 
             const preview = document.getElementById('profile-preview');
-
             const lector = new FileReader();
 
             lector.onload = function(e) {
@@ -455,10 +499,60 @@
                     src="${e.target.result}"
                     alt="Vista previa de foto de perfil">
             `;
-
             };
 
             lector.readAsDataURL(archivo);
         });
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Mantener actualizado el token CSRF
+        |--------------------------------------------------------------------------
+        */
+
+        function actualizarTokenCSRF() {
+
+            fetch('{{ route('web.csrf') }}', {
+                    method: 'GET',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => {
+
+                    if (!response.ok) {
+                        throw new Error('No se pudo actualizar el token CSRF.');
+                    }
+
+                    return response.json();
+                })
+                .then(data => {
+
+                    if (!data.token) {
+                        return;
+                    }
+
+                    document.querySelectorAll('input[name="_token"]').forEach(function(input) {
+                        input.value = data.token;
+                    });
+
+                })
+                .catch(error => {
+
+                    console.log('No se pudo actualizar el token CSRF:', error);
+
+                });
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Actualizar cada 10 minutos
+        |--------------------------------------------------------------------------
+        */
+
+        setInterval(actualizarTokenCSRF, 10 * 60 * 1000);
     </script>
 @endsection

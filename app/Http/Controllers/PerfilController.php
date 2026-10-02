@@ -35,7 +35,7 @@ class PerfilController extends Controller
      */
     public function update(Request $request)
     {
-        $usuario = Auth::user();
+        $usuario = Auth::user();     
 
         /*
     |--------------------------------------------------------------------------
@@ -90,6 +90,11 @@ class PerfilController extends Controller
                 ],
 
                 'linkedin' => [
+                    'nullable',
+                    'url',
+                    'max:255',
+                ],
+                'github' => [
                     'nullable',
                     'url',
                     'max:255',
@@ -156,6 +161,10 @@ class PerfilController extends Controller
 
                 'linkedin.max' => 'El enlace de LinkedIn no puede superar los 255 caracteres.',
 
+                'github.url' => 'El enlace de GitHub no es válido.',
+
+                'github.max' => 'El enlace de GitHub no puede superar los 255 caracteres.',
+
                 'foto.image' => 'El archivo seleccionado debe ser una imagen.',
 
                 'foto.mimes' => 'La foto debe estar en formato JPG, JPEG o PNG.',
@@ -193,6 +202,7 @@ class PerfilController extends Controller
             'localidad_id' => $datos['localidad_id'] ?? null,
             'biografia' => $datos['biografia'] ?? null,
             'linkedin' => $datos['linkedin'] ?? null,
+            'github' => $datos['github'] ?? null,
         ];
 
         /*
@@ -219,7 +229,7 @@ class PerfilController extends Controller
             $datosPerfil['cv'] = $request
                 ->file('cv')
                 ->store('perfiles/cv', 'public');
-        }
+        }       
 
         /*
     |--------------------------------------------------------------------------

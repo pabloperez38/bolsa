@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('name');
 
             $table->string('email')->unique();
+            $table->string('google_id')->nullable()->unique();
 
             $table->timestamp('email_verified_at')->nullable();
 
@@ -32,7 +33,7 @@ return new class extends Migration
             $table->foreignId('tipo_usuario_id')
                 ->nullable()
                 ->constrained('tipos_usuario')
-                ->nullOnDelete();         
+                ->nullOnDelete();
 
             // ==========================================
             // ELIMINACIÓN LÓGICA

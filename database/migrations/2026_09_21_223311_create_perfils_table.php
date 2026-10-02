@@ -22,6 +22,12 @@ return new class extends Migration
             $table->string('apellido', 100)->nullable();
             $table->string('dni', 20)->unique();
             $table->string('legajo', 10)->unique();
+            $table->foreignId('carrera_id')
+                ->nullable()
+                ->constrained('carreras')
+                ->nullOnDelete();
+            $table->unsignedInteger('materias_aprobadas')
+                ->nullable();
             $table->string('telefono', 50)->nullable();
             $table->date('fecha_nacimiento')->nullable();
             // Ubicación
@@ -35,7 +41,8 @@ return new class extends Migration
             $table->string('foto')->nullable();
             $table->string('cv')->nullable();
             // Redes / sitios profesionales
-            $table->string('linkedin', 255)->nullable();        
+            $table->string('linkedin', 255)->nullable();
+            $table->string('github', 255)->nullable();
 
             $table->timestamps();
         });

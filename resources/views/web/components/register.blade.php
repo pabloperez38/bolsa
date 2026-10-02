@@ -8,6 +8,18 @@
 
                 <h4>Registro de nuevo usuario</h4>
 
+                @if (session('google_register'))
+                    <div class="alert alert-info">
+                        Estás registrándote con tu cuenta de Google.
+                        <br>
+                        Correo: <strong>{{ session('google_register.email') }}</strong>
+                    </div>
+                @endif
+
+                @php
+                    $googleRegister = session('google_register');
+                @endphp
+
                 {{-- =====================================================
                     TABS
                 ====================================================== --}}
@@ -31,9 +43,7 @@
 
                     <div class="inner">
 
-                        <form action="{{ route('registro.candidato') }}"
-                            method="POST"
-                            id="registerForm">
+                        <form action="{{ route('registro.candidato') }}" method="POST" id="registerForm">
 
                             @csrf
 
@@ -54,18 +64,15 @@
                                         Seleccione una opción
                                     </option>
 
-                                    <option value="estudiante"
-                                        {{ old('tipo') == 'estudiante' ? 'selected' : '' }}>
+                                    <option value="estudiante" {{ old('tipo') == 'estudiante' ? 'selected' : '' }}>
                                         Estudiante
                                     </option>
 
-                                    <option value="graduado"
-                                        {{ old('tipo') == 'graduado' ? 'selected' : '' }}>
+                                    <option value="graduado" {{ old('tipo') == 'graduado' ? 'selected' : '' }}>
                                         Graduado
                                     </option>
 
-                                    <option value="docente"
-                                        {{ old('tipo') == 'docente' ? 'selected' : '' }}>
+                                    <option value="docente" {{ old('tipo') == 'docente' ? 'selected' : '' }}>
                                         Docente
                                     </option>
 
@@ -90,9 +97,7 @@
                                     DNI<span>*</span>
                                 </label>
 
-                                <input type="text"
-                                    name="dni"
-                                    value="{{ old('dni') }}"
+                                <input type="text" name="dni" value="{{ old('dni') }}"
                                     placeholder="Ingrese su DNI">
 
                                 @error('dni')
@@ -114,9 +119,7 @@
                                     Legajo<span>*</span>
                                 </label>
 
-                                <input type="text"
-                                    name="legajo"
-                                    value="{{ old('legajo') }}"
+                                <input type="text" name="legajo" value="{{ old('legajo') }}"
                                     placeholder="Ingrese su legajo">
 
                                 @error('legajo')
@@ -138,10 +141,9 @@
                                     Correo electrónico<span>*</span>
                                 </label>
 
-                                <input type="email"
-                                    name="email"
-                                    value="{{ old('email') }}"
-                                    placeholder="Correo electrónico">
+                                <input type="email" name="email"
+                                    value="{{ $googleRegister['email'] ?? old('email') }}"
+                                    @if ($googleRegister) readonly @endif placeholder="Correo electrónico">
 
                                 @error('email')
                                     <span class="text-danger">
@@ -164,9 +166,7 @@
 
                                 <div class="inputs-group auth-pass-inputgroup">
 
-                                    <input type="password"
-                                        name="password"
-                                        class="input-form password-input"
+                                    <input type="password" name="password" class="input-form password-input"
                                         placeholder="Contraseña">
 
                                     <a class="icon-eye-off password-addon"></a>
@@ -194,10 +194,8 @@
 
                                 <div class="inputs-group auth-pass-inputgroup">
 
-                                    <input type="password"
-                                        name="password_confirmation"
-                                        class="input-form password-input"
-                                        placeholder="Confirmar contraseña">
+                                    <input type="password" name="password_confirmation"
+                                        class="input-form password-input" placeholder="Confirmar contraseña">
 
                                     <a class="icon-eye-off password-addon"></a>
 
@@ -220,9 +218,7 @@
 
                                 <div class="sub-ip">
 
-                                    <input type="checkbox"
-                                        name="terminos"
-                                        value="1"
+                                    <input type="checkbox" name="terminos" value="1"
                                         {{ old('terminos') ? 'checked' : '' }}>
 
                                     Acepto los
@@ -277,9 +273,7 @@
 
                     <div class="inner">
 
-                        <form action="{{ route('registro.empresa') }}"
-                            method="POST"
-                            id="empresaRegisterForm">
+                        <form action="{{ route('registro.empresa') }}" method="POST" id="empresaRegisterForm">
 
                             @csrf
 
@@ -293,9 +287,7 @@
                                     Razón social / Nombre de empresa<span>*</span>
                                 </label>
 
-                                <input type="text"
-                                    name="razon_social"
-                                    value="{{ old('razon_social') }}"
+                                <input type="text" name="razon_social" value="{{ old('razon_social') }}"
                                     placeholder="Nombre de la empresa">
 
                                 @error('razon_social')
@@ -317,9 +309,7 @@
                                     CUIT<span>*</span>
                                 </label>
 
-                                <input type="text"
-                                    name="cuit"
-                                    value="{{ old('cuit') }}"
+                                <input type="text" name="cuit" value="{{ old('cuit') }}"
                                     placeholder="Ingrese el CUIT">
 
                                 @error('cuit')
@@ -341,9 +331,7 @@
                                     Correo electrónico<span>*</span>
                                 </label>
 
-                                <input type="email"
-                                    name="email"
-                                    value="{{ old('email') }}"
+                                <input type="email" name="email" value="{{ $googleRegister['email'] ?? old('email') }}" @if($googleRegister) readonly @endif
                                     placeholder="Correo electrónico">
 
                                 @error('email')
@@ -367,9 +355,7 @@
 
                                 <div class="inputs-group auth-pass-inputgroup">
 
-                                    <input type="password"
-                                        name="password"
-                                        class="input-form password-input"
+                                    <input type="password" name="password" class="input-form password-input"
                                         placeholder="Contraseña">
 
                                     <a class="icon-eye-off password-addon"></a>
@@ -397,10 +383,8 @@
 
                                 <div class="inputs-group auth-pass-inputgroup">
 
-                                    <input type="password"
-                                        name="password_confirmation"
-                                        class="input-form password-input"
-                                        placeholder="Confirmar contraseña">
+                                    <input type="password" name="password_confirmation"
+                                        class="input-form password-input" placeholder="Confirmar contraseña">
 
                                     <a class="icon-eye-off password-addon"></a>
 
@@ -423,9 +407,7 @@
 
                                 <div class="sub-ip">
 
-                                    <input type="checkbox"
-                                        name="terminos"
-                                        value="1"
+                                    <input type="checkbox" name="terminos" value="1"
                                         {{ old('terminos') ? 'checked' : '' }}>
 
                                     Acepto los
@@ -489,10 +471,8 @@
 ============================================================ --}}
 
 @if (session('error'))
-
     <script>
-
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
 
             Swal.fire({
 
@@ -507,9 +487,7 @@
             });
 
         });
-
     </script>
-
 @endif
 
 
@@ -519,7 +497,6 @@
 ============================================================ --}}
 
 <script>
-
     const formulariosRegistro = [
 
         document.getElementById('registerForm'),
@@ -538,7 +515,7 @@
         }
 
 
-        formulario.addEventListener('submit', function () {
+        formulario.addEventListener('submit', function() {
 
             Swal.fire({
 
@@ -563,5 +540,4 @@
         });
 
     });
-
 </script>

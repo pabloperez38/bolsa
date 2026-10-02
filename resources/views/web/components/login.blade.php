@@ -14,6 +14,10 @@
                     </div>
                 @endif
 
+                @php
+                    $googleRegister = session('google_register');
+                @endphp
+
                 <form action="{{ route('login.post') }}" method="POST" id="loginForm">
 
                     @csrf
@@ -50,11 +54,13 @@
                     </div>
                     <div class="group-ant-choice">
                         <div class="sub-ip"><input type="checkbox" name="remember" id="remember">Recordarme</div>
-                        <a href="#" class="forgot">¿Olvidaste tu contraseña?</a>
+                        <a href="{{ route('password.request') }}" class="forgot">¿Olvidaste tu contraseña?</a>
                     </div>
                     <p class="line-ip"><span>o ingrese con redes sociales</span></p>
                     <a href="#" class="btn-social">Continuar con Facebook</a>
-                    <a href="#" class="btn-social"> Continuar con Google</a>
+                    <a href="{{ route('google.redirect') }}" class="btn-social">
+                        Continuar con Google
+                    </a>
 
                     <div class="sign-up">Todavía no estás registrado? <a href="/register">Registrarme</a></div>
                 </form>

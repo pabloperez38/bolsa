@@ -32,7 +32,6 @@
     <!-- Responsive -->
     <link rel="stylesheet" href="{{ asset('assets/stylesheets/responsive.css') }}">
 
-
 </head>
 
 <body class="dashboard show">
