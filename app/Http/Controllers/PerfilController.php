@@ -6,6 +6,8 @@ use App\Models\Localidad;
 use App\Models\Perfil;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Fortify\Fortify;
+use Laravel\Fortify\Contracts\TwoFactorAuthenticationProvider;
 
 class PerfilController extends Controller
 {
@@ -31,11 +33,66 @@ class PerfilController extends Controller
     }
 
     /**
+     * Mostrar código QR para configurar 2FA.
+     */
+    public function twoFactorQr()
+    {
+        $usuario = Auth::user();
+
+        abort_unless(
+            $usuario->two_factor_secret,
+            404
+        );
+
+        return response(
+            $usuario->twoFactorQrCodeSvg()
+        )->header('Content-Type', 'image/svg+xml');
+    }
+
+    /**
+     * Confirmar la configuración de 2FA.
+     */
+    public function twoFactorConfirm(Request $request)
+    {
+        $request->validate([
+            'code' => ['required', 'digits:6'],
+        ]);
+
+        $usuario = Auth::user();
+
+        if (!$usuario->two_factor_secret) {
+            return back()->with('error', 'Primero debés activar la autenticación en dos pasos.');
+        }
+
+        $provider = app(TwoFactorAuthenticationProvider::class);
+
+        $valido = $provider->verify(
+            Fortify::currentEncrypter()->decrypt(
+                $usuario->two_factor_secret
+            ),
+            $request->code
+        );
+
+        if (!$valido) {
+            return back()->with('error', 'El código ingresado no es válido.');
+        }
+
+        $usuario->forceFill([
+            'two_factor_confirmed_at' => now(),
+        ])->save();
+
+        return back()->with(
+            'success',
+            'La autenticación en dos pasos fue activada correctamente.'
+        );
+    }
+
+    /**
      * Guardar o actualizar el perfil.
      */
     public function update(Request $request)
     {
-        $usuario = Auth::user();     
+        $usuario = Auth::user();
 
         /*
     |--------------------------------------------------------------------------
@@ -229,7 +286,7 @@ class PerfilController extends Controller
             $datosPerfil['cv'] = $request
                 ->file('cv')
                 ->store('perfiles/cv', 'public');
-        }       
+        }
 
         /*
     |--------------------------------------------------------------------------

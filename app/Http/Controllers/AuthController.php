@@ -67,6 +67,30 @@ class AuthController extends Controller
                 );
         }
 
+        /*
+    |--------------------------------------------------------------------------
+    | Autenticación en dos pasos
+    |--------------------------------------------------------------------------
+    */
+
+        if ($usuario->hasEnabledTwoFactorAuthentication()) {
+
+            // Guardamos temporalmente el usuario pendiente de 2FA
+            $request->session()->put('two_factor_user_id', $usuario->id);
+
+            // Guardamos temporalmente la opción "recordarme"
+            $request->session()->put(
+                'two_factor_remember',
+                $request->boolean('remember')
+            );
+
+            // Cerramos la autenticación actual.
+            // El usuario todavía NO tendrá acceso al sistema.
+            Auth::logout();
+
+            return redirect()->route('usuario.2fa.login');
+        }
+
         // Regenerar la sesión después del login correcto
         $request->session()->regenerate();
 
@@ -88,6 +112,145 @@ class AuthController extends Controller
                 }
 
                 // Si el perfil está incompleto → completar perfil
+                return redirect('/usuario/perfil');
+
+            default:
+
+                Auth::logout();
+
+                return redirect()
+                    ->route('login')
+                    ->withErrors([
+                        'email' => 'El tipo de usuario no es válido.',
+                    ]);
+        }
+    }
+
+    /**
+     * Mostrar pantalla para ingresar el código 2FA.
+     */
+    public function twoFactorLogin()
+    {
+        if (!session()->has('two_factor_user_id')) {
+            return redirect()->route('login');
+        }
+
+        return view('web.auth.two-factor-login');
+    }
+
+
+    /**
+     * Verificar el código 2FA durante el inicio de sesión.
+     */
+    public function twoFactorLoginVerify(Request $request)
+    {
+        $request->validate(
+            [
+                'code' => ['required', 'digits:6'],
+            ],
+            [
+                'code.required' => 'El código de autenticación es obligatorio.',
+                'code.digits' => 'El código debe tener 6 dígitos.',
+            ]
+        );
+
+        // Recuperar ID del usuario pendiente de 2FA
+        $userId = $request->session()->get('two_factor_user_id');
+
+        if (!$userId) {
+            return redirect()
+                ->route('login')
+                ->withErrors([
+                    'email' => 'La sesión de autenticación expiró. Volvé a iniciar sesión.',
+                ]);
+        }
+
+        // Buscar usuario
+        $usuario = \App\Models\User::find($userId);
+
+        if (!$usuario) {
+            $request->session()->forget([
+                'two_factor_user_id',
+                'two_factor_remember',
+            ]);
+
+            return redirect()
+                ->route('login')
+                ->withErrors([
+                    'email' => 'No se pudo encontrar el usuario.',
+                ]);
+        }
+
+        // Verificar que realmente tenga 2FA activado
+        if (!$usuario->hasEnabledTwoFactorAuthentication()) {
+
+            $request->session()->forget([
+                'two_factor_user_id',
+                'two_factor_remember',
+            ]);
+
+            return redirect()->route('login');
+        }
+
+        // Verificar código de Google Authenticator
+        $provider = app(
+            \Laravel\Fortify\Contracts\TwoFactorAuthenticationProvider::class
+        );
+
+        $valido = $provider->verify(
+            \Laravel\Fortify\Fortify::currentEncrypter()->decrypt(
+                $usuario->two_factor_secret
+            ),
+            $request->code
+        );
+
+        // Código incorrecto
+        if (!$valido) {
+            return back()
+                ->withErrors([
+                    'code' => 'El código de autenticación no es válido.',
+                ]);
+        }
+
+        // Recuperar opción "Recordarme"
+        $remember = $request->session()->pull(
+            'two_factor_remember',
+            false
+        );
+
+        // Eliminar usuario pendiente
+        $request->session()->forget('two_factor_user_id');
+
+        // Autenticar definitivamente al usuario
+        Auth::login($usuario, $remember);
+
+        // Regenerar sesión
+        $request->session()->regenerate();
+
+        // Obtener tipo de usuario
+        $tipoUsuario = strtolower(
+            (string) ($usuario->tipoUsuario?->nombre ?? '')
+        );
+
+        // Redirección según tipo de usuario
+        switch ($tipoUsuario) {
+
+            case 'administrador':
+                return redirect('/admin');
+
+            case 'empresa':
+                return redirect('/empresa');
+
+            case 'estudiante':
+            case 'graduado':
+            case 'docente':
+
+                // Si el perfil está completo
+                if ($usuario->perfil && $usuario->perfil->estaCompleto()) {
+                    return redirect('/usuario');
+                }
+
+                // Si el perfil está incompleto
                 return redirect('/usuario/perfil');
 
             default:

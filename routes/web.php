@@ -9,6 +9,7 @@ use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\WebController;
 use Illuminate\Support\Facades\Route;
+use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticationController;
 
 
 Route::get('/auth/google', [GoogleController::class, 'redirect'])
@@ -36,6 +37,11 @@ Route::middleware('guest')->group(function () {
         ->name('register');
 
     Route::post('/register', [AuthController::class, 'registroCandidato']);
+
+    // Autenticación en dos pasos durante el login
+    Route::get('/usuario/2fa/login', [AuthController::class, 'twoFactorLogin'])->name('usuario.2fa.login');
+
+    Route::post('/usuario/2fa/login', [AuthController::class, 'twoFactorLoginVerify'])->name('usuario.2fa.login.verify');
 });
 
 Route::get('/email/verificar/{id}/{hash}', [AuthController::class, 'verificarEmail'])
@@ -149,6 +155,16 @@ Route::middleware(['auth', 'usuario'])->group(function () {
 
     Route::put('/usuario/perfil', [PerfilController::class, 'update'])
         ->name('usuario.perfil.update');
+
+    Route::post('/usuario/2fa', [TwoFactorAuthenticationController::class, 'store'])
+        ->name('usuario.2fa.enable');
+
+    Route::delete('/usuario/2fa', [TwoFactorAuthenticationController::class, 'destroy'])
+        ->name('usuario.2fa.disable');
+
+    Route::get('/usuario/2fa/qr', [PerfilController::class, 'twoFactorQr'])->name('usuario.2fa.qr');
+
+    Route::post('/usuario/2fa/confirmar', [PerfilController::class, 'twoFactorConfirm'])->name('usuario.2fa.confirmar');
 });
 Route::get('/csrf-token', function () {
     return response()->json([

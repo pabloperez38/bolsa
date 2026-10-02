@@ -97,7 +97,22 @@
             });
         </script>
     @endif
-   
+    @if (session('status') === \Laravel\Fortify\Fortify::TWO_FACTOR_AUTHENTICATION_DISABLED)
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+
+                Swal.fire({
+                    icon: 'success',
+                    title: '2FA desactivado',
+                    text: 'La autenticación en dos pasos fue quitada correctamente.',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true
+                });
+
+            });
+        </script>
+    @endif
 </body>
 
 </html>

@@ -436,8 +436,6 @@
                                                         </div>
                                                     </section>
 
-
-
                                                 </div>
                                             @endif
 
@@ -465,6 +463,178 @@
 
                     </div>
 
+                    <div class="col-md-12">
+
+                        <div class="profile-setting bg-white mt-4">
+
+                            <div class="form-infor-profile">
+
+                                <h3 class="title-info">
+                                    Seguridad de la cuenta
+                                </h3>
+
+                                <div class="contact-wrap info-wd">
+
+                                    <h3>
+                                        Autenticación en dos pasos
+                                    </h3>
+
+                                    <p class="mb-3">
+                                        Agregá una capa adicional de seguridad a tu cuenta utilizando
+                                        Google Authenticator.
+                                    </p>
+
+                                    {{-- Mensajes --}}
+                                    @if (session('success'))
+                                        <div class="alert alert-success">
+                                            {{ session('success') }}
+                                        </div>
+                                    @endif
+
+                                    @if (session('error'))
+                                        <div class="alert alert-danger">
+                                            {{ session('error') }}
+                                        </div>
+                                    @endif
+
+
+                                    {{-- 2FA ACTIVADO --}}
+                                    @if ($usuario->hasEnabledTwoFactorAuthentication())
+                                        <div class="alert alert-success">
+
+                                            <strong>
+                                                <i class="fa-solid fa-shield-halved"></i>
+                                                Autenticación en dos pasos activada
+                                            </strong>
+
+                                            <p class="mb-0 mt-2">
+                                                Tu cuenta está protegida mediante autenticación
+                                                en dos pasos.
+                                            </p>
+
+                                        </div>
+
+                                        <form action="{{ route('usuario.2fa.disable') }}" method="POST">
+
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <div class="tt-button button-style">
+
+                                                <button type="submit" class="btn-2">
+                                                    Desactivar autenticación en dos pasos
+                                                </button>
+
+                                            </div>
+
+                                        </form>
+
+
+                                        {{-- 2FA ACTIVADO PERO SIN CONFIRMAR --}}
+                                    @elseif ($usuario->two_factor_secret)
+                                        <div class="alert alert-warning">
+
+                                            <strong>
+                                                <i class="fa-solid fa-triangle-exclamation"></i>
+                                                Configuración pendiente
+                                            </strong>
+
+                                            <p class="mb-0 mt-2">
+                                                Escaneá el código QR con Google Authenticator
+                                                y luego ingresá el código de 6 dígitos para
+                                                confirmar la configuración.
+                                            </p>
+
+                                        </div>
+
+
+                                        {{-- Código QR --}}
+                                        <div class="text-center mt-4 mb-4">
+
+                                            <img src="{{ route('usuario.2fa.qr') }}"
+                                                alt="Código QR para Google Authenticator"
+                                                style="width: 220px; height: 220px;">
+
+                                            <p class="mt-3">
+                                                Abrí <strong>Google Authenticator</strong> en tu teléfono
+                                                y escaneá este código QR.
+                                            </p>
+
+                                        </div>
+
+
+                                        {{-- CONFIRMAR CÓDIGO --}}
+                                        <form action="{{ route('usuario.2fa.confirmar') }}" method="POST">
+
+                                            @csrf
+
+                                            <fieldset>
+
+                                                <label class="title-user fw-7">
+                                                    Código de autenticación
+                                                </label>
+
+                                                <input type="text" name="code" class="input-form" maxlength="6"
+                                                    minlength="6" inputmode="numeric" autocomplete="one-time-code"
+                                                    placeholder="Ingresá el código de 6 dígitos" required>
+
+                                                @error('code')
+                                                    <span class="text-danger">
+                                                        {{ $message }}
+                                                    </span>
+                                                @enderror
+
+                                            </fieldset>
+
+                                            <div class="tt-button button-style mt-3">
+
+                                                <button type="submit" class="btn-3">
+                                                    Confirmar y activar 2FA
+                                                </button>
+
+                                            </div>
+
+                                        </form>
+
+
+                                        {{-- 2FA DESACTIVADO --}}
+                                    @else
+                                        <div class="alert alert-light border">
+
+                                            <strong>
+                                                <i class="fa-solid fa-shield-halved"></i>
+                                                Autenticación en dos pasos desactivada
+                                            </strong>
+
+                                            <p class="mb-0 mt-2">
+                                                Actualmente tu cuenta utiliza únicamente tu contraseña
+                                                para iniciar sesión.
+                                            </p>
+
+                                        </div>
+
+                                        <div class="tt-button button-style">
+
+                                            <form action="{{ route('usuario.2fa.enable') }}" method="POST">
+
+                                                @csrf
+
+                                                <button type="submit" class="btn-3">
+                                                    Activar autenticación en dos pasos
+                                                </button>
+
+                                            </form>
+
+                                        </div>
+                                    @endif
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
                 </div>
 
             </div>
@@ -474,10 +644,10 @@
     </div>
     <script>
         /*
-        |--------------------------------------------------------------------------
-        | Vista previa de foto de perfil
-        |--------------------------------------------------------------------------
-        */
+                                    |--------------------------------------------------------------------------
+                                    | Vista previa de foto de perfil
+                                    |--------------------------------------------------------------------------
+                                    */
 
         document.getElementById('tf-upload-img').addEventListener('change', function(event) {
 
