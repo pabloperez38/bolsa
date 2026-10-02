@@ -1,316 +1,263 @@
 # Bolsa de Trabajo
 
-Sistema web desarrollado en Laravel para gestionar ofertas laborales, postulaciones y accesos por perfiles institucionales dentro de una bolsa de trabajo universitaria.
+Aplicación web universitaria para publicar ofertas laborales y pasantías, validar candidatos con un padrón institucional y administrar postulaciones. Está construida con Laravel 12 y PHP 8.2 o superior.
 
-## Descripción general
+## Funcionalidades implementadas
 
-La aplicación permite:
+- Catálogo público de ofertas activas, filtros de navegación por tipo de usuario, página de detalle autenticada y ofertas relacionadas por categoría y empresa.
+- Registro de estudiantes, graduados y docentes mediante validación de DNI, legajo, tipo y estado activo en el padrón institucional.
+- Registro de empresas mediante CUIT y correo únicos.
+- Inicio de sesión con contraseña o Google OAuth, verificación de correo para cuentas no administrativas y cierre de sesión.
+- Autenticación en dos pasos (TOTP) opcional para cuentas de candidato, con códigos de recuperación.
+- Restablecimiento de contraseña mediante las acciones y rutas de Laravel Fortify.
+- Perfil de candidato con datos personales, localidad, carrera, biografía, enlaces profesionales, foto y CV.
+- Postulaciones con estado, historial, reactivación de una postulación retirada y retiro mientras esté pendiente o en revisión.
+- Panel administrativo y consultas de usuarios, ofertas y empresas; administración de categorías con eliminación lógica y restauración.
+- Datos de referencia para tipos de usuario, ofertas, modalidades, contratación, categorías, subcategorías, localidades, carreras, empresas y ofertas de ejemplo.
 
-- Publicar y listar ofertas de trabajo y pasantías.
-- Registrar candidatos según su tipo: estudiante, graduado o docente.
-- Verificar la cuenta por correo electrónico.
-- Completar un perfil personal y restringir acceso hasta que esté completo.
-- Permitir que empresas gestionen su presencia dentro del sistema.
-- Gestionar usuarios y categorías desde un panel administrativo.
-- Controlar postulaciones y disponibilidad de cada oferta.
+## Roles y permisos
 
-El proyecto está basado en Laravel 12 con una estructura MVC clásica, Vite para assets frontend y configuración real para MySQL en XAMPP/WAMP.
+| Rol           | Capacidades disponibles                                                                           | Entrada principal |
+| ------------- | ------------------------------------------------------------------------------------------------- | ----------------- |
+| Administrador | Panel y consulta de usuarios, ofertas y empresas; crear, editar, eliminar y restaurar categorías. | `/admin`          |
+| Empresa       | Panel y vista de perfil de empresa.                                                               | `/empresa`        |
+| Estudiante    | Perfil, pasantías y postulaciones. No puede acceder a ofertas de trabajo.                         | `/usuario`        |
+| Graduado      | Perfil, ofertas de trabajo y postulaciones. No puede acceder a pasantías.                         | `/usuario`        |
+| Docente       | Perfil, ofertas de trabajo y postulaciones. No puede acceder a pasantías.                         | `/usuario`        |
 
-## Roles del sistema
+Las rutas por rol se protegen con los middleware `admin`, `empresa` y `usuario`. Las rutas de postulación también exigen `perfil.completo`. El detalle de una oferta requiere iniciar sesión y no está disponible para cuentas de administrador o empresa.
 
-### 1. Administrador
+## Flujos y reglas de negocio
 
-El administrador puede:
+### Registro y verificación
 
-- Acceder al panel principal de administración.
-- Listar usuarios, ofertas laborales y empresas.
-- Gestionar categorías y subcategorías.
-- Supervisar la actividad del sistema.
+El registro de candidato valida que DNI, legajo y tipo de usuario coincidan con una persona activa del padrón institucional y que esa persona no tenga otra cuenta. Se crea un perfil inicial con los datos institucionales. La cuenta no inicia sesión automáticamente.
 
-Ruta principal:
+El registro de empresa crea una cuenta y una empresa asociada. En ambos registros se solicita correo, contraseña confirmada de al menos 8 caracteres y aceptación de términos. Las cuentas de candidato y empresa deben verificar su correo antes de iniciar sesión; el administrador está exento.
 
-- `/admin`
+Google OAuth no omite el control institucional: si el correo aún no tiene cuenta, se conserva temporalmente para continuar el registro normal del candidato. La callback local debe coincidir con la URL configurada en Google.
 
-### 2. Empresa
+### Perfil de candidato
 
-Las cuentas de tipo empresa tienen acceso a una vista específica para consultorios de la organización y su perfil.
+El perfil se considera completo cuando tiene legajo, dirección, DNI, localidad y teléfono. Si falta alguno, las páginas protegidas redirigen a `/usuario/perfil`. El formulario además solicita nombre, fecha de nacimiento y localidad; permite biografía, LinkedIn y GitHub. La foto admite JPG/JPEG/PNG hasta 2 MB y el CV PDF hasta 5 MB.
 
-Ruta principal:
+### Ofertas y postulaciones
 
-- `/empresa`
+- Estudiantes solo pueden ver y solicitar pasantías; graduados y docentes solo pueden ver y solicitar trabajos.
+- Solo se muestran ofertas activas. Para postularse, además, la fecha de cierre no debe haber vencido.
+- No se admite más de una postulación vigente por persona y oferta. Una postulación retirada puede volver a activarse y pasa a estado `pendiente`.
+- Los estados disponibles en la base son `pendiente`, `en_revision`, `seleccionado`, `rechazado` y `retirado`.
+- Una postulación solo se puede retirar cuando está `pendiente` o `en_revision`.
 
-### 3. Candidato
+### Autenticación en dos pasos
 
-Los usuarios candidatos se registran como:
+El candidato puede configurar 2FA desde su perfil, escanear el QR y confirmar un código TOTP de seis dígitos. En el inicio de sesión se solicita ese código o un código de recuperación; usar un código de recuperación lo invalida. Se pueden regenerar los códigos de recuperación.
 
-- estudiante
-- graduado
-- docente
+## Rutas
 
-Estos roles pueden:
+Las rutas web están definidas en `routes/web.php`.
 
-- completar su perfil personal,
-- navegar ofertas disponibles según el tipo de perfil,
-- postularse a trabajos o pasantías,
-- consultar su historial de postulaciones,
-- retirar postulaciones activas.
+| Método      | Ruta                                          | Uso                                                               |
+| ----------- | --------------------------------------------- | ----------------------------------------------------------------- |
+| GET         | `/`                                           | Inicio y ofertas destacadas.                                      |
+| GET         | `/ofertas`                                    | Catálogo paginado de ofertas activas.                             |
+| GET         | `/oferta/{slug}/{id}`                         | Detalle de oferta para cuentas de candidato autenticadas.         |
+| GET/POST    | `/login`                                      | Formulario e inicio de sesión.                                    |
+| GET/POST    | `/register`                                   | Formulario y registro de candidato.                               |
+| POST        | `/registro/candidato`                         | Registro de candidato.                                            |
+| POST        | `/registro/empresa`                           | Registro de empresa.                                              |
+| POST        | `/logout`                                     | Cierre de sesión.                                                 |
+| GET         | `/auth/google`                                | Inicio de OAuth con Google.                                       |
+| GET         | `/auth/google/callback`                       | Retorno de OAuth con Google.                                      |
+| GET         | `/email/verificar/{id}/{hash}`                | Verificación firmada del correo.                                  |
+| GET         | `/recuperar`                                  | Vista personalizada de recuperación, actualmente vacía.           |
+| GET/POST    | `/forgot-password`                            | Vista y solicitud Fortify para enviar enlace de restablecimiento. |
+| GET         | `/reset-password/{token}`                     | Formulario Fortify de restablecimiento.                           |
+| POST        | `/reset-password`                             | Guardar la contraseña nueva.                                      |
+| GET/POST    | `/usuario/2fa/login`                          | Confirmación 2FA durante el inicio de sesión.                     |
+| GET         | `/admin`                                      | Inicio del panel administrativo.                                  |
+| GET         | `/admin/usuarios`                             | Consulta de usuarios.                                             |
+| GET         | `/admin/ofertas-laborales`                    | Consulta de ofertas.                                              |
+| GET         | `/admin/empresas`                             | Consulta de empresas.                                             |
+| GET         | `/admin/categorias`                           | Listado de categorías.                                            |
+| GET         | `/admin/categorias/create`                    | Formulario para crear categoría.                                  |
+| POST        | `/admin/categorias`                           | Crear categoría.                                                  |
+| GET         | `/admin/categorias/{id}/edit`                 | Formulario para editar categoría.                                 |
+| PUT/DELETE  | `/admin/categorias/{id}`                      | Actualizar o eliminar categoría.                                  |
+| POST        | `/admin/categorias/{id}/restore`              | Restaurar categoría eliminada lógicamente.                        |
+| GET         | `/empresa`                                    | Inicio del panel de empresa.                                      |
+| GET         | `/empresa/perfil`                             | Vista de perfil de empresa.                                       |
+| GET         | `/usuario`                                    | Inicio del área de candidato.                                     |
+| GET/PUT     | `/usuario/perfil`                             | Consultar y actualizar perfil.                                    |
+| GET         | `/usuario/trabajos`                           | Listado de trabajos para graduados y docentes.                    |
+| GET         | `/usuario/pasantias`                          | Listado de pasantías para estudiantes.                            |
+| GET         | `/usuario/postulaciones`                      | Historial del candidato.                                          |
+| POST        | `/usuario/postularse/{id}`                    | Crear o reactivar postulación.                                    |
+| POST        | `/usuario/postulaciones/{id}/retirar`         | Retirar postulación elegible.                                     |
+| POST/DELETE | `/usuario/2fa`                                | Habilitar o deshabilitar 2FA.                                     |
+| GET         | `/usuario/2fa/qr`                             | QR para configurar 2FA.                                           |
+| POST        | `/usuario/2fa/confirmar`                      | Confirmar configuración 2FA.                                      |
+| GET         | `/usuario/2fa/codigos-recuperacion`           | Ver códigos de recuperación.                                      |
+| POST        | `/usuario/2fa/codigos-recuperacion/regenerar` | Regenerar códigos.                                                |
+| POST        | `/user/passkeys`                              | Endpoint Fortify para registrar passkey.                          |
+| GET         | `/user/passkeys/options`                      | Opciones para registrar passkey.                                  |
+| DELETE      | `/user/passkeys/{passkey}`                    | Eliminar passkey.                                                 |
+| GET         | `/passkeys/login/options`                     | Opciones para iniciar sesión con passkey.                         |
+| POST        | `/passkeys/login`                             | Iniciar sesión con passkey.                                       |
 
-Rutas principales:
+## Tecnologías
 
-- `/usuario`
-- `/usuario/perfil`
-- `/usuario/trabajos`
-- `/usuario/pasantias`
-- `/usuario/postulaciones`
+- PHP 8.2+, Laravel 12, Laravel Fortify, Laravel Passkeys y Laravel Socialite.
+- MySQL/MariaDB para desarrollo local recomendado; SQLite está disponible como configuración inicial de Laravel y para pruebas.
+- Vite 6, Tailwind CSS 4 y JavaScript con módulos ES.
+- PHPUnit 11 para pruebas.
 
-## Flujo funcional
+## Requisitos
 
-### Registro de candidato
+- PHP 8.2 o superior con las extensiones requeridas por Laravel y el controlador PDO de la base elegida.
+- Composer.
+- Node.js y npm.
+- MySQL/MariaDB activo si se usa XAMPP.
+- Git para clonar el repositorio.
 
-El candidato debe:
+## Instalación local con XAMPP
 
-1. Elegir un tipo de usuario: estudiante, graduado o docente.
-2. Ingresar DNI y legajo.
-3. Validar que esos datos existan en el padrón institucional activo.
-4. Registrar un correo y contraseña.
-5. Aceptar los términos.
+1. Clonar el proyecto y entrar al directorio:
 
-Si coincide con una persona institucional validada, se crea la cuenta y se envía la verificación de correo.
+    ```bash
+    git clone <url-del-repositorio>
+    cd bolsa-trabajo
+    ```
 
-### Verificación de email
+2. Instalar dependencias:
 
-El usuario no puede iniciar sesión mientras su email no esté verificado, salvo los administradores.
+    ```bash
+    composer install
+    npm install
+    ```
 
-La verificación se realiza mediante:
+3. Crear el archivo de entorno. En Git Bash:
 
-- `/email/verificar/{id}/{hash}`
+    ```bash
+    cp .env.example .env
+    ```
 
-### Perfil completo
+    En PowerShell se puede usar `Copy-Item .env.example .env`.
 
-Para acceder a funciones de postulaciones, el usuario debe completar su perfil. El middleware `perfil.completo` exige que el perfil contenga datos mínimos como:
+4. Iniciar MySQL desde XAMPP y crear la base de datos `bolsa-trabajo`. Configurar `.env`:
 
-- legajo
-- dirección
-- DNI
-- localidad
-- teléfono
+    ```env
+    APP_NAME="Bolsa de Trabajo"
+    APP_URL=http://127.0.0.1:8000
 
-Si falta información, se redirige a `/usuario/perfil`.
+    DB_CONNECTION=mysql
+    DB_HOST=127.0.0.1
+    DB_PORT=3306
+    DB_DATABASE=bolsa-trabajo
+    DB_USERNAME=root
+    DB_PASSWORD=
+    ```
 
-### Postulación
+    Si MySQL tiene contraseña, indicar su valor en `DB_PASSWORD`. También se puede usar SQLite configurando `DB_CONNECTION=sqlite` y la ruta de la base según la configuración local.
 
-Un usuario puede postularse a una oferta si:
+5. Generar la clave, crear las tablas y cargar datos iniciales:
 
-- es estudiante, graduado o docente,
-- tiene el perfil completo,
-- la oferta está activa,
-- la oferta no está vencida,
-- la oferta corresponde a su tipo de perfil.
+    ```bash
+    php artisan key:generate
+    php artisan migrate --seed
+    php artisan storage:link
+    ```
 
-Reglas de acceso por tipo:
+6. En terminales separadas, iniciar Laravel y Vite:
 
-- estudiante → solo pasantías
-- graduado/docente → solo trabajos
+    ```bash
+    php artisan serve
+    ```
 
-### Retiro de postulación
+    ```bash
+    npm run dev
+    ```
 
-El usuario puede retirar su inscripción si la postulación todavía está en estado pendiente o en revisión.
+    Abrir la URL que indique `artisan serve` (por defecto `http://127.0.0.1:8000`). También existe `composer run dev`, que inicia servidor, queue listener, logs y Vite en paralelo.
 
-## Stack tecnológico
+## Configuración opcional
 
-- PHP 8.2
-- Laravel 12
-- MySQL
-- XAMPP
-- Vite
-- TailwindCSS
-- PHPUnit para testing
+### Google OAuth
 
-## Estructura principal
+Crear credenciales OAuth de tipo aplicación web en Google y configurar las variables siguientes en `.env`. La URL de retorno debe estar registrada exactamente en la consola de Google:
+
+```env
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GOOGLE_REDIRECT_URI=http://127.0.0.1:8000/auth/google/callback
+```
+
+### Correo de verificación
+
+`.env.example` usa `MAIL_MAILER=log`: los mensajes de verificación se escriben en `storage/logs/laravel.log` en vez de enviarse por SMTP. Para entregar correos reales, configurar un proveedor de correo en `.env`.
+
+### Archivos del perfil
+
+Las fotos y los CV se guardan en el disco `public`, bajo `storage/app/public/perfiles/`. `php artisan storage:link` publica el enlace necesario para servirlos desde `public/storage`.
+
+## Datos de desarrollo
+
+`php artisan migrate --seed` ejecuta `DatabaseSeeder`, que carga los tipos de usuario y oferta, carreras, categorías, subcategorías, localidades, modalidades, tipos de contratación, empresas, personas institucionales y ofertas de ejemplo.
+
+El seeder crea un administrador local:
+
+| Correo                   | Contraseña |
+| ------------------------ | ---------- |
+| `admin@bolsatrabajo.com` | `12345678` |
+
+Es una credencial únicamente para desarrollo local. Cambiarla antes de cualquier despliegue y no reutilizarla en entornos compartidos. Los demás usuarios semilla están sujetos a las reglas normales de verificación de correo y perfil.
+
+Para reconstruir la base local desde cero se puede ejecutar `php artisan migrate:fresh --seed`. **Este comando elimina todas las tablas y los datos existentes.**
+
+## Pruebas y compilación
+
+Ejecutar la suite PHP:
+
+```bash
+php artisan test
+```
+
+Las pruebas de funcionalidad actuales comprueban acceso al panel administrativo y de usuario, y denegación por rol. Para compilar los assets:
+
+```bash
+npm run build
+```
+
+## Estructura del proyecto
 
 ```text
 app/
-├── Http/
-│   ├── Controllers/
-│   └── Middleware/
-├── Models/
-├── Notifications/
-└── Providers/
-bootstrap/
-config/
-Database/
-├── migrations/
-├── seeders/
+  Http/Controllers/   Controladores web y de autenticación
+  Http/Middleware/    Restricciones de rol y perfil completo
+  Models/             Modelos Eloquent del dominio
+  Notifications/      Notificaciones de la aplicación
+  Providers/          Proveedores de servicios y Fortify
+bootstrap/            Arranque y alias de middleware
+config/               Configuración de Laravel y servicios externos
+database/
+  migrations/         Esquema de la base de datos
+  seeders/            Datos iniciales y de desarrollo
 resources/
-├── css/
-├── js/
-└── views/
-routes/
-└── web.php
-tests/
-public/
+  css/ js/ views/     Assets y vistas Blade
+routes/web.php        Rutas HTTP
+tests/                Pruebas PHPUnit
 ```
 
-## Rutas principales
+## Modelo de datos
 
-Las rutas están definidas en `routes/web.php` y se agrupan por rol:
+El dominio principal se organiza alrededor de usuarios y tipos de usuario, personas del padrón institucional, perfiles, empresas, ofertas (`trabajos`) y postulaciones. Las ofertas se relacionan con tipo de oferta, categoría, subcategoría, modalidad y tipo de contratación. También existen tablas de carreras y localidades. Categorías y ofertas usan eliminación lógica. La migración de autenticación agrega campos de 2FA a usuarios; la tabla `passkeys` almacena credenciales WebAuthn.
 
-- Público:
-    - `/`
-    - `/login`
-    - `/register`
-    - `/oferta/{slug}/{id}`
+## Alcance actual y pendientes
 
-- Autenticación:
-    - `/registro/candidato`
-    - `/registro/empresa`
-    - `/logout`
-    - `/email/verificar/{id}/{hash}`
+- El panel de empresa y su perfil son vistas; actualmente no hay operaciones para que una empresa cree, edite o administre ofertas desde la aplicación.
+- Administración ofrece consultas de usuarios, ofertas y empresas. El CRUD funcional disponible en ese panel es el de categorías; no se ofrece CRUD de ofertas ni de subcategorías.
+- `SubcategoriaController` y `TrabajoController` contienen acciones incompletas/no conectadas a las rutas actuales.
+- Fortify registra las rutas y acciones backend para solicitar y guardar una contraseña nueva (`/forgot-password` y `/reset-password`). La vista personalizada `/recuperar`, enlazada desde el login, está vacía; falta terminar la interfaz completa de recuperación.
+- Passkeys está habilitado en la configuración Fortify y sus rutas se registran automáticamente, pero el modelo `User` aún no integra el trait del paquete y no hay interfaz propia. El flujo no debe considerarse listo para uso hasta completar y probar esa integración.
 
-- Administración:
-    - `/admin`
-    - `/admin/usuarios`
-    - `/admin/ofertas-laborales`
-    - `/admin/empresas`
-    - `/admin/categorias`
-
-- Empresa:
-    - `/empresa`
-    - `/empresa/perfil`
-
-- Usuario:
-    - `/usuario`
-    - `/usuario/perfil`
-    - `/usuario/trabajos`
-    - `/usuario/pasantias`
-    - `/usuario/postulaciones`
-
-## Instalación
-
-### Prerrequisitos
-
-- PHP 8.2+
-- Composer
-- Node.js y npm
-- MySQL
-- XAMPP o un servidor local con MySQL activo
-- Git
-
-### Pasos
-
-1. Clonar el proyecto:
-
-```bash
-git clone <url-del-repositorio>
-cd bolsa-trabajo
-```
-
-2. Instalar dependencias de PHP:
-
-```bash
-composer install
-```
-
-3. Instalar dependencias frontend:
-
-```bash
-npm install
-```
-
-4. Configurar la base de datos en el archivo `.env`:
-
-```env
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=bolsa-trabajo
-DB_USERNAME=root
-DB_PASSWORD=
-```
-
-5. Crear la base de datos en MySQL si no existe:
-
-```sql
-CREATE DATABASE `bolsa-trabajo`;
-```
-
-6. Generar la clave de aplicación:
-
-```bash
-php artisan key:generate
-```
-
-7. Ejecutar migraciones y seeders:
-
-```bash
-php artisan migrate --seed
-```
-
-8. Levantar el proyecto:
-
-```bash
-php artisan serve
-```
-
-Y en otra terminal:
-
-```bash
-npm run dev
-```
-
-## Usuarios semilla
-
-El proyecto incluye usuarios de prueba predefinidos para desarrollo y pruebas locales:
-
-- Administrador: `admin@bolsatrabajo.com` / `12345678`
-- Estudiante: `estudiante@bolsatrabajo.com` / `12345678`
-- Graduado: `graduado@bolsatrabajo.com` / `12345678`
-- Docente: `docente@bolsatrabajo.com` / `12345678`
-- Empresa: `empresa@bolsatrabajo.com` / `12345678`
-
-> Estos usuarios son útiles para verificar permisos y flujos por rol.
-
-## Base de datos y datos maestros
-
-El seeder principal carga los siguientes registros:
-
-- categorías y subcategorías
-- empresas
-- tipos de usuario
-- usuarios base
-- localidades
-- tipos de oferta
-- modalidades
-- tipos de contratación
-- trabajos
-- personas institucionales
-
-## Seguridad y validaciones
-
-El sistema aplica capas de validación y control de acceso mediante middleware:
-
-- `admin` → restringe acceso a administradores
-- `empresa` → restringe acceso a empresas
-- `usuario` → restringe acceso a candidatos
-- `perfil.completo` → obliga completar datos mínimos antes de acceder a funciones del usuario
-
-Además, la autenticación válida email verificado para usuarios no administradores y el registro de candidatos valida la existencia institucional.
-
-## Verificación del proyecto
-
-Se validó el comportamiento principal con:
-
-```bash
-php artisan test --filter=RoleAccessTest
-```
-
-Resultado verificado:
-
-- 4 pruebas pasadas
-- 0 fallas
-
-Esto confirma que el sistema de permisos por rol y accesos principales está funcionando correctamente con la configuración actual.
-
-## Licencia
-
-Este proyecto se distribuye bajo la licencia MIT, en línea con el esqueleto base de Laravel.
+Estas limitaciones describen el estado del código y no impiden navegar ofertas ni postularse como candidato cuando se cumplen las reglas anteriores.
