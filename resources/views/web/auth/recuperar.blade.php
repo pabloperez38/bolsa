@@ -23,7 +23,7 @@
         </div>
     </section>
 
-   
+    @include('web.components.recuperar')
 
     @include('web.components.footer')
 

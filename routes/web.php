@@ -10,6 +10,7 @@ use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\WebController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticationController;
+use Illuminate\Http\Request;
 
 
 Route::get('/auth/google', [GoogleController::class, 'redirect'])
@@ -50,6 +51,16 @@ Route::get('/email/verificar/{id}/{hash}', [AuthController::class, 'verificarEma
 
 Route::get('/recuperar', [AuthController::class, 'passwordResetRequest'])
     ->name('password.request');
+
+Route::get('/reset-password/{token}', function (
+    Request $request,
+    string $token
+) {
+    return view('web.auth.reset-password', [
+        'token' => $token,
+        'email' => $request->query('email'),
+    ]);
+})->middleware('guest')->name('password.reset');
 
 // =====================================================
 // REGISTRO

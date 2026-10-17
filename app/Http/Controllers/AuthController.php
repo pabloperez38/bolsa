@@ -679,6 +679,6 @@ class AuthController extends Controller
 
     public function passwordResetRequest()
     {
-        return view('web.auth.recovery');
+        return view('web.auth.recuperar');
     }
 }
