@@ -83,22 +83,7 @@
             });
         </script>
     @endif
-
-    {{--     @if ($errors->any())
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: @json($errors->first()),
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: true
-                });
-            });
-        </script>
-    @endif
- --}}
+    
 
     @if (session('error'))
         <script>

@@ -65,15 +65,14 @@
                                                                     <div class="map color-4">
                                                                         {{ $oferta->Empresa->nombre }} </div>
                                                                     <div class="days"> @php
-                                                                        $hoy = now()->startOfDay();
-                                                                        $cierre = $oferta->fecha_cierre?->startOfDay();
+                                                                        $cierre = $oferta->fechaCierreVencimiento();
                                                                     @endphp
 
                                                                         @if ($cierre)
-                                                                            @if ($cierre->isPast())
+                                                                            @if (!$oferta->fechaCierreVigente())
                                                                                 Oferta finalizada
                                                                             @else
-                                                                                Faltan {{ $hoy->diffInDays($cierre) }} días
+                                                                                Faltan {{ $oferta->diasRestantes() }} días
                                                                             @endif
                                                                         @endif
                                                                     </div>

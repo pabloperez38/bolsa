@@ -155,9 +155,10 @@ Route::post('/usuario/postularse/{id}', [UsuarioController::class, 'postularse']
     ->middleware(['auth', 'usuario', 'perfil.completo'])
     ->name('usuario.postularse');
 
-Route::post('/usuario/postulaciones/{id}/retirar', [UsuarioController::class, 'retirarPostulacion'])
-    ->middleware(['auth', 'usuario', 'perfil.completo'])
-    ->name('usuario.postulaciones.retirar');
+Route::delete(
+    '/usuario/postulaciones/{id}/retirar',
+    [UsuarioController::class, 'retirarPostulacion']
+)->name('usuario.postulaciones.retirar');;
 
 Route::middleware(['auth', 'usuario'])->group(function () {
 

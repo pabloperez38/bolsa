@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 
 class Trabajo extends Model
@@ -30,11 +31,34 @@ class Trabajo extends Model
     ];
 
     protected $casts = [
-        'fecha_publicacion' => 'datetime',
-        'fecha_cierre' => 'datetime',
+        'fecha_publicacion' => 'date',
+        'fecha_cierre' => 'date',
         'destacado' => 'boolean',
         'activo' => 'boolean',
     ];
+
+    public function fechaCierreVencimiento(): ?Carbon
+    {
+        return $this->fecha_cierre?->copy()->endOfDay();
+    }
+
+    public function fechaCierreVigente(): bool
+    {
+        $vencimiento = $this->fechaCierreVencimiento();
+
+        return $vencimiento === null || $vencimiento->isFuture();
+    }
+
+    public function diasRestantes(): int
+    {
+        $vencimiento = $this->fechaCierreVencimiento();
+
+        if ($vencimiento === null || !$vencimiento->isFuture()) {
+            return 0;
+        }
+
+        return (int) ceil(now()->diffInHours($vencimiento) / 24);
+    }
 
     public function empresa()
     {

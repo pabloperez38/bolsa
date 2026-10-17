@@ -59,7 +59,7 @@
                                                                     <div class="map color-4">
                                                                         {{ $trabajo->empresa->nombre }}</div>
                                                                     <div class="days">
-                                                                        <span>{{ $trabajo->fecha_publicacion->diffForHumans() }}</span>
+                                                                        <span>{{ $trabajo->fecha_publicacion->format('d/m/Y') }}</span>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -84,17 +84,10 @@
                                                     <td>
                                                         <div class="title-day color-1">
                                                             @if ($trabajo->fecha_cierre)
-                                                                @if ($trabajo->fecha_cierre->isFuture())
-                                                                    @php
-                                                                        $diasRestantes = (int) ceil(
-                                                                            now()->diffInHours($trabajo->fecha_cierre) /
-                                                                                24,
-                                                                        );
-                                                                    @endphp
-
+                                                                @if ($trabajo->fechaCierreVigente())
                                                                     <span>
-                                                                        {{ $diasRestantes }}
-                                                                        {{ $diasRestantes == 1 ? 'día restante' : 'días restantes' }}
+                                                                        {{ $trabajo->diasRestantes() }}
+                                                                        {{ $trabajo->diasRestantes() == 1 ? 'día restante' : 'días restantes' }}
                                                                     </span>
                                                                 @else
                                                                     <span>Publicación finalizada</span>

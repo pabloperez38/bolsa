@@ -149,10 +149,7 @@ class UsuarioController extends Controller
         }
 
         // La oferta no debe estar vencida
-        if (
-            $trabajo->fecha_cierre &&
-            $trabajo->fecha_cierre->isPast()
-        ) {
+        if (!$trabajo->fechaCierreVigente()) {
             return back()->with(
                 'warning',
                 'Esta oferta ya no se encuentra disponible para postularse.'
@@ -227,7 +224,7 @@ class UsuarioController extends Controller
             ->where('user_id', $usuario->id)
             ->firstOrFail();
 
-        // Solo se puede retirar una postulación que todavía está pendiente
+        // Solo se puede eliminar una postulación pendiente o en revisión
         if (!in_array($postulacion->estado, ['pendiente', 'en_revision'])) {
             return back()->with(
                 'warning',
@@ -235,9 +232,8 @@ class UsuarioController extends Controller
             );
         }
 
-        $postulacion->update([
-            'estado' => 'retirado',
-        ]);
+        // Eliminar el registro de la tabla postulaciones
+        $postulacion->delete();
 
         return back()->with(
             'success',

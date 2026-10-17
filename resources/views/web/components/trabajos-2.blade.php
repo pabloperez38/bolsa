@@ -40,7 +40,7 @@
 
                                          <li>
                                              <span class="icon-calendar"></span>
-                                             {{ $trabajo->fecha_publicacion?->diffForHumans() }}
+                                             {{ $trabajo->fecha_publicacion?->format('d/m/Y') }}
                                          </li>
                                      </ul>
 
@@ -92,7 +92,12 @@
 
                                  <p class="days">
                                      @if ($trabajo->fecha_cierre)
-                                         Termina en {{ $trabajo->fecha_cierre->diffForHumans() }}
+                                         @if ($trabajo->fechaCierreVigente())
+                                             Termina en {{ $trabajo->diasRestantes() }}
+                                             {{ $trabajo->diasRestantes() == 1 ? 'día' : 'días' }}
+                                         @else
+                                             Publicación finalizada
+                                         @endif
                                      @endif
                                  </p>
 

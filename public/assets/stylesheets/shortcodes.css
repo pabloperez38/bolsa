@@ -7659,7 +7659,7 @@ button.btn-find:hover {
 }
 
 .features-job .inner-box .box-content {
-    width: 80%;
+    /*width: 80%;*/
 }
 
 .features-job.style-2.stc-apply .inner-box .box-content {
@@ -7704,7 +7704,7 @@ button.btn-find:hover {
 
 .features-job .job-archive-header h3 {
     line-height: 28px;
-    font-size: 20px;
+    font-size: 28px;
     word-break: break-word;
 }
 
@@ -11573,4 +11573,342 @@ input[type="number"]::-webkit-inner-spin-button {
     background-color: #148160;
     border: 1px solid #148160;
     box-shadow: unset;
+}
+
+/* ========================================
+   OFERTAS DESTACADAS - ESTILO ELEGANTE
+======================================== */
+
+.jobs-elegantes {
+    padding: 68px 0 76px;
+    background: #f8fafc;
+}
+
+.jobs-elegantes-heading {
+    margin-bottom: 34px;
+}
+
+.jobs-elegantes-heading .group-title {
+    /*max-width: 720px;*/
+}
+
+.jobs-elegantes-kicker {
+    display: block;
+    margin-bottom: 10px;
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.jobs-elegantes-heading h2 {
+    margin: 0 0 12px;
+    color: #172b4d;
+    font-size: 34px;
+    font-weight: 750;
+    line-height: 1.25;
+    letter-spacing: -0.8px;
+}
+
+.jobs-elegantes-heading p {
+    max-width: 680px;
+    margin: 0;
+    color: #68778b;
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.jobs-elegantes-grid {
+    row-gap: 22px;
+}
+
+.jobs-elegantes-column {
+    display: flex;
+}
+
+.jobs-elegantes-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid #e6ebf2;
+    border-radius: 10px;
+    box-shadow: 0 3px 12px rgba(15, 23, 42, 0.025);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.jobs-elegantes-card:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 9px 24px rgba(15, 23, 42, 0.065);
+}
+
+/* Encabezado y datos principales */
+
+.jobs-elegantes-header {
+    flex: 1;
+    padding: 25px 26px 23px;
+}
+
+.jobs-elegantes-header .inner-box,
+.jobs-elegantes-header .box-content {
+    width: 100%;
+}
+
+.jobs-elegantes-empresa {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-bottom: 17px;
+}
+
+.jobs-elegantes-empresa-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    color: #526783;
+    background: #f1f5f9;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+.jobs-elegantes-empresa h4 {
+    flex: 1;
+    min-width: 100px;
+    margin: 0;
+    color: #58677c;
+    font-size: 13px;
+    font-weight: 650;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.jobs-elegantes-tipo {
+    display: inline-block;
+    padding: 7px 10px;
+    color: #315d91;
+    background: #f0f5fb;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.4;
+}
+
+.jobs-elegantes-card .jobs-elegantes-titulo {
+    position: relative;
+    z-index: 2;
+    margin: 0 0 19px;
+    color: #1e293b;
+    font-size: 20px;
+    font-weight: 750;
+    line-height: 1.4;
+    letter-spacing: -0.25px;
+    overflow-wrap: anywhere;
+}
+
+/* Ubicación y publicación en una fila ordenada */
+
+.jobs-elegantes-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 24px;
+}
+
+.jobs-elegantes-meta-item {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 8px;
+    min-width: 0;
+    color: #718096;
+    font-size: 12px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+.jobs-elegantes-meta-item > span:first-child {
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: #8392a7;
+    font-size: 14px;
+}
+
+/* Pie de tarjeta: etiquetas y vencimiento */
+
+.jobs-elegantes-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 13px;
+    min-height: 66px;
+    padding: 14px 26px;
+    background: #fcfdff;
+    border-top: 1px solid #edf0f5;
+}
+
+.jobs-elegantes-footer .job-footer-left {
+    min-width: 0;
+}
+
+.jobs-elegantes-tags {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.jobs-elegantes-tags li {
+    margin: 0;
+}
+
+.jobs-elegantes-tags li a {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 9px;
+    color: #58677c;
+    background: #fff;
+    border: 1px solid #e4e9f0;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.4;
+    transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.jobs-elegantes-tags li a:hover {
+    color: #315d91;
+    border-color: #a9bfd9;
+}
+
+.jobs-elegantes-cierre {
+    margin-left: auto;
+}
+
+.jobs-elegantes-cierre .days {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 650;
+    line-height: 1.5;
+}
+
+.jobs-elegantes-vigente {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #47765f;
+}
+
+.jobs-elegantes-finalizado {
+    color: #9b6262;
+}
+
+/* Botón inferior */
+
+.jobs-elegantes-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 18px;
+}
+
+.jobs-elegantes-actions .tf-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    min-height: 47px;
+    padding: 12px 22px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 700;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.jobs-elegantes-actions .tf-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 14px rgba(15, 23, 42, 0.10);
+}
+
+/* Tablet */
+
+@media (max-width: 991px) {
+    .jobs-elegantes {
+        padding: 54px 0 60px;
+    }
+
+    .jobs-elegantes-heading h2 {
+        font-size: 30px;
+    }
+
+    .jobs-elegantes-header {
+        padding: 22px;
+    }
+
+    .jobs-elegantes-footer {
+        padding: 14px 22px;
+    }
+}
+
+/* Celular */
+
+@media (max-width: 575px) {
+    .jobs-elegantes {
+        padding: 40px 0 46px;
+    }
+
+    .jobs-elegantes-heading {
+        margin-bottom: 25px;
+    }
+
+    .jobs-elegantes-heading h2 {
+        font-size: 26px;
+        letter-spacing: -0.4px;
+    }
+
+    .jobs-elegantes-heading p {
+        font-size: 13px;
+    }
+
+    .jobs-elegantes-header {
+        padding: 20px 18px;
+    }
+
+    .jobs-elegantes-card .jobs-elegantes-titulo {
+        font-size: 19px;
+    }
+
+    .jobs-elegantes-empresa {
+        gap: 8px;
+    }
+
+    .jobs-elegantes-empresa h4 {
+        font-size: 12px;
+    }
+
+    .jobs-elegantes-meta {
+        gap: 9px 16px;
+    }
+
+    .jobs-elegantes-footer {
+        align-items: flex-start;
+        padding: 15px 18px;
+    }
+
+    .jobs-elegantes-cierre {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .jobs-elegantes-actions .tf-button {
+        width: 100%;
+    }
 }

@@ -44,7 +44,6 @@
 
                                             <tr>
                                                 <th>Oferta</th>
-                                                <th>Tipo</th>
                                                 <th>Modalidad</th>
                                                 <th>Postulación</th>
                                                 <th>Estado</th>
@@ -113,23 +112,6 @@
                                                             </div>
 
                                                         </td>
-
-
-                                                        {{-- TIPO DE OFERTA --}}
-                                                        <td>
-
-                                                            <div class="button-status style-2">
-
-                                                                @if ($trabajo->tipoOferta)
-                                                                    {{ $trabajo->tipoOferta->nombre }}
-                                                                @else
-                                                                    -
-                                                                @endif
-
-                                                            </div>
-
-                                                        </td>
-
 
                                                         {{-- MODALIDAD --}}
                                                         <td>
@@ -250,29 +232,21 @@
 
                                                                     </li>
 
-                                                                    {{-- RETIRARSE --}}
+                                                                    {{-- RETIRAR POSTULACIÓN --}}
                                                                     @if (in_array($postulacion->estado, ['pendiente', 'en_revision']))
                                                                         <li>
-
                                                                             <form method="POST"
                                                                                 action="{{ route('usuario.postulaciones.retirar', $postulacion->id) }}"
                                                                                 class="form-retirar-postulacion">
-
                                                                                 @csrf
+                                                                                @method('DELETE')
 
                                                                                 <button type="submit"
                                                                                     style="border: none; background: none; padding: 0; cursor: pointer;">
-
                                                                                     <span class="icon-close more-ic"></span>
-
-                                                                                    <span>
-                                                                                        Retirarme
-                                                                                    </span>
-
+                                                                                    <span>Retirarme</span>
                                                                                 </button>
-
                                                                             </form>
-
                                                                         </li>
                                                                     @endif
 

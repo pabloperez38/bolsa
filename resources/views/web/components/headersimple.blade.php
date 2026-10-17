@@ -258,10 +258,7 @@
                              </nav>
                          </div>
                      </div>
-                     <div class="header-ct-right">
-                         <div class="header-customize-item help">
-                             <a href="#"><span class="icon-help-circle"></span></a>
-                         </div>
+                     <div class="header-ct-right">                       
 
                          <div class="header-customize-item button">
                              @auth

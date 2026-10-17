@@ -25,7 +25,7 @@
     }
 
     .header-customize-item.account .name {
-        display: none;
+        /* display: none;*/
     }
 
     .sticky-area-wrap .header-ct-right .account img {

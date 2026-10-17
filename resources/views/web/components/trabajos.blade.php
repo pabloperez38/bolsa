@@ -1,122 +1,136 @@
- <section class="jobs-section-three">
-     <div class="tf-container">
-         <div class="tf-title style-2">
-             <div class="group-title">
-                 <h2>Ofertas laborales destacadas</h2>
-                 <p>
-                     Encontrá oportunidades laborales y profesionales seleccionadas para vos. Explorá las propuestas
-                     disponibles y descubrí nuevas oportunidades para desarrollar tu carrera.
-                 </p>
-             </div>
-         </div>
-         <div class="row wow fadeInUp">
+<section class="jobs-section-three jobs-elegantes">
+    <div class="tf-container">
 
-             @foreach ($trabajos as $trabajo)
-                 <div class="col-lg-6">
-                     <div class="features-job">
+        <div class="tf-title style-2 jobs-elegantes-heading">
+            <div class="group-title">
+                <span class="jobs-elegantes-kicker">OPORTUNIDADES PROFESIONALES</span>
+                <h2>Ofertas laborales destacadas</h2>
+                <p>
+                    Encontrá oportunidades laborales y profesionales seleccionadas para vos.
+                    Explorá las propuestas disponibles y descubrí nuevas oportunidades
+                    para desarrollar tu carrera.
+                </p>
+            </div>
+        </div>
 
-                         <div class="job-archive-header">
-                             <div class="inner-box">                             
+        <div class="row wow fadeInUp jobs-elegantes-grid">
 
-                                 <div class="box-content">
+            @foreach ($trabajos as $trabajo)
+                <div class="col-lg-6 jobs-elegantes-column">
+                    <div class="features-job jobs-elegantes-card">
 
-                                     <h4>
+                        <div class="job-archive-header jobs-elegantes-header">
+                            <div class="inner-box">
+                                <div class="box-content">
 
-                                         {{ $trabajo->empresa->nombre }}
+                                    <div class="jobs-elegantes-empresa">
+                                        <span class="jobs-elegantes-empresa-icon">
+                                            <span class="icon-briefcase"></span>
+                                        </span>
 
-                                     </h4>
+                                        <h4>{{ $trabajo->empresa->nombre }}</h4>
 
-                                     <h3>
+                                        <span class="jobs-elegantes-tipo">
+                                            @if ($trabajo->tipoOferta)
+                                                {{ $trabajo->tipoOferta->nombre }}
+                                            @endif
+                                        </span>
+                                    </div>
 
-                                         {{ $trabajo->titulo }}
+                                    <h3 class="jobs-elegantes-titulo">
+                                        {{ $trabajo->titulo }}
+                                    </h3>
 
-                                     </h3>
+                                    <div class="jobs-elegantes-meta">
+                                        <div class="jobs-elegantes-meta-item">
+                                            <span class="icon-map-pin"></span>
+                                            <span>{{ $trabajo->ubicacion }}</span>
+                                        </div>
 
-                                     <ul>
-                                         <li>
-                                             <span class="icon-map-pin"></span>
-                                             {{ $trabajo->ubicacion }}
-                                         </li>
+                                        <div class="jobs-elegantes-meta-item">
+                                            <span class="icon-calendar"></span>
+                                            <span>
+                                                {{ $trabajo->fecha_publicacion?->format('d/m/Y') }}
+                                            </span>
+                                        </div>
+                                    </div>
 
-                                         <li>
-                                             <span class="icon-calendar"></span>
-                                             {{ $trabajo->fecha_publicacion?->diffForHumans() }}
-                                         </li>
-                                     </ul>
+                                </div>
+                            </div>
+                        </div>
 
-                                     <span class="tipo_oferta"> {{-- Tipo de oferta: Trabajo / Pasantía --}}
-                                         @if ($trabajo->tipoOferta)
-                                             {{ $trabajo->tipoOferta->nombre }}
-                                         @endif
-                                     </span>
+                        <div class="job-archive-footer jobs-elegantes-footer">
 
-                                 </div>
-                             </div>
-                         </div>
+                            <div class="job-footer-left">
+                                <ul class="job-tag jobs-elegantes-tags">
 
-                         <div class="job-archive-footer">
+                                    {{-- Tipo de contratación --}}
+                                    @if ($trabajo->tipoContratacion)
+                                        <li>
+                                            <a href="{{ route('web.oferta.detalle', [
+                                                'slug' => $trabajo->slug,
+                                                'id' => $trabajo->id,
+                                            ]) }}">
+                                                {{ $trabajo->tipoContratacion->nombre }}
+                                            </a>
+                                        </li>
+                                    @endif
 
-                             <div class="job-footer-left">
-                                 <ul class="job-tag">
+                                    {{-- Modalidad --}}
+                                    @if ($trabajo->modalidad)
+                                        <li>
+                                            <a href="{{ route('web.oferta.detalle', [
+                                                'slug' => $trabajo->slug,
+                                                'id' => $trabajo->id,
+                                            ]) }}">
+                                                {{ $trabajo->modalidad->nombre }}
+                                            </a>
+                                        </li>
+                                    @endif
 
-                                     {{-- Tipo de contratación: Full-time / Part-time / etc. --}}
-                                     @if ($trabajo->tipoContratacion)
-                                         <li>
-                                             <a
-                                                 href="{{ route('web.oferta.detalle', [
-                                                     'slug' => $trabajo->slug,
-                                                     'id' => $trabajo->id,
-                                                 ]) }}">
-                                                 {{ $trabajo->tipoContratacion->nombre }}
-                                             </a>
-                                         </li>
-                                     @endif
+                                </ul>
+                            </div>
 
-                                     {{-- Modalidad: Presencial / Remoto / Híbrido --}}
-                                     @if ($trabajo->modalidad)
-                                         <li>
-                                             <a
-                                                 href="{{ route('web.oferta.detalle', [
-                                                     'slug' => $trabajo->slug,
-                                                     'id' => $trabajo->id,
-                                                 ]) }}">
-                                                 {{ $trabajo->modalidad->nombre }}
-                                             </a>
-                                         </li>
-                                     @endif
+                            <div class="job-footer-right jobs-elegantes-cierre">
+                                <p class="days">
+                                    @if ($trabajo->fecha_cierre)
+                                        @if ($trabajo->fechaCierreVigente())
+                                            <span class="jobs-elegantes-vigente">
+                                                <span class="icon-clock"></span>
+                                                Termina en {{ $trabajo->diasRestantes() }}
+                                                {{ $trabajo->diasRestantes() == 1 ? 'día' : 'días' }}
+                                            </span>
+                                        @else
+                                            <span class="jobs-elegantes-finalizado">
+                                                Publicación finalizada
+                                            </span>
+                                        @endif
+                                    @endif
+                                </p>
+                            </div>
 
-                                 </ul>
-                             </div>
+                        </div>
 
-                             <div class="job-footer-right">
+                        <a href="{{ route('web.oferta.detalle', [
+                            'slug' => $trabajo->slug,
+                            'id' => $trabajo->id,
+                        ]) }}"
+                           class="jobtex-link-item"
+                           tabindex="0"></a>
 
-                                 <p class="days">
-                                     @if ($trabajo->fecha_cierre)
-                                         Termina en {{ $trabajo->fecha_cierre->diffForHumans() }}
-                                     @endif
-                                 </p>
+                    </div>
+                </div>
+            @endforeach
 
-                             </div>
-                         </div>
+            <div class="col-md-12">
+                <div class="wrap-button jobs-elegantes-actions">
+                    <a href="/ofertas" class="tf-button style-1">
+                        Ver todas las ofertas
+                        <span class="icon-keyboard_arrow_right"></span>
+                    </a>
+                </div>
+            </div>
 
-                         <a href="{{ route('web.oferta.detalle', [
-                             'slug' => $trabajo->slug,
-                             'id' => $trabajo->id,
-                         ]) }}"
-                             class="jobtex-link-item" tabindex="0"></a>
-
-                     </div>
-                 </div>
-             @endforeach
-
-             <div class="col-md-12">
-                 <div class="wrap-button">
-                     <a href="/ofertas" class="tf-button style-1">
-                         Ver todas las ofertas
-                         <span class="icon-keyboard_arrow_right"></span>
-                     </a>
-                 </div>
-             </div>
-         </div>
-     </div>
- </section>
+        </div>
+    </div>
+</section>
