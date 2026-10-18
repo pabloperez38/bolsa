@@ -19,9 +19,9 @@
              </li>
 
              <li>
-                 <a href="/empresa/mis-ofertas" class="tf-effect">
+                 <a href="/empresa/mis-publicaciones" class="tf-effect">
                      <span class="icon-my-apply dash-icon"></span>
-                     <span class="dash-titles">Mis ofertas</span>
+                     <span class="dash-titles">Mis publicaciones</span>
                  </a>
              </li>
              <li>

@@ -24,10 +24,7 @@
                                 <div class="box-content">
 
                                     <div class="jobs-elegantes-empresa">
-                                        <span class="jobs-elegantes-empresa-icon">
-                                            <span class="icon-briefcase"></span>
-                                        </span>
-
+                                      
                                         <h4>{{ $trabajo->empresa->nombre }}</h4>
 
                                         <span class="jobs-elegantes-tipo">

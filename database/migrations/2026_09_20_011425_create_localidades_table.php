@@ -11,11 +11,15 @@ return new class extends Migration
         Schema::create('localidades', function (Blueprint $table) {
             $table->id();
 
-            $table->string('nombre', 100)->unique();
+            $table->foreignId('provincia_id')
+                ->constrained('provincias')
+                ->restrictOnDelete();
 
-            $table->boolean('activo')->default(true);
+            $table->string('nombre', 100);
 
             $table->timestamps();
+
+            $table->unique(['provincia_id', 'nombre']);
         });
     }
 

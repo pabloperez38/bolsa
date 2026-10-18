@@ -1,3 +1,4 @@
+
 <?php
 
 use App\Http\Controllers\AdminController;
@@ -8,10 +9,13 @@ use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\WebController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticationController;
-use Illuminate\Http\Request;
 
+// =====================================================
+// AUTENTICACIÓN CON GOOGLE
+// =====================================================
 
 Route::get('/auth/google', [GoogleController::class, 'redirect'])
     ->name('google.redirect');
@@ -19,20 +23,30 @@ Route::get('/auth/google', [GoogleController::class, 'redirect'])
 Route::get('/auth/google/callback', [GoogleController::class, 'callback'])
     ->name('google.callback');
 
-Route::get('/', [WebController::class, 'index'])->name('web.index');
+// =====================================================
+// SITIO PÚBLICO
+// =====================================================
+
+Route::get('/', [WebController::class, 'index'])
+    ->name('web.index');
+
+Route::get('/ofertas', [WebController::class, 'ofertas'])
+    ->name('web.ofertas.index');
 
 Route::get('/oferta/{slug}/{id}', [WebController::class, 'detalle'])
     ->name('web.oferta.detalle');
 
-Route::get('/ofertas', [WebController::class, 'ofertas'])
-    ->name('web.ofertas.index');
+// =====================================================
+// LOGIN, REGISTRO Y RECUPERACIÓN DE CONTRASEÑA
+// =====================================================
 
 Route::middleware('guest')->group(function () {
 
     Route::get('/login', [AuthController::class, 'showLogin'])
         ->name('login');
 
-    Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+    Route::post('/login', [AuthController::class, 'login'])
+        ->name('login.post');
 
     Route::get('/register', [AuthController::class, 'showRegister'])
         ->name('register');
@@ -40,30 +54,33 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'registroCandidato']);
 
     // Autenticación en dos pasos durante el login
-    Route::get('/usuario/2fa/login', [AuthController::class, 'twoFactorLogin'])->name('usuario.2fa.login');
+    Route::get('/usuario/2fa/login', [AuthController::class, 'twoFactorLogin'])
+        ->name('usuario.2fa.login');
 
-    Route::post('/usuario/2fa/login', [AuthController::class, 'twoFactorLoginVerify'])->name('usuario.2fa.login.verify');
+    Route::post('/usuario/2fa/login', [AuthController::class, 'twoFactorLoginVerify'])
+        ->name('usuario.2fa.login.verify');
+
+    Route::get('/reset-password/{token}', function (
+        Request $request,
+        string $token
+    ) {
+        return view('web.auth.reset-password', [
+            'token' => $token,
+            'email' => $request->query('email'),
+        ]);
+    })->name('password.reset');
 });
 
-Route::get('/email/verificar/{id}/{hash}', [AuthController::class, 'verificarEmail'])
-    ->middleware('signed')
-    ->name('verification.verify');
+Route::get('/email/verificar/{id}/{hash}', [
+    AuthController::class,
+    'verificarEmail',
+])->middleware('signed')->name('verification.verify');
 
 Route::get('/recuperar', [AuthController::class, 'passwordResetRequest'])
     ->name('password.request');
 
-Route::get('/reset-password/{token}', function (
-    Request $request,
-    string $token
-) {
-    return view('web.auth.reset-password', [
-        'token' => $token,
-        'email' => $request->query('email'),
-    ]);
-})->middleware('guest')->name('password.reset');
-
 // =====================================================
-// REGISTRO
+// REGISTRO DE CANDIDATOS Y EMPRESAS
 // =====================================================
 
 Route::post('/registro/candidato', [AuthController::class, 'registroCandidato'])
@@ -75,116 +92,158 @@ Route::post('/registro/empresa', [AuthController::class, 'registroEmpresa'])
 Route::post('/logout', [AuthController::class, 'logout'])
     ->name('logout');
 
-
-//Rutas de admin
+// =====================================================
+// ADMINISTRACIÓN
+// =====================================================
 
 Route::middleware(['auth', 'admin'])->group(function () {
+
     Route::get('/admin', [AdminController::class, 'index'])
         ->name('admin.index');
 
-    Route::prefix('admin')->group(function () {
+    Route::prefix('admin')->name('admin.')->group(function () {
+
+        // Usuarios
         Route::get('/usuarios', [EmpresaController::class, 'usuarios'])
-            ->name('admin.usuarios.index');
-    });
-    Route::prefix('admin')->group(function () {
+            ->name('usuarios.index');
+
+        // Ofertas laborales
         Route::get('/ofertas-laborales', [EmpresaController::class, 'ofertasLaborales'])
-            ->name('admin.ofertas-laborales.index');
-    });
-    Route::prefix('admin')->group(function () {
+            ->name('ofertas-laborales.index');
+
+        // Empresas
         Route::get('/empresas', [EmpresaController::class, 'index'])
-            ->name('admin.empresa.index');
-    });
+            ->name('empresa.index');
 
-    Route::prefix('admin')->group(function () {
-        Route::get('/categorias', [CategoriaController::class, 'categorias'])
-            ->name('admin.categorias.index');
-    });
+        // Categorías
+        Route::prefix('categorias')->name('categorias.')->group(function () {
 
-    Route::prefix('admin')->group(function () {
-        Route::get('/categorias/create', [CategoriaController::class, 'create'])
-            ->name('admin.categorias.create');
+            Route::get('/', [CategoriaController::class, 'categorias'])
+                ->name('index');
 
-        Route::post('/categorias', [CategoriaController::class, 'storeCategoria'])
-            ->name('admin.categorias.store');
+            Route::get('/create', [CategoriaController::class, 'create'])
+                ->name('create');
 
-        Route::get('/categorias/{id}/edit', [CategoriaController::class, 'editCategoria'])
-            ->name('admin.categorias.edit');
+            Route::post('/', [CategoriaController::class, 'storeCategoria'])
+                ->name('store');
 
-        Route::put('/categorias/{id}', [CategoriaController::class, 'updateCategoria'])
-            ->name('admin.categorias.update');
+            Route::get('/{id}/edit', [CategoriaController::class, 'editCategoria'])
+                ->name('edit');
 
-        Route::delete('/categorias/{id}', [CategoriaController::class, 'destroyCategoria'])
-            ->name('admin.categorias.destroy');
+            Route::put('/{id}', [CategoriaController::class, 'updateCategoria'])
+                ->name('update');
 
-        Route::post(
-            '/categorias/{id}/restore',
-            [CategoriaController::class, 'restoreCategoria']
-        )->name('admin.categorias.restore');
+            Route::delete('/{id}', [CategoriaController::class, 'destroyCategoria'])
+                ->name('destroy');
+
+            Route::post('/{id}/restore', [CategoriaController::class, 'restoreCategoria'])
+                ->name('restore');
+        });
     });
 });
 
-Route::middleware(['auth', 'empresa'])->group(function () {
-    Route::get('/empresa', [EmpresaController::class, 'dashboard'])
-        ->name('empresa.index');
+// =====================================================
+// PANEL DE EMPRESA
+// =====================================================
 
-    Route::get('/Empresa', [EmpresaController::class, 'dashboard'])
-        ->name('empresa.index.uppercase');
+Route::middleware(['auth', 'empresa'])
+    ->prefix('empresa')
+    ->name('empresa.')
+    ->group(function () {
 
-    Route::get('/empresa/perfil', [EmpresaController::class, 'perfil'])
-        ->name('empresa.perfil');
-});
+        Route::get('/', [EmpresaController::class, 'dashboard'])
+            ->name('index');
 
-//Usuarios
-Route::get('/usuario', [UsuarioController::class, 'index'])
-    ->middleware('auth', 'usuario')
-    ->name('usuario.index');
+        Route::get('/perfil', [EmpresaController::class, 'perfil'])
+            ->name('perfil');
 
-Route::get('/usuario/postulaciones', [UsuarioController::class, 'postulaciones'])
-    ->middleware('auth', 'usuario', 'perfil.completo')
-    ->name('usuario.postulaciones');
+        Route::put('/perfil', [EmpresaController::class, 'update'])
+            ->name('perfil.update');
 
-Route::get('/usuario/trabajos', [UsuarioController::class, 'trabajos'])
-    ->middleware('auth', 'usuario', 'perfil.completo')
-    ->name('usuario.trabajos');
+        Route::get('/mis-publicaciones', [EmpresaController::class, 'misPublicaciones'])
+            ->name('mis-publicaciones');
+    });
 
-Route::get('/usuario/pasantias', [UsuarioController::class, 'pasantias'])
-    ->middleware('auth', 'usuario', 'perfil.completo')
-    ->name('usuario.pasantias');
+// =====================================================
+// PANEL DE USUARIOS
+// =====================================================
 
-Route::post('/usuario/postularse/{id}', [UsuarioController::class, 'postularse'])
-    ->middleware(['auth', 'usuario', 'perfil.completo'])
-    ->name('usuario.postularse');
+Route::middleware(['auth', 'usuario'])
+    ->prefix('usuario')
+    ->name('usuario.')
+    ->group(function () {
 
-Route::delete(
-    '/usuario/postulaciones/{id}/retirar',
-    [UsuarioController::class, 'retirarPostulacion']
-)->name('usuario.postulaciones.retirar');;
+        Route::get('/', [UsuarioController::class, 'index'])
+            ->name('index');
 
-Route::middleware(['auth', 'usuario'])->group(function () {
+        // Perfil del usuario
+        Route::get('/perfil', [PerfilController::class, 'edit'])
+            ->name('perfil');
 
-    Route::get('/usuario/perfil', [PerfilController::class, 'edit'])
-        ->name('usuario.perfil');
+        Route::put('/perfil', [PerfilController::class, 'update'])
+            ->name('perfil.update');
 
-    Route::put('/usuario/perfil', [PerfilController::class, 'update'])
-        ->name('usuario.perfil.update');
+        // Funciones que requieren perfil completo
+        Route::middleware('perfil.completo')->group(function () {
 
-    Route::post('/usuario/2fa', [TwoFactorAuthenticationController::class, 'store'])
-        ->name('usuario.2fa.enable');
+            Route::get('/postulaciones', [UsuarioController::class, 'postulaciones'])
+                ->name('postulaciones');
 
-    Route::delete('/usuario/2fa', [TwoFactorAuthenticationController::class, 'destroy'])
-        ->name('usuario.2fa.disable');
+            Route::get('/trabajos', [UsuarioController::class, 'trabajos'])
+                ->name('trabajos');
 
-    Route::get('/usuario/2fa/qr', [PerfilController::class, 'twoFactorQr'])->name('usuario.2fa.qr');
+            Route::get('/pasantias', [UsuarioController::class, 'pasantias'])
+                ->name('pasantias');
 
-    Route::post('/usuario/2fa/confirmar', [PerfilController::class, 'twoFactorConfirm'])->name('usuario.2fa.confirmar');
+            Route::post('/postularse/{id}', [UsuarioController::class, 'postularse'])
+                ->name('postularse');
+        });
 
-    Route::get('/usuario/2fa/codigos-recuperacion', [PerfilController::class, 'twoFactorRecoveryCodes'])->name('usuario.2fa.recovery-codes');
+        // Retirar postulación
+        Route::delete('/postulaciones/{id}/retirar', [
+            UsuarioController::class,
+            'retirarPostulacion',
+        ])->name('postulaciones.retirar');
+    });
+
+// =====================================================
+// AUTENTICACIÓN EN DOS PASOS
+// Compartida por usuarios y empresas
+// =====================================================
+
+Route::middleware('auth')->group(function () {
+
+    Route::post('/usuario/2fa', [
+        TwoFactorAuthenticationController::class,
+        'store',
+    ])->name('usuario.2fa.enable');
+
+    Route::delete('/usuario/2fa', [
+        TwoFactorAuthenticationController::class,
+        'destroy',
+    ])->name('usuario.2fa.disable');
+
+    Route::get('/usuario/2fa/qr', [PerfilController::class, 'twoFactorQr'])
+        ->name('usuario.2fa.qr');
+
+    Route::post('/usuario/2fa/confirmar', [PerfilController::class, 'twoFactorConfirm'])
+        ->name('usuario.2fa.confirmar');
+
+    Route::get('/usuario/2fa/codigos-recuperacion', [
+        PerfilController::class,
+        'twoFactorRecoveryCodes',
+    ])->name('usuario.2fa.recovery-codes');
 
     Route::post('/usuario/2fa/codigos-recuperacion/regenerar', [
         PerfilController::class,
-        'twoFactorRegenerateRecoveryCodes'
+        'twoFactorRegenerateRecoveryCodes',
     ])->name('usuario.2fa.recovery-codes.regenerate');
 });
+
+// =====================================================
+// TOKEN CSRF
+// =====================================================
+
 Route::get('/csrf-token', function () {
     return response()->json([
         'token' => csrf_token(),

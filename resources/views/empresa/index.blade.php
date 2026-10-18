@@ -7,7 +7,7 @@
     @include('empresa.components.header')
 
     @include('empresa.components.leftmenu')
-
+    
     @include('empresa.components.footer')
 
 @endsection

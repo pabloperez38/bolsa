@@ -1,3 +1,4 @@
+
 <?php
 
 use Illuminate\Database\Migrations\Migration;
@@ -32,9 +33,10 @@ return new class extends Migration
 
             $table->string('direccion', 255)->nullable();
 
-            $table->string('localidad', 100)->nullable();
-
-            $table->string('provincia', 100)->nullable();
+            $table->foreignId('localidad_id')
+                ->nullable()
+                ->constrained('localidades')
+                ->restrictOnDelete();
 
             $table->boolean('activo')->default(true);
 
@@ -46,6 +48,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('empresa');
+        Schema::dropIfExists('empresas');
     }
 };
