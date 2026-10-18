@@ -8,10 +8,10 @@ Aplicación web universitaria para publicar ofertas laborales y pasantías, vali
 - Registro de estudiantes, graduados y docentes mediante validación de DNI, legajo, tipo y estado activo en el padrón institucional.
 - Registro de empresas mediante CUIT y correo únicos.
 - Inicio de sesión con contraseña o Google OAuth, verificación de correo para cuentas no administrativas y cierre de sesión.
-- Autenticación en dos pasos (TOTP) opcional para cuentas de candidato, con códigos de recuperación.
-- Restablecimiento de contraseña mediante las acciones y rutas de Laravel Fortify.
+- Autenticación en dos pasos (TOTP) opcional, con códigos de recuperación.
+- Pantallas de solicitud y cambio de contraseña preparadas; el envío y guardado no están conectados a rutas activas.
 - Perfil de candidato con datos personales, localidad, carrera, biografía, enlaces profesionales, foto y CV.
-- Postulaciones con estado, historial, reactivación de una postulación retirada y retiro mientras esté pendiente o en revisión.
+- Postulaciones e historial para candidatos. El retiro disponible elimina el registro en vez de cambiarlo al estado `retirado`.
 - Panel administrativo y consultas de usuarios, ofertas y empresas; administración de categorías con eliminación lógica y restauración.
 - Datos de referencia para tipos de usuario, ofertas, modalidades, contratación, categorías, subcategorías, localidades, carreras, empresas y ofertas de ejemplo.
 
@@ -20,12 +20,12 @@ Aplicación web universitaria para publicar ofertas laborales y pasantías, vali
 | Rol           | Capacidades disponibles                                                                           | Entrada principal |
 | ------------- | ------------------------------------------------------------------------------------------------- | ----------------- |
 | Administrador | Panel y consulta de usuarios, ofertas y empresas; crear, editar, eliminar y restaurar categorías. | `/admin`          |
-| Empresa       | Panel y vista de perfil de empresa.                                                               | `/empresa`        |
+| Empresa       | Panel, consulta de publicaciones propias y edición del perfil/datos de acceso.                     | `/empresa`        |
 | Estudiante    | Perfil, pasantías y postulaciones. No puede acceder a ofertas de trabajo.                         | `/usuario`        |
 | Graduado      | Perfil, ofertas de trabajo y postulaciones. No puede acceder a pasantías.                         | `/usuario`        |
 | Docente       | Perfil, ofertas de trabajo y postulaciones. No puede acceder a pasantías.                         | `/usuario`        |
 
-Las rutas por rol se protegen con los middleware `admin`, `empresa` y `usuario`. Las rutas de postulación también exigen `perfil.completo`. El detalle de una oferta requiere iniciar sesión y no está disponible para cuentas de administrador o empresa.
+Las rutas por rol se protegen con los middleware `admin`, `empresa` y `usuario`. Para listar ofertas y postularse, las cuentas de candidato también deben tener el perfil completo. El detalle de una oferta requiere iniciar sesión y no está disponible para cuentas de administrador o empresa.
 
 ## Flujos y reglas de negocio
 
@@ -33,7 +33,7 @@ Las rutas por rol se protegen con los middleware `admin`, `empresa` y `usuario`.
 
 El registro de candidato valida que DNI, legajo y tipo de usuario coincidan con una persona activa del padrón institucional y que esa persona no tenga otra cuenta. Se crea un perfil inicial con los datos institucionales. La cuenta no inicia sesión automáticamente.
 
-El registro de empresa crea una cuenta y una empresa asociada. En ambos registros se solicita correo, contraseña confirmada de al menos 8 caracteres y aceptación de términos. Las cuentas de candidato y empresa deben verificar su correo antes de iniciar sesión; el administrador está exento.
+El registro de empresa crea una cuenta y una empresa asociada. En ambos registros se solicita correo, contraseña confirmada de al menos 8 caracteres y aceptación de términos. Las cuentas de candidato y empresa deben verificar su correo antes de iniciar sesión; el administrador está exento. Las cuentas semilla de candidato y empresa no quedan verificadas automáticamente.
 
 Google OAuth no omite el control institucional: si el correo aún no tiene cuenta, se conserva temporalmente para continuar el registro normal del candidato. La callback local debe coincidir con la URL configurada en Google.
 
@@ -45,13 +45,13 @@ El perfil se considera completo cuando tiene legajo, dirección, DNI, localidad 
 
 - Estudiantes solo pueden ver y solicitar pasantías; graduados y docentes solo pueden ver y solicitar trabajos.
 - Solo se muestran ofertas activas. Para postularse, además, la fecha de cierre no debe haber vencido.
-- No se admite más de una postulación vigente por persona y oferta. Una postulación retirada puede volver a activarse y pasa a estado `pendiente`.
-- Los estados disponibles en la base son `pendiente`, `en_revision`, `seleccionado`, `rechazado` y `retirado`.
-- Una postulación solo se puede retirar cuando está `pendiente` o `en_revision`.
+- La base de datos impone una sola postulación por persona y oferta mediante una clave única.
+- La tabla define los estados `pendiente`, `en_revision`, `seleccionado`, `rechazado` y `retirado`; actualmente la aplicación crea postulaciones como `pendiente` y no ofrece una operación para cambiar su estado.
+- El candidato puede retirar su postulación si está `pendiente` o `en_revision`; la acción actual elimina el registro. No hay un flujo de reactivación implementado.
 
 ### Autenticación en dos pasos
 
-El candidato puede configurar 2FA desde su perfil, escanear el QR y confirmar un código TOTP de seis dígitos. En el inicio de sesión se solicita ese código o un código de recuperación; usar un código de recuperación lo invalida. Se pueden regenerar los códigos de recuperación.
+Una cuenta autenticada puede configurar 2FA con un código TOTP de seis dígitos. El inicio de sesión solicita ese código o un código de recuperación; usar un código de recuperación lo invalida. También se pueden regenerar los códigos de recuperación.
 
 ## Rutas
 
@@ -62,6 +62,7 @@ Las rutas web están definidas en `routes/web.php`.
 | GET         | `/`                                           | Inicio y ofertas destacadas.                                      |
 | GET         | `/ofertas`                                    | Catálogo paginado de ofertas activas.                             |
 | GET         | `/oferta/{slug}/{id}`                         | Detalle de oferta para cuentas de candidato autenticadas.         |
+| GET         | `/csrf-token`                                 | Devuelve el token CSRF de la sesión como JSON.                    |
 | GET/POST    | `/login`                                      | Formulario e inicio de sesión.                                    |
 | GET/POST    | `/register`                                   | Formulario y registro de candidato.                               |
 | POST        | `/registro/candidato`                         | Registro de candidato.                                            |
@@ -70,10 +71,8 @@ Las rutas web están definidas en `routes/web.php`.
 | GET         | `/auth/google`                                | Inicio de OAuth con Google.                                       |
 | GET         | `/auth/google/callback`                       | Retorno de OAuth con Google.                                      |
 | GET         | `/email/verificar/{id}/{hash}`                | Verificación firmada del correo.                                  |
-| GET         | `/recuperar`                                  | Vista personalizada de recuperación, actualmente vacía.           |
-| GET/POST    | `/forgot-password`                            | Vista y solicitud Fortify para enviar enlace de restablecimiento. |
-| GET         | `/reset-password/{token}`                     | Formulario Fortify de restablecimiento.                           |
-| POST        | `/reset-password`                             | Guardar la contraseña nueva.                                      |
+| GET         | `/recuperar`                                  | Formulario de solicitud de recuperación; su ruta de envío no está registrada. |
+| GET         | `/reset-password/{token}`                     | Formulario de cambio; la ruta `password.update` que usa no está registrada. |
 | GET/POST    | `/usuario/2fa/login`                          | Confirmación 2FA durante el inicio de sesión.                     |
 | GET         | `/admin`                                      | Inicio del panel administrativo.                                  |
 | GET         | `/admin/usuarios`                             | Consulta de usuarios.                                             |
@@ -86,24 +85,20 @@ Las rutas web están definidas en `routes/web.php`.
 | PUT/DELETE  | `/admin/categorias/{id}`                      | Actualizar o eliminar categoría.                                  |
 | POST        | `/admin/categorias/{id}/restore`              | Restaurar categoría eliminada lógicamente.                        |
 | GET         | `/empresa`                                    | Inicio del panel de empresa.                                      |
-| GET         | `/empresa/perfil`                             | Vista de perfil de empresa.                                       |
+| GET/PUT     | `/empresa/perfil`                             | Consultar y actualizar datos de empresa y acceso.                  |
+| GET         | `/empresa/mis-publicaciones`                  | Consultar publicaciones de la empresa.                             |
 | GET         | `/usuario`                                    | Inicio del área de candidato.                                     |
 | GET/PUT     | `/usuario/perfil`                             | Consultar y actualizar perfil.                                    |
 | GET         | `/usuario/trabajos`                           | Listado de trabajos para graduados y docentes.                    |
 | GET         | `/usuario/pasantias`                          | Listado de pasantías para estudiantes.                            |
 | GET         | `/usuario/postulaciones`                      | Historial del candidato.                                          |
-| POST        | `/usuario/postularse/{id}`                    | Crear o reactivar postulación.                                    |
-| POST        | `/usuario/postulaciones/{id}/retirar`         | Retirar postulación elegible.                                     |
+| POST        | `/usuario/postularse/{id}`                    | Crear una postulación.                                             |
+| DELETE      | `/usuario/postulaciones/{id}/retirar`         | Eliminar una postulación pendiente o en revisión.                  |
 | POST/DELETE | `/usuario/2fa`                                | Habilitar o deshabilitar 2FA.                                     |
 | GET         | `/usuario/2fa/qr`                             | QR para configurar 2FA.                                           |
 | POST        | `/usuario/2fa/confirmar`                      | Confirmar configuración 2FA.                                      |
 | GET         | `/usuario/2fa/codigos-recuperacion`           | Ver códigos de recuperación.                                      |
 | POST        | `/usuario/2fa/codigos-recuperacion/regenerar` | Regenerar códigos.                                                |
-| POST        | `/user/passkeys`                              | Endpoint Fortify para registrar passkey.                          |
-| GET         | `/user/passkeys/options`                      | Opciones para registrar passkey.                                  |
-| DELETE      | `/user/passkeys/{passkey}`                    | Eliminar passkey.                                                 |
-| GET         | `/passkeys/login/options`                     | Opciones para iniciar sesión con passkey.                         |
-| POST        | `/passkeys/login`                             | Iniciar sesión con passkey.                                       |
 
 ## Tecnologías
 
@@ -250,14 +245,14 @@ tests/                Pruebas PHPUnit
 
 ## Modelo de datos
 
-El dominio principal se organiza alrededor de usuarios y tipos de usuario, personas del padrón institucional, perfiles, empresas, ofertas (`trabajos`) y postulaciones. Las ofertas se relacionan con tipo de oferta, categoría, subcategoría, modalidad y tipo de contratación. También existen tablas de carreras y localidades. Categorías y ofertas usan eliminación lógica. La migración de autenticación agrega campos de 2FA a usuarios; la tabla `passkeys` almacena credenciales WebAuthn.
+El dominio principal se organiza alrededor de usuarios y tipos de usuario, personas del padrón institucional, perfiles, empresas, ofertas (`trabajos`) y postulaciones. Las ofertas se relacionan con tipo de oferta, categoría, subcategoría, modalidad y tipo de contratación. También existen tablas de provincias, localidades y carreras. Categorías, ofertas y usuarios usan eliminación lógica. La migración de autenticación agrega campos de 2FA a usuarios; la migración de passkeys crea una tabla de credenciales, aunque su flujo no está conectado en la aplicación.
 
 ## Alcance actual y pendientes
 
-- El panel de empresa y su perfil son vistas; actualmente no hay operaciones para que una empresa cree, edite o administre ofertas desde la aplicación.
+- La empresa puede actualizar su perfil y datos de acceso, y consultar sus publicaciones; no hay operaciones para crear, editar o administrar ofertas desde la aplicación.
 - Administración ofrece consultas de usuarios, ofertas y empresas. El CRUD funcional disponible en ese panel es el de categorías; no se ofrece CRUD de ofertas ni de subcategorías.
 - `SubcategoriaController` y `TrabajoController` contienen acciones incompletas/no conectadas a las rutas actuales.
-- Fortify registra las rutas y acciones backend para solicitar y guardar una contraseña nueva (`/forgot-password` y `/reset-password`). La vista personalizada `/recuperar`, enlazada desde el login, está vacía; falta terminar la interfaz completa de recuperación.
-- Passkeys está habilitado en la configuración Fortify y sus rutas se registran automáticamente, pero el modelo `User` aún no integra el trait del paquete y no hay interfaz propia. El flujo no debe considerarse listo para uso hasta completar y probar esa integración.
+- La vista `/recuperar` y el formulario `/reset-password/{token}` están implementados, y Fortify tiene configurada la función de restablecimiento. Sin embargo, no están registradas las rutas POST para solicitar el enlace y guardar la nueva contraseña; por eso el flujo no está operativo.
+- Passkeys está incluido en la configuración de Fortify y existe la migración de su tabla, pero el modelo `User` no integra el trait del paquete y `php artisan route:list` no muestra rutas de passkeys. No debe considerarse una función disponible.
 
-Estas limitaciones describen el estado del código y no impiden navegar ofertas ni postularse como candidato cuando se cumplen las reglas anteriores.
+Estas limitaciones describen el estado actual del código. Para consultar las rutas registradas en el entorno local, ejecutar `php artisan route:list --except-vendor`.
