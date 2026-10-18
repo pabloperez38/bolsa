@@ -87,14 +87,19 @@
 
                              @foreach ($categorias as $categoria)
                                  <li class="categories-mobile">
-                                     <a href="#"><span class="{{ $categoria->icono }}"></span>
+                                     <a href="{{ route('web.categorias.show', $categoria->slug) }}"><span
+                                             class="{{ $categoria->icono }}"></span>
                                          {{ $categoria->nombre }}</a>
                                      <div class="group-menu-category-mobile">
                                          <div class="menu left">
                                              <ul>
                                                  @foreach ($categoria->subcategorias as $subcategoria)
                                                      <li>
-                                                         <a href="#">
+                                                         <a
+                                                             href="{{ route('web.ofertas.subcategoria', [
+                                                                 'categoriaSlug' => $categoria->slug,
+                                                                 'subcategoriaSlug' => $subcategoria->slug,
+                                                             ]) }}">
                                                              {{ $subcategoria->nombre }}
                                                          </a>
                                                      </li>
@@ -174,7 +179,7 @@
 
                                      @foreach ($categorias as $categoria)
                                          <li>
-                                             <a href="#">
+                                             <a href="{{ route('web.categorias.show', $categoria->slug) }}">
                                                  <span class="{{ $categoria->icono }}"></span>
                                                  {{ $categoria->nombre }}
                                              </a>
@@ -185,7 +190,11 @@
 
                                                          @foreach ($categoria->subcategorias as $subcategoria)
                                                              <li>
-                                                                 <a href="#">
+                                                                 <a
+                                                                     href="{{ route('web.ofertas.subcategoria', [
+                                                                         'categoriaSlug' => $categoria->slug,
+                                                                         'subcategoriaSlug' => $subcategoria->slug,
+                                                                     ]) }}">
                                                                      {{ $subcategoria->nombre }}
                                                                  </a>
                                                              </li>
@@ -258,7 +267,7 @@
                              </nav>
                          </div>
                      </div>
-                     <div class="header-ct-right">                       
+                     <div class="header-ct-right">
 
                          <div class="header-customize-item button">
                              @auth

@@ -12,18 +12,26 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('subcategorias', function (Blueprint $table) {
-
             $table->id();
+
             $table->foreignId('categoria_id')
                 ->constrained('categorias')
                 ->cascadeOnDelete();
+
             $table->string('nombre', 150);
+            $table->string('slug');
+
             $table->string('descripcion')->nullable();
+
             $table->boolean('activo')->default(true);
             $table->softDeletes();
             $table->timestamps();
-            // Evita repetir una subcategoría dentro de la misma categoría
+
+            // Evita repetir una subcategoría dentro de la misma categoría.
             $table->unique(['categoria_id', 'nombre']);
+
+            // Evita repetir slugs dentro de una misma categoría.
+            $table->unique(['categoria_id', 'slug']);
         });
     }
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Localidad;
 use App\Models\Perfil;
+use App\Models\Provincia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Fortify\Fortify;
@@ -14,23 +15,38 @@ class PerfilController extends Controller
     /**
      * Mostrar el perfil del usuario autenticado.
      */
+
+
     public function edit()
     {
-
         $usuario = Auth::user();
 
         $perfil = $usuario->perfil;
 
-        $localidades = Localidad::where('activo', true)
-            ->orderBy('nombre')
-            ->get();
+        $provincias = Provincia::orderBy('nombre')->get();
+
+        $localidades = Localidad::select(
+            'id',
+            'provincia_id',
+            'nombre'
+        )->orderBy('nombre')->get();
+
+        // Recuperar la provincia de la localidad actual del perfil.
+        // Si hubo errores de validación, conservar la selección anterior.
+        $provinciaSeleccionada = old(
+            'provincia_id',
+            $perfil?->localidad?->provincia_id
+        );
 
         return view('usuario.perfil.index', compact(
             'usuario',
             'perfil',
-            'localidades'
+            'provincias',
+            'localidades',
+            'provinciaSeleccionada'
         ));
     }
+
 
     /**
      * Mostrar código QR para configurar 2FA.
@@ -183,6 +199,11 @@ class PerfilController extends Controller
                     'string',
                     'max:255',
                 ],
+                'area' => [
+                    'required',
+                    'string',
+                    'max:255',
+                ],
 
                 'localidad_id' => [
                     'required',
@@ -245,6 +266,8 @@ class PerfilController extends Controller
 
                 'telefono.required' => 'El teléfono es obligatorio.',
 
+                'area.required' => 'El área es obligatoria.',
+
                 'telefono.max' => 'El teléfono no puede superar los 50 caracteres.',
 
                 'direccion.required' => 'La dirección es obligatoria.',
@@ -305,11 +328,13 @@ class PerfilController extends Controller
             'telefono' => $datos['telefono'] ?? null,
             'fecha_nacimiento' => $datos['fecha_nacimiento'] ?? null,
             'direccion' => $datos['direccion'] ?? null,
+            'area' => $datos['area'] ?? null,
             'localidad_id' => $datos['localidad_id'] ?? null,
             'biografia' => $datos['biografia'] ?? null,
             'linkedin' => $datos['linkedin'] ?? null,
             'github' => $datos['github'] ?? null,
         ];
+
 
         /*
     |--------------------------------------------------------------------------

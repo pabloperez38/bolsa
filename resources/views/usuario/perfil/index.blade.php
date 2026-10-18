@@ -134,18 +134,16 @@
                                                 </label>
 
                                                 @if ($tipoUsuario === 'docente')
-                                                    <input type="text" name="carrera"
-                                                        class="input-form @error('carrera') is-invalid @enderror"
-                                                        value="{{ old('carrera', $usuario->carrera ?? '') }}"
-                                                        maxlength="255"
+                                                    <input type="text" name="area"
+                                                        class="input-form @error('area') is-invalid @enderror"
+                                                        value="{{ old('area', $perfil->area ?? '') }}" maxlength="255"
                                                         placeholder="Ingresá tu carrera, área o departamento">
 
-                                                    @error('carrera')
+                                                    @error('area')
                                                         <div class="text-danger mt-1">
                                                             {{ $message }}
                                                         </div>
                                                     @enderror
-                                                
                                                 @else
                                                     <input type="text" class="input-form"
                                                         value="{{ $usuario->personaInstitucional?->nombre ?? 'No disponible' }}"
@@ -259,35 +257,43 @@
                                                 @enderror
                                             </fieldset>
 
-                                            {{-- LOCALIDAD --}}
-
+                                            {{-- PROVINCIA --}}
                                             <fieldset>
-                                                <label class="title-user fw-7">
+                                                <label class="title-user fw-7" for="provincia_id">
+                                                    Provincia
+                                                </label>
+
+                                                <select id="provincia_id" name="provincia_id"
+                                                    class="input-form @error('provincia_id') is-invalid @enderror"
+                                                    required>
+                                                    <option value="">Seleccioná una provincia</option>
+
+                                                    @foreach ($provincias as $provincia)
+                                                        <option value="{{ $provincia->id }}" @selected((string) old('provincia_id', $provinciaSeleccionada) === (string) $provincia->id)>
+                                                            {{ $provincia->nombre }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+
+                                                @error('provincia_id')
+                                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                                @enderror
+                                            </fieldset>
+
+                                            {{-- LOCALIDAD --}}
+                                            <fieldset>
+                                                <label class="title-user fw-7" for="localidad_id">
                                                     Localidad
                                                 </label>
 
-                                                <select name="localidad_id"
-                                                    class="input-form @error('localidad_id') is-invalid @enderror">
-
-                                                    <option value="">
-                                                        Seleccionar localidad
-                                                    </option>
-
-                                                    @foreach ($localidades as $localidad)
-                                                        <option value="{{ $localidad->id }}"
-                                                            {{ old('localidad_id', $perfil?->localidad_id) == $localidad->id ? 'selected' : '' }}>
-
-                                                            {{ $localidad->nombre }}
-
-                                                        </option>
-                                                    @endforeach
-
+                                                <select id="localidad_id" name="localidad_id"
+                                                    class="input-form @error('localidad_id') is-invalid @enderror" required
+                                                    disabled>
+                                                    <option value="">Primero seleccioná una provincia</option>
                                                 </select>
 
                                                 @error('localidad_id')
-                                                    <div class="text-danger mt-1">
-                                                        {{ $message }}
-                                                    </div>
+                                                    <div class="text-danger mt-1">{{ $message }}</div>
                                                 @enderror
                                             </fieldset>
 
@@ -601,10 +607,10 @@
 
     <script>
         /*
-                |--------------------------------------------------------------------------
-                | Vista previa de foto de perfil
-                |--------------------------------------------------------------------------
-                */
+                                    |--------------------------------------------------------------------------
+                                    | Vista previa de foto de perfil
+                                    |--------------------------------------------------------------------------
+                                    */
 
         const inputFoto = document.getElementById('tf-upload-img');
 
@@ -679,6 +685,72 @@
         */
 
         setInterval(actualizarTokenCSRF, 10 * 60 * 1000);
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const provincia = document.getElementById('provincia_id');
+            const localidad = document.getElementById('localidad_id');
+
+            // Localidades cargadas desde el controlador.
+            const localidades =
+                {{ Js::from(
+                    $localidades->map(function ($item) {
+                            return [
+                                'id' => $item->id,
+                                'provincia_id' => $item->provincia_id,
+                                'nombre' => $item->nombre,
+                            ];
+                        })->values(),
+                ) }};
+
+            // Priorizar el valor enviado si hubo errores de validación.
+            const localidadGuardada =
+                {{ Js::from(old('localidad_id', $perfil?->localidad_id)) }};
+
+            function cargarLocalidades(provinciaId, localidadSeleccionada = '') {
+                localidad.innerHTML = '';
+
+                const opcionInicial = document.createElement('option');
+                opcionInicial.value = '';
+                opcionInicial.textContent = provinciaId ?
+                    'Seleccioná una localidad' :
+                    'Primero seleccioná una provincia';
+
+                localidad.appendChild(opcionInicial);
+
+                if (!provinciaId) {
+                    localidad.disabled = true;
+                    return;
+                }
+
+                const filtradas = localidades.filter(function(item) {
+                    return String(item.provincia_id) === String(provinciaId);
+                });
+
+                filtradas.forEach(function(item) {
+                    const opcion = document.createElement('option');
+                    opcion.value = item.id;
+                    opcion.textContent = item.nombre;
+
+                    if (String(item.id) === String(localidadSeleccionada)) {
+                        opcion.selected = true;
+                    }
+
+                    localidad.appendChild(opcion);
+                });
+
+                localidad.disabled = false;
+            }
+
+            provincia.addEventListener('change', function() {
+                // Al cambiar la provincia, no conservar una localidad anterior.
+                cargarLocalidades(this.value);
+            });
+
+            // Inicializar con la provincia y localidad actuales del perfil.
+            cargarLocalidades(provincia.value, localidadGuardada);
+        });
     </script>
 
 @endsection

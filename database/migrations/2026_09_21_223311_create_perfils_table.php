@@ -28,6 +28,7 @@ return new class extends Migration
                 ->nullOnDelete();
             $table->unsignedInteger('materias_aprobadas')
                 ->nullable();
+            $table->string('area', 255)->nullable();
             $table->string('telefono', 50)->nullable();
             $table->date('fecha_nacimiento')->nullable();
             // Ubicación

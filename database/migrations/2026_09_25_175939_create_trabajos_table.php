@@ -9,34 +9,23 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('trabajos', function (Blueprint $table) {
-
             $table->id();
 
-            // ==========================================
-            // INFORMACIÓN PRINCIPAL
-            // ==========================================
-
+            // Información principal
             $table->string('titulo', 150);
-
+            $table->string('slug')->index();
             $table->text('descripcion');
 
             $table->foreignId('empresa_id')
                 ->constrained('empresas')
                 ->cascadeOnDelete();
 
-            // ==========================================
-            // TIPO DE OFERTA
-            // ==========================================
-            // Trabajo / Pasantía
-
+            // Tipo de oferta: trabajo o pasantía
             $table->foreignId('tipo_oferta_id')
                 ->constrained('tipos_oferta')
                 ->restrictOnDelete();
 
-            // ==========================================
-            // CATEGORÍA
-            // ==========================================
-
+            // Categoría
             $table->foreignId('categoria_id')
                 ->constrained('categorias')
                 ->restrictOnDelete();
@@ -45,45 +34,26 @@ return new class extends Migration
                 ->constrained('subcategorias')
                 ->restrictOnDelete();
 
-            // ==========================================
-            // UBICACIÓN
-            // ==========================================
-
+            // Ubicación
             $table->string('ubicacion', 150);
 
-            // ==========================================
-            // MODALIDAD
-            // ==========================================
-            // Presencial / Remoto / Híbrido
-
+            // Modalidad
             $table->foreignId('modalidad_id')
                 ->constrained('modalidades')
                 ->restrictOnDelete();
 
-            // ==========================================
-            // TIPO DE CONTRATACIÓN
-            // ==========================================
-            // Full-time / Part-time / Freelance /
-            // Temporal / Por proyecto
-
+            // Tipo de contratación
             $table->foreignId('tipo_contratacion_id')
                 ->constrained('tipos_contratacion')
                 ->restrictOnDelete();
 
-            // ==========================================
-            // FECHAS
-            // ==========================================
-
+            // Fechas
             $table->date('fecha_publicacion');
-
             $table->date('fecha_cierre');
 
-            // ==========================================
-            // ESTADO
-            // ==========================================
+            // Estado
+            $table->boolean('activo')->default(true);
 
-            $table->boolean('activo')
-                ->default(true);
             $table->softDeletes();
             $table->timestamps();
         });

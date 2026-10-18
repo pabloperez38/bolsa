@@ -12,6 +12,7 @@ use App\Http\Controllers\WebController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticationController;
+use Illuminate\Support\Facades\Artisan;
 
 // =====================================================
 // AUTENTICACIÓN CON GOOGLE
@@ -35,6 +36,14 @@ Route::get('/ofertas', [WebController::class, 'ofertas'])
 
 Route::get('/oferta/{slug}/{id}', [WebController::class, 'detalle'])
     ->name('web.oferta.detalle');
+
+Route::get('/ofertas/resultados', [WebController::class, 'resultados'])
+    ->name('web.ofertas.resultados');
+
+Route::get('/categorias/{slug}', [WebController::class, 'categoria'])
+    ->name('web.categorias.show');
+
+Route::get('/ofertas/{categoriaSlug}/{subcategoriaSlug}', [WebController::class, 'subcategoria'])->name('web.ofertas.subcategoria');
 
 // =====================================================
 // LOGIN, REGISTRO Y RECUPERACIÓN DE CONTRASEÑA
@@ -249,3 +258,25 @@ Route::get('/csrf-token', function () {
         'token' => csrf_token(),
     ]);
 })->name('web.csrf');
+
+/* Route::get('/generar-storage', function () {
+    $target = '/home/sistemadeventas/domains/sistemadeventas.com.ar/storage/app/public';
+
+    // Cambiamos 'public' por 'public_html' (o la carpeta pública real de tu hosting)
+    $link = '/home/sistemadeventas/domains/sistemadeventas.com.ar/public_html/storage';
+
+    if (file_exists($link)) {
+        if (is_link($link)) {
+            unlink($link);
+        } else {
+            rmdir($link);
+        }
+    }
+
+    if (symlink($target, $link)) {
+        return '¡Enlace simbólico creado correctamente en public_html/storage!';
+    }
+
+    return 'No se pudo crear el enlace.';
+});
+ */

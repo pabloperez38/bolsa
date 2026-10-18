@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Categoria;
 use App\Models\Subcategoria;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class SubcategoriaSeeder extends Seeder
 {
@@ -149,15 +150,15 @@ class SubcategoriaSeeder extends Seeder
 
         foreach ($subcategorias as $nombreCategoria => $nombresSubcategorias) {
 
-            // Buscar la categoría por su nombre
-            $categoria = Categoria::where('nombre', $nombreCategoria)->first();
+            $categoria = Categoria::where(
+                'nombre',
+                $nombreCategoria
+            )->first();
 
-            // Si la categoría no existe, continuar con la siguiente
             if (!$categoria) {
                 continue;
             }
 
-            // Crear las subcategorías
             foreach ($nombresSubcategorias as $nombreSubcategoria) {
 
                 Subcategoria::updateOrCreate(
@@ -166,6 +167,7 @@ class SubcategoriaSeeder extends Seeder
                         'nombre' => $nombreSubcategoria,
                     ],
                     [
+                        'slug' => Str::slug($nombreSubcategoria),
                         'descripcion' => null,
                         'activo' => true,
                     ]

@@ -6,10 +6,13 @@ use App\Models\Categoria;
 use App\Models\Localidad;
 use App\Models\Trabajo;
 use App\Models\Postulacion;
+use App\Models\Provincia;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Subcategoria;
 
 class WebController extends Controller
 {
+
     public function index()
     {
         $categorias = Categoria::with([
@@ -32,10 +35,17 @@ class WebController extends Controller
             ->limit(6)
             ->get();
 
-        $localidades = Localidad::orderBy('nombre', 'asc')->get();
+        $provincias = Provincia::with('localidades')
+            ->orderBy('nombre', 'asc')
+            ->get();;
 
-        return view('web.index', compact('categorias', 'trabajos', 'localidades'));
+        return view('web.index', compact(
+            'categorias',
+            'trabajos',
+            'provincias'
+        ));
     }
+
 
     //Detalle del trabajo o pasantia 
 
@@ -199,5 +209,165 @@ class WebController extends Controller
             ->paginate(12);
 
         return view('web.ofertas.index', compact('trabajos'));
+    }
+
+
+    public function resultados()
+    {
+        $usuario = Auth::user();
+
+        $tipoUsuario = strtolower(
+            (string) ($usuario?->tipoUsuario?->nombre ?? '')
+        );
+
+        $consulta = Trabajo::with([
+            'categoria',
+            'subcategoria',
+            'empresa',
+            'tipoOferta',
+            'modalidad',
+            'tipoContratacion',
+        ])->where('activo', true);
+
+        // Respetar las ofertas permitidas según el tipo de usuario.
+        if ($tipoUsuario === 'estudiante') {
+            $consulta->where('tipo_oferta_id', 2);
+        }
+
+        if (in_array($tipoUsuario, ['graduado', 'docente'])) {
+            $consulta->where('tipo_oferta_id', 1);
+        }
+
+        // Buscar por palabra clave.
+        $palabraClave = request('palabra_clave');
+
+        if ($palabraClave) {
+            $consulta->where(function ($query) use ($palabraClave) {
+                $query->where('titulo', 'like', "%{$palabraClave}%");
+            });
+        }
+
+        // Filtrar por localidad, si se seleccionó.
+        if (request('localidad_id')) {
+            $consulta->whereHas('empresa', function ($query) {
+                $query->where('localidad_id', request('localidad_id'));
+            });
+        }
+
+        $trabajos = $consulta
+            ->orderByDesc('fecha_publicacion')
+            ->paginate(12)
+            ->withQueryString();
+
+        return view('web.ofertas.index', compact('trabajos'));
+    }
+    // ==================================================
+    // CATEGORÍA PÚBLICA
+    // ==================================================
+
+
+    public function categoria(string $slug)
+    {
+        $categoria = Categoria::with([
+            'subcategorias' => function ($query) {
+                $query->where('activo', true)
+                    ->orderBy('nombre');
+            },
+        ])
+            ->where('slug', $slug)
+            ->where('activo', true)
+            ->firstOrFail();
+
+        $consulta = Trabajo::with([
+            'categoria',
+            'subcategoria',
+            'empresa',
+            'tipoOferta',
+            'modalidad',
+            'tipoContratacion',
+        ])
+            ->where('activo', true)
+            ->where('categoria_id', $categoria->id);
+
+        $usuario = Auth::user();
+
+        $tipoUsuario = strtolower(
+            (string) ($usuario?->tipoUsuario?->nombre ?? '')
+        );
+
+        // Estudiante: solamente pasantías.
+        if ($tipoUsuario === 'estudiante') {
+            $consulta->where('tipo_oferta_id', 2);
+        }
+
+        // Graduado y docente: solamente trabajos.
+        if (in_array($tipoUsuario, ['graduado', 'docente'], true)) {
+            $consulta->where('tipo_oferta_id', 1);
+        }
+
+        $trabajos = $consulta
+            ->orderByDesc('fecha_publicacion')
+            ->paginate(12);
+
+        return view('web.categorias.show', compact(
+            'categoria',
+            'trabajos'
+        ));
+    }
+
+
+
+    // ==================================================
+    // OFERTAS POR SUBCATEGORÍA
+    // ==================================================
+
+    public function subcategoria(string $categoriaSlug, string $subcategoriaSlug)
+    {
+        $categoria = Categoria::where('slug', $categoriaSlug)
+            ->where('activo', true)
+            ->firstOrFail();
+
+        $subcategoria = Subcategoria::where('categoria_id', $categoria->id)
+            ->where('slug', $subcategoriaSlug)
+            ->where('activo', true)
+            ->firstOrFail();
+
+        $usuario = Auth::user();
+
+        $tipoUsuario = strtolower(
+            (string) ($usuario?->tipoUsuario?->nombre ?? '')
+        );
+
+        $consulta = Trabajo::with([
+            'categoria',
+            'subcategoria',
+            'empresa',
+            'tipoOferta',
+            'modalidad',
+            'tipoContratacion',
+        ])
+            ->where('activo', true)
+            ->where('categoria_id', $categoria->id)
+            ->where('subcategoria_id', $subcategoria->id);
+
+        // Estudiante: solamente pasantías.
+        if ($tipoUsuario === 'estudiante') {
+            $consulta->where('tipo_oferta_id', 2);
+        }
+
+        // Graduado y docente: solamente trabajos.
+        if (in_array($tipoUsuario, ['graduado', 'docente'], true)) {
+            $consulta->where('tipo_oferta_id', 1);
+        }
+
+        $trabajos = $consulta
+            ->orderByDesc('fecha_publicacion')
+            ->paginate(12);
+
+        return view('web.ofertas.index', compact(
+            'trabajos',
+            'categoria',
+            'subcategoria'
+        ));
     }
 }

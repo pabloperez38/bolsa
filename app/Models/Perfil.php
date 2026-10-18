@@ -25,6 +25,7 @@ class Perfil extends Model
         'cv',
         'linkedin',
         'legajo',
+        'area', 
         'carrera_id',
         'materias_aprobadas',
         'github',
