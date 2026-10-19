@@ -5,7 +5,7 @@
             <div class="group-title">
                 <span class="jobs-elegantes-kicker">OPORTUNIDADES PROFESIONALES</span>
 
-                <h2>Ofertas laborales</h2>
+                <h1>Ofertas laborales</h1>
 
                 <p>
                     Encontrá oportunidades laborales y profesionales seleccionadas para vos.
@@ -18,8 +18,8 @@
         <div class="row wow fadeInUp jobs-elegantes-grid">
             @if ($trabajos->isEmpty())
                 <div class="col-12">
-                    <div class="text-center py-5">
-                        <h5>No hay ofertas laborales disponibles</h5>
+                    <div class="text-center py-5 alert alert-info">
+                        <h6>No hay ofertas laborales disponibles</h6>
                         <p>En este momento no hay ofertas publicadas. Te invitamos a volver a consultar más adelante.
                         </p>
                     </div>
